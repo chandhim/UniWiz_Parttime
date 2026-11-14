@@ -1,47 +1,71 @@
 <?php
-// FILE: uniwiz-backend/config/database.php (FULLY FIXED FOR .ENV LOADING)
-// ======================================================================
-// This file handles the database connection for the backend API.
-// It loads environment variables from a .env file and provides a Database class for PDO connection.
+// FILE: uniwiz-backend/config/database.php (DUAL DRIVER: SUPABASE PGSQL & LOCAL MYSQL)
+// ====================================================================================
 
-// --- Load environment variables from .env file ---
-// This ensures that this file can be included anywhere and still find the root .env file.
 require_once __DIR__ . '/../vendor/autoload.php';
+
+// Try loading root .env first, then uniwiz-backend .env
 try {
-    // createImmutable will throw an error if the .env file is not found.
-    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..'); 
-    $dotenv->load();
+    if (file_exists(__DIR__ . '/../../.env')) {
+        $rootDotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../..');
+        $rootDotenv->safeLoad();
+    }
+    if (file_exists(__DIR__ . '/../.env')) {
+        $backendDotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+        $backendDotenv->safeLoad();
+    }
 } catch (Exception $e) {
-    // This will help us debug if the .env file is missing.
-    die("Error: Could not load the .env file. Please ensure it exists in the 'uniwiz-backend' directory. Details: " . $e->getMessage());
+    // Continue if dotenv cannot load
 }
 
-// --- Database Credentials (fallbacks, not used if .env is loaded) ---
-$host = "localhost";
-$dbname = "uniwiz_db";
-$username = "root";
-$password = ""; // Your Laragon password (usually empty)
-
 class Database {
-    // --- Database Credentials ---
-    // These now come from the .env file, but we keep them here as fallbacks.
-    private $host = "localhost";
-    private $db_name = "uniwiz_db";
-    private $username = "root";
-    private $password = ""; // Your Laragon password (usually empty)
     public $conn;
 
-    // --- Get the database connection ---
     public function getConnection() {
         $this->conn = null;
 
+        $dbUrl = $_ENV['DATABASE_URL'] ?? getenv('DATABASE_URL') ?? null;
+        $directUrl = $_ENV['DIRECT_URL'] ?? getenv('DIRECT_URL') ?? null;
+        $connectionUrl = $directUrl ?: $dbUrl;
+
         try {
-            // Create a new PDO connection
-            $this->conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->db_name, $this->username, $this->password);
-            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch(PDOException $exception) {
-            // This error is critical and should stop the script.
-            die("DATABASE CONNECTION ERROR: " . $exception->getMessage());
+            if ($connectionUrl && (strpos($connectionUrl, 'postgres://') === 0 || strpos($connectionUrl, 'postgresql://') === 0)) {
+                // Parse PostgreSQL / Supabase connection URL
+                $parts = parse_url($connectionUrl);
+                $host = $parts['host'] ?? 'localhost';
+                $port = $parts['port'] ?? 5432;
+                $user = isset($parts['user']) ? urldecode($parts['user']) : 'postgres';
+                $pass = isset($parts['pass']) ? urldecode($parts['pass']) : '';
+                $dbname = isset($parts['path']) ? ltrim($parts['path'], '/') : 'postgres';
+
+                $dsn = "pgsql:host={$host};port={$port};dbname={$dbname};sslmode=require";
+                $this->conn = new PDO($dsn, $user, $pass, [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    PDO::ATTR_EMULATE_PREPARES => false,
+                ]);
+            } else {
+                // Fallback to MySQL
+                $host = $_ENV['DB_HOST'] ?? getenv('DB_HOST') ?? 'localhost';
+                $port = $_ENV['DB_PORT'] ?? getenv('DB_PORT') ?? '3306';
+                $dbname = $_ENV['DB_NAME'] ?? getenv('DB_NAME') ?? 'uniwiz_db';
+                $user = $_ENV['DB_USER'] ?? getenv('DB_USER') ?? 'root';
+                $pass = $_ENV['DB_PASS'] ?? getenv('DB_PASS') ?? '';
+
+                $dsn = "mysql:host={$host};port={$port};dbname={$dbname};charset=utf8mb4";
+                $this->conn = new PDO($dsn, $user, $pass, [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                ]);
+            }
+        } catch (PDOException $exception) {
+            header('Content-Type: application/json');
+            http_response_code(500);
+            echo json_encode([
+                "success" => false,
+                "message" => "DATABASE CONNECTION ERROR: " . $exception->getMessage()
+            ]);
+            exit();
         }
 
         return $this->conn;
