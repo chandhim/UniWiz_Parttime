@@ -152,13 +152,12 @@ if ($data->action === 'register') {
                 exit();
             }
 
-            // Insert new user
-            $query = "INSERT INTO users (email, password, first_name, last_name, company_name, role, email_verification_token) VALUES (:email, :password, :first_name, :last_name, :company_name, :role, :token)";
+            // Insert new user (auto-verified, mail verification removed)
+            $query = "INSERT INTO users (email, password, first_name, last_name, company_name, role, is_verified, email_verified_at) VALUES (:email, :password, :first_name, :last_name, :company_name, :role, 1, CURRENT_TIMESTAMP)";
             $stmt = $db->prepare($query);
 
             $email = htmlspecialchars(strip_tags($data->email));
             $password_hash = password_hash($data->password, PASSWORD_BCRYPT);
-            $verification_token = bin2hex(random_bytes(50));
             
             $stmt->bindParam(':email', $email);
             $stmt->bindParam(':password', $password_hash);
@@ -166,7 +165,6 @@ if ($data->action === 'register') {
             $stmt->bindParam(':last_name', $lastName);
             $stmt->bindParam(':company_name', $companyName);
             $stmt->bindParam(':role', $role);
-            $stmt->bindParam(':token', $verification_token);
 
             if ($stmt->execute()) {
                 $new_user_id = $db->lastInsertId();
@@ -188,48 +186,10 @@ if ($data->action === 'register') {
                 $notif_link = "/user-management"; // Or relevant admin page
                 createAdminNotification($db, $notif_type, $notif_message, $notif_link);
 
-                // Send verification email
-                $mail = new PHPMailer(true);
-                try {
-                    // SMTP Configuration with fallback values
-                    $smtp_host = $_ENV['SMTP_HOST'] ?? 'smtp.gmail.com';
-                    $smtp_port = $_ENV['SMTP_PORT'] ?? 587;
-                    $smtp_user = $_ENV['SMTP_USER'] ?? 'uniwiz22@gmail.com';
-                    $smtp_pass = $_ENV['SMTP_PASS'] ?? 'your_app_password_here';
-                    
-                    if (empty($smtp_pass) || $smtp_pass === 'your_app_password_here') {
-                        error_log("SMTP password not configured. Please set SMTP_PASS in .env file.");
-                        // Continue with registration even if email fails
-                    } else {
-                        $mail->isSMTP();
-                        $mail->Host       = $smtp_host;
-                        $mail->SMTPAuth   = true;
-                        $mail->Username   = $smtp_user;
-                        $mail->Password   = $smtp_pass;
-                        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-                        $mail->Port       = $smtp_port;
-
-                        $mail->setFrom('uniwiz22@gmail.com', 'UniWiz');
-                        $mail->addAddress($email);
-                        $mail->isHTML(true);
-                        $mail->Subject = 'Verify Your Email Address for UniWiz';
-                        
-                        // Verification link
-                        $verification_link = 'http://uniwiz-backend.test/api/verify_email.php?token=' . $verification_token;
-                        
-                        $mail->Body    = "<h2>Welcome to UniWiz!</h2><p>Thank you for registering. Please click the link below to verify your email address:</p><p><a href='{$verification_link}' style='padding: 10px 15px; background-color: #4F46E5; color: white; text-decoration: none; border-radius: 5px;'>Verify My Email</a></p><p>If you did not create an account, no further action is required.</p>";
-                        $mail->send();
-                        error_log("Verification email sent successfully to: " . $email);
-                    }
-                } catch (Exception $e) {
-                    error_log("Mailer Error: {$mail->ErrorInfo}");
-                    error_log("Failed to send verification email to: " . $email);
-                }
-
                 $new_user = getFullUserProfile($db, $new_user_id);
                 http_response_code(201);
                 echo json_encode([
-                    "message" => "Registration successful! Please check your email to verify your account.",
+                    "message" => "Registration successful! Welcome to UniWiz.",
                     "user" => $new_user 
                 ]);
             } else {

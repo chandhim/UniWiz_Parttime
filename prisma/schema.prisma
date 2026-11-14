@@ -89,7 +89,7 @@ model User {
   role                   UserRole  @default(STUDENT)
   profileImageUrl        String?   @map("profile_image_url") @db.Text
   status                 UserStatus @default(ACTIVE)
-  isVerified             Boolean   @default(false) @map("is_verified")
+  isVerified             Boolean   @default(true) @map("is_verified")
   emailVerificationToken String?   @map("email_verification_token") @db.VarChar(255)
   emailVerifiedAt        DateTime? @map("email_verified_at")
   resetToken             String?   @map("reset_token") @db.VarChar(255)

@@ -132,12 +132,8 @@ function LoginPage({ onLoginSuccess, setPage, initialState }) {
             }
             
             if (isSignUpMode) {
-                // Save pending credentials to allow auto-login after email verification
-                try {
-                    sessionStorage.setItem('pendingLogin', JSON.stringify({ email, password }));
-                } catch (_) {}
-                // Navigate to Verify page
-                setPage('verify');
+                // Auto-login immediately upon registration (mail verification removed)
+                onLoginSuccess(result.user);
                 return;
             }
 
@@ -197,7 +193,7 @@ function LoginPage({ onLoginSuccess, setPage, initialState }) {
                                 <svg className="h-5 w-5 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
-                                <span>{error.includes('verify') ? 'Please verify your email address. Check your inbox or spam folder.' : error}</span>
+                                <span>{error}</span>
                             </motion.div>
                         )}
                     </AnimatePresence>

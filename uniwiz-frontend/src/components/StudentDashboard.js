@@ -243,13 +243,8 @@ function StudentDashboard({ currentUser, handleApply, setPage, setPublisherIdFor
                 background: 'linear-gradient(to bottom right, #BFDDFF, #ffffff)'
             }}
         >
-            {/* Verification notice removed from blocking apply */}
+            {/* Verification notice removed */}
             <div className="max-w-6xl mx-auto">
-                {showVerificationWarning && (
-                    <div className="mb-8 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 rounded">
-                        <strong>Your account is not verified.</strong> Please complete your profile to request verification.
-                    </div>
-                )}
                 {/* --- Header --- */}
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
                     <div>

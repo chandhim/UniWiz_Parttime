@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS users (
     role user_role NOT NULL DEFAULT 'student',
     profile_image_url TEXT,
     status user_status NOT NULL DEFAULT 'active',
-    is_verified BOOLEAN NOT NULL DEFAULT FALSE,
+    is_verified BOOLEAN NOT NULL DEFAULT TRUE,
     email_verification_token VARCHAR(255),
     email_verified_at TIMESTAMP WITH TIME ZONE,
     reset_token VARCHAR(255),
