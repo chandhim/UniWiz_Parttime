@@ -151,7 +151,7 @@ const ModernJobCard = ({ job, setPage, isNew }) => {
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
               </h4>
-              <h3 className="text-base font-bold text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-1 mt-0.5">
+              <h3 className="text-base font-bold text-slate-900 group-hover:text-emerald-700 transition-colors line-clamp-1 mt-0.5">
                 {job.title}
               </h3>
             </div>
@@ -171,7 +171,7 @@ const ModernJobCard = ({ job, setPage, isNew }) => {
 
         {/* Meta Chips */}
         <div className="flex flex-wrap items-center gap-2 mb-5">
-          <span className="inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-100">
+          <span className="inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200">
             {job.job_type || 'Part-time'}
           </span>
           <span className="inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700">
@@ -181,7 +181,7 @@ const ModernJobCard = ({ job, setPage, isNew }) => {
             {job.location || 'Remote'}
           </span>
           {job.category_name && (
-            <span className="inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-lg bg-purple-50 text-purple-700 border border-purple-100">
+            <span className="inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-lg bg-amber-50 text-amber-800 border border-amber-200">
               {job.category_name}
             </span>
           )}
@@ -192,14 +192,14 @@ const ModernJobCard = ({ job, setPage, isNew }) => {
       <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
         <div>
           <span className="text-xs text-slate-400 block font-medium">Estimated Pay</span>
-          <span className="text-sm font-extrabold text-slate-900 text-emerald-600">
+          <span className="text-sm font-extrabold text-emerald-800">
             {job.payment_range || 'Competitive'}
           </span>
         </div>
 
         <button
           onClick={() => setPage('login', { signup: true, role: 'student' })}
-          className="inline-flex items-center gap-1 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 px-3.5 py-2 rounded-xl transition-all shadow-sm hover:shadow group-hover:scale-105 active:scale-95"
+          className="inline-flex items-center gap-1 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 px-3.5 py-2 rounded-xl transition-all shadow-xs hover:shadow group-hover:scale-105 active:scale-95"
         >
           Apply Now
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -243,7 +243,7 @@ const LandingPage = ({ setPage }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-slate-800 font-sans antialiased selection:bg-indigo-100 selection:text-indigo-900">
+    <div className="min-h-screen bg-[#F8FAFC] text-slate-800 font-sans antialiased selection:bg-emerald-100 selection:text-emerald-900">
       {/* =========================================================================
           1. FLOATING MODERN HEADER / NAVBAR
          ========================================================================= */}
@@ -261,34 +261,34 @@ const LandingPage = ({ setPage }) => {
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               className="flex items-center gap-2.5 cursor-pointer group"
             >
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-700 via-emerald-600 to-teal-500 flex items-center justify-center text-white shadow-md shadow-emerald-600/20 group-hover:scale-105 transition-transform ring-2 ring-emerald-500/20">
                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M12 14l9-5-9-5-9 5 9 5z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M12 14l6.16-3.422A12.083 12.083 0 0112 21a12.083 12.083 0 01-6.16-9.422L12 14z" />
                 </svg>
               </div>
               <div>
-                <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-slate-900 via-indigo-950 to-indigo-700 bg-clip-text text-transparent">
-                  UniWiz
+                <span className="text-xl font-black tracking-tight text-slate-900">
+                  Uni<span className="text-emerald-700">Wiz</span>
                 </span>
-                <span className="hidden sm:inline-block ml-1.5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-indigo-50 text-indigo-700 ring-1 ring-indigo-500/10">
-                  Campus Jobs
+                <span className="hidden sm:inline-block ml-1.5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-amber-50 text-amber-800 ring-1 ring-amber-500/20">
+                  Campus Gigs
                 </span>
               </div>
             </div>
 
             {/* Center Navigation Links */}
             <nav className="hidden md:flex items-center gap-8">
-              <a href="#browse-categories" className="text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors">
+              <a href="#browse-categories" className="text-sm font-semibold text-slate-600 hover:text-emerald-700 transition-colors">
                 Categories
               </a>
-              <a href="#featured-jobs" className="text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors">
+              <a href="#featured-jobs" className="text-sm font-semibold text-slate-600 hover:text-emerald-700 transition-colors">
                 Featured Jobs
               </a>
-              <a href="#how-it-works" className="text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors">
+              <a href="#how-it-works" className="text-sm font-semibold text-slate-600 hover:text-emerald-700 transition-colors">
                 How It Works
               </a>
-              <a href="#testimonials" className="text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors">
+              <a href="#testimonials" className="text-sm font-semibold text-slate-600 hover:text-emerald-700 transition-colors">
                 Reviews
               </a>
             </nav>
@@ -297,13 +297,13 @@ const LandingPage = ({ setPage }) => {
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setPage('login')}
-                className="text-sm font-bold text-slate-700 hover:text-indigo-600 px-4 py-2 rounded-xl hover:bg-slate-100 transition-all"
+                className="text-sm font-bold text-slate-700 hover:text-emerald-700 px-4 py-2 rounded-xl hover:bg-slate-100 transition-all"
               >
                 Sign In
               </button>
               <button
                 onClick={() => setPage('login', { signup: true, role: 'student' })}
-                className="text-sm font-bold text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 px-5 py-2.5 rounded-xl shadow-md shadow-indigo-500/20 hover:shadow-lg hover:shadow-indigo-500/30 transition-all hover:scale-[1.02] active:scale-95"
+                className="text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 px-5 py-2.5 rounded-xl shadow-md shadow-emerald-600/20 hover:shadow-lg hover:shadow-emerald-600/30 transition-all hover:scale-[1.02] active:scale-95"
               >
                 Get Started
               </button>
@@ -317,7 +317,7 @@ const LandingPage = ({ setPage }) => {
          ========================================================================= */}
       <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-radial-gradient bg-grid-slate">
         {/* Ambient background glow orbs */}
-        <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-gradient-to-tr from-indigo-500/15 via-purple-500/15 to-transparent blur-3xl pointer-events-none -z-10" />
+        <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-gradient-to-tr from-emerald-500/15 via-amber-500/12 to-transparent blur-3xl pointer-events-none -z-10" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto">
@@ -339,10 +339,10 @@ const LandingPage = ({ setPage }) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.15] mb-6"
+              className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 leading-[1.15] mb-6"
             >
               Power Your Degree with <br className="hidden sm:inline" />
-              <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-emerald-800 via-emerald-600 to-amber-500 bg-clip-text text-transparent">
                 Real-World Experience.
               </span>
             </motion.h1>
@@ -362,10 +362,10 @@ const LandingPage = ({ setPage }) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="bg-white p-2.5 rounded-2xl border border-slate-200 shadow-[0_10px_35px_-5px_rgba(0,0,0,0.08)] max-w-3xl mx-auto mb-10"
+              className="bg-white p-2.5 rounded-2xl border border-slate-200/90 shadow-[0_10px_35px_-5px_rgba(0,0,0,0.08)] max-w-3xl mx-auto mb-10"
             >
               <form onSubmit={handleSearchSubmit} className="flex flex-col sm:flex-row items-center gap-2">
-                <div className="flex items-center gap-2 px-3.5 py-2.5 flex-1 w-full bg-slate-50/80 rounded-xl border border-slate-200/60 focus-within:border-indigo-400 focus-within:bg-white transition-all">
+                <div className="flex items-center gap-2 px-3.5 py-2.5 flex-1 w-full bg-slate-50/80 rounded-xl border border-slate-200/60 focus-within:border-emerald-500 focus-within:bg-white transition-all">
                   <svg className="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
@@ -378,7 +378,7 @@ const LandingPage = ({ setPage }) => {
                   />
                 </div>
 
-                <div className="flex items-center gap-2 px-3.5 py-2.5 sm:w-56 w-full bg-slate-50/80 rounded-xl border border-slate-200/60 focus-within:border-indigo-400 focus-within:bg-white transition-all">
+                <div className="flex items-center gap-2 px-3.5 py-2.5 sm:w-56 w-full bg-slate-50/80 rounded-xl border border-slate-200/60 focus-within:border-emerald-500 focus-within:bg-white transition-all">
                   <svg className="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                   </svg>
@@ -398,7 +398,7 @@ const LandingPage = ({ setPage }) => {
 
                 <button
                   type="submit"
-                  className="w-full sm:w-auto px-7 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold transition-all shadow-md hover:shadow-indigo-500/25 flex items-center justify-center gap-2 group"
+                  className="w-full sm:w-auto px-7 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold transition-all shadow-md shadow-emerald-600/20 hover:shadow-lg hover:shadow-emerald-600/30 flex items-center justify-center gap-2 group active:scale-95"
                 >
                   Explore Jobs
                   <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">

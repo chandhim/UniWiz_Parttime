@@ -9,58 +9,81 @@ module.exports = {
         sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
       },
       colors: {
-        // --- SUPERB MODERN COLOR PALETTE (EXISTING) ---
-        'primary-dark': '#0F172A',
-        'primary-main': '#4F46E5',
-        'primary-light': '#818CF8',
-        'primary-lighter': '#E0E7FF',
+        // --- BESPOKE UNIWIZ "EMERALD VANGUARD & WARM AMBER" PALETTE ---
+        // Distinctive academic & growth colors replacing generic Antigravity indigo/purple
+        'primary-dark': '#062C24',
+        'primary-main': '#059669',     // Core Emerald
+        'primary-light': '#34D399',    // Vibrant Mint
+        'primary-lighter': '#D1FAE5',  // Soft Emerald Frost
         
-        // --- EXTENDED MODERN PALETTES ---
+        // --- PRIMARY: DEEP ALPINE EMERALD (Growth, Academic Prestige, High-Trust) ---
         primary: {
-          50: '#EEF2FF',
-          100: '#E0E7FF',
-          200: '#C7D2FE',
-          300: '#A5B4FC',
-          400: '#818CF8',
-          500: '#6366F1',
-          600: '#4F46E5',
-          700: '#4338CA',
-          800: '#3730A3',
-          900: '#312E81',
-          950: '#1E1B4B',
+          50: '#ECFDF5',
+          100: '#D1FAE5',
+          200: '#A7F3D0',
+          300: '#6EE7B7',
+          400: '#34D399',
+          500: '#10B981',
+          600: '#059669',
+          700: '#047857',
+          800: '#065F46',
+          900: '#064E3B',
+          950: '#022C22',
         },
+
+        // --- BRAND: WARM SOLAR OCHRE / AMBER GOLD (Collegiate Warmth, Badges, Wages) ---
         brand: {
-          50: '#FAF5FF',
-          100: '#F3E8FF',
-          500: '#A855F7',
-          600: '#9333EA',
-          700: '#7E22CE',
+          50: '#FFFBEB',
+          100: '#FEF3C7',
+          200: '#FDE68A',
+          300: '#FCD34D',
+          400: '#FBBF24',
+          500: '#F59E0B',
+          600: '#D97706',
+          700: '#B45309',
+          800: '#92400E',
+          900: '#78350F',
+        },
+
+        // --- SECONDARY TEAL ACCENTS ---
+        teal: {
+          50: '#F0FDFA',
+          100: '#CCFBF1',
+          500: '#14B8A6',
+          600: '#0D9488',
+          700: '#0F766E',
+          900: '#134E4A',
         },
         
-        // --- UPDATED & ENHANCED ACCENT COLORS ---
+        // --- SYSTEM ACCENTS ---
         'accent-green': '#10B981',
         'accent-red': '#EF4444',
         'accent-yellow': '#F59E0B',
         
-        // --- LIGHT & VIBRANT ACCENT COLORS FOR CATEGORIES/ICONS ---
+        // --- FACULTY & CATEGORY HARMONIES ---
         'accent-blue': {
-          light: '#EFF6FF',
-          dark: '#2563EB'
+          light: '#F0F9FF',
+          dark: '#0284C7'
         },
         'accent-pink': {
-          light: '#FDF2F8',
-          dark: '#DB2777'
+          light: '#FFF1F2',
+          dark: '#E11D48'
         },
         'accent-teal': {
           light: '#F0FDFA',
           dark: '#0D9488'
         },
         'accent-purple': {
-          light: '#FAF5FF',
+          light: '#F5F3FF',
           dark: '#7C3AED'
         },
+        'accent-amber': {
+          light: '#FFFBEB',
+          dark: '#D97706'
+        },
 
-        'neutral-dark': '#1E293B',
+        // --- REFINED SLATE & PORCELAIN SURFACES ---
+        'neutral-dark': '#0F172A',
         'neutral-medium': '#64748B',
         'neutral-light': '#F8FAFC',
         
@@ -68,12 +91,16 @@ module.exports = {
         'bg-publisher-dashboard': '#F8FAFC',
       },
       boxShadow: {
-        'glow-primary': '0 0 25px -5px rgba(99, 102, 241, 0.35)',
-        'glow-accent': '0 0 25px -5px rgba(16, 185, 129, 0.35)',
-        'subtle': '0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05)',
-        'card': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
-        'card-hover': '0 12px 30px -4px rgba(0, 0, 0, 0.09)',
+        'glow-primary': '0 0 25px -4px rgba(16, 185, 129, 0.35)',
+        'glow-brand': '0 0 25px -4px rgba(245, 158, 11, 0.35)',
+        'subtle': '0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.03)',
+        'card': '0 4px 20px -2px rgba(15, 23, 42, 0.05)',
+        'card-hover': '0 12px 32px -4px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(5, 150, 105, 0.06)',
       },
+      borderRadius: {
+        '2xl': '1rem',
+        '3xl': '1.5rem',
+      }
     },
   },
   plugins: [],

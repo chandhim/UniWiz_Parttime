@@ -128,12 +128,12 @@ function LoginPage({ onLoginSuccess, setPage, initialState }) {
     return (
         <div className="min-h-screen bg-[#F8FAFC] text-slate-800 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden bg-radial-gradient bg-grid-slate">
             {/* Ambient Background Aura */}
-            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[350px] bg-gradient-to-tr from-indigo-500/10 via-purple-500/10 to-transparent blur-3xl pointer-events-none" />
+            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[550px] h-[380px] bg-gradient-to-tr from-emerald-500/10 via-amber-500/10 to-transparent blur-3xl pointer-events-none" />
 
             {/* Back to Home Button */}
             <button
                 onClick={() => setPage('home')}
-                className="fixed top-5 left-5 z-40 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white/90 backdrop-blur-md border border-slate-200/80 text-xs font-bold text-slate-700 hover:text-indigo-600 hover:border-indigo-200 shadow-sm transition-all hover:scale-105"
+                className="fixed top-5 left-5 z-40 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white/90 backdrop-blur-md border border-slate-200/90 text-xs font-bold text-slate-700 hover:text-emerald-700 hover:border-emerald-200 shadow-sm transition-all hover:scale-105"
             >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
@@ -146,18 +146,18 @@ function LoginPage({ onLoginSuccess, setPage, initialState }) {
                 <div className="text-center mb-6">
                     <div
                         onClick={() => setPage('home')}
-                        className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/25 mb-3 cursor-pointer hover:scale-105 transition-transform"
+                        className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-700 via-emerald-600 to-teal-500 text-white shadow-lg shadow-emerald-600/20 mb-3 cursor-pointer hover:scale-105 transition-transform ring-2 ring-emerald-500/20"
                     >
                         <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M12 14l9-5-9-5-9 5 9 5z" />
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M12 14l6.16-3.422A12.083 12.083 0 0112 21a12.083 12.083 0 01-6.16-9.422L12 14z" />
                         </svg>
                     </div>
-                    <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                        {isSignUpMode ? 'Create Your Account' : 'Welcome Back'}
+                    <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                        {isSignUpMode ? 'Join UniWiz' : 'Welcome Back'}
                     </h2>
                     <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                        {isSignUpMode ? 'Connect with student opportunities across Sri Lanka' : 'Sign in to access your UniWiz workspace'}
+                        {isSignUpMode ? 'Connect with campus opportunities across Sri Lanka' : 'Sign in to access your student or employer portal'}
                     </p>
                 </div>
 
@@ -186,29 +186,29 @@ function LoginPage({ onLoginSuccess, setPage, initialState }) {
 
                     {/* Quick Demo Login Autofill Chips (Only on Sign In) */}
                     {!isSignUpMode && (
-                        <div className="mb-6 p-3 rounded-2xl bg-indigo-50/50 border border-indigo-100/80">
-                            <span className="text-[11px] font-bold uppercase tracking-wider text-indigo-700 block mb-2">
-                                🚀 Instant Demo Autofill:
+                        <div className="mb-6 p-3 rounded-2xl bg-emerald-50/70 border border-emerald-200/80">
+                            <span className="text-[11px] font-black uppercase tracking-wider text-emerald-800 block mb-2">
+                                🚀 1-Click Demo Evaluation Login:
                             </span>
                             <div className="grid grid-cols-3 gap-1.5">
                                 <button
                                     type="button"
                                     onClick={() => handleAutofill('student')}
-                                    className="px-2 py-1.5 rounded-lg bg-white border border-indigo-200/80 text-[11px] font-bold text-indigo-700 hover:bg-indigo-600 hover:text-white transition-all shadow-sm text-center"
+                                    className="px-2 py-1.5 rounded-lg bg-white border border-emerald-200 text-[11px] font-bold text-emerald-800 hover:bg-emerald-700 hover:text-white transition-all shadow-xs text-center"
                                 >
                                     Student
                                 </button>
                                 <button
                                     type="button"
                                     onClick={() => handleAutofill('publisher')}
-                                    className="px-2 py-1.5 rounded-lg bg-white border border-indigo-200/80 text-[11px] font-bold text-indigo-700 hover:bg-indigo-600 hover:text-white transition-all shadow-sm text-center"
+                                    className="px-2 py-1.5 rounded-lg bg-white border border-emerald-200 text-[11px] font-bold text-emerald-800 hover:bg-emerald-700 hover:text-white transition-all shadow-xs text-center"
                                 >
                                     Employer
                                 </button>
                                 <button
                                     type="button"
                                     onClick={() => handleAutofill('admin')}
-                                    className="px-2 py-1.5 rounded-lg bg-white border border-indigo-200/80 text-[11px] font-bold text-indigo-700 hover:bg-indigo-600 hover:text-white transition-all shadow-sm text-center"
+                                    className="px-2 py-1.5 rounded-lg bg-white border border-emerald-200 text-[11px] font-bold text-emerald-800 hover:bg-emerald-700 hover:text-white transition-all shadow-xs text-center"
                                 >
                                     Admin
                                 </button>
@@ -218,6 +218,37 @@ function LoginPage({ onLoginSuccess, setPage, initialState }) {
 
                     {/* Role Selector (Sign Up only) */}
                     {isSignUpMode && (
+                        <div className="grid grid-cols-2 gap-2 p-1 rounded-2xl bg-slate-100 border border-slate-200 mb-5">
+                            <button
+                                type="button"
+                                onClick={() => setRole('student')}
+                                className={`py-2 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
+                                    role === 'student'
+                                        ? 'bg-white text-emerald-800 shadow-xs'
+                                        : 'text-slate-600 hover:text-slate-900'
+                                }`}
+                            >
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                                Student
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setRole('publisher')}
+                                className={`py-2 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
+                                    role === 'publisher'
+                                        ? 'bg-white text-emerald-800 shadow-xs'
+                                        : 'text-slate-600 hover:text-slate-900'
+                                }`}
+                            >
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m-1 4h1m8-10h1m-1 4h1m-1 4h1m-8 4v-4c0-1.49.53-2.94 1.5-4L12 9l2.5-2c.97-1.06 1.5-2.51 1.5-4V3H5v3" />
+                                </svg>
+                                Employer
+                            </button>
+                        </div>
+                    )}
                         <div className="grid grid-cols-2 gap-2 p-1 rounded-2xl bg-slate-100 border border-slate-200 mb-5">
                             <button
                                 type="button"
@@ -398,7 +429,7 @@ function LoginPage({ onLoginSuccess, setPage, initialState }) {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full mt-2 py-3 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold text-xs sm:text-sm shadow-md shadow-indigo-500/20 hover:shadow-indigo-500/30 transition-all hover:scale-[1.01] active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                            className="w-full mt-2 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs sm:text-sm shadow-md shadow-emerald-600/20 hover:shadow-emerald-600/30 transition-all hover:scale-[1.01] active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
                             {isLoading ? (
                                 <span className="flex items-center gap-2">
@@ -409,9 +440,9 @@ function LoginPage({ onLoginSuccess, setPage, initialState }) {
                                     Processing...
                                 </span>
                             ) : isSignUpMode ? (
-                                'Complete Sign Up'
+                                'Complete Free Registration'
                             ) : (
-                                'Sign In to Portal'
+                                'Sign In to Workspace'
                             )}
                         </button>
                     </form>
@@ -423,7 +454,7 @@ function LoginPage({ onLoginSuccess, setPage, initialState }) {
                                 Already have an account?{' '}
                                 <button
                                     onClick={toggleMode}
-                                    className="font-bold text-indigo-600 hover:underline"
+                                    className="font-bold text-emerald-700 hover:underline"
                                 >
                                     Sign In
                                 </button>
@@ -433,7 +464,7 @@ function LoginPage({ onLoginSuccess, setPage, initialState }) {
                                 Don&apos;t have an account?{' '}
                                 <button
                                     onClick={toggleMode}
-                                    className="font-bold text-indigo-600 hover:underline"
+                                    className="font-bold text-emerald-700 hover:underline"
                                 >
                                     Create Free Account
                                 </button>

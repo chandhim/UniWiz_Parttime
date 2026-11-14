@@ -465,7 +465,7 @@ function ChatWindow({ conversation, currentUser, onNewMessageSent }) {
                     </div>
                 ) : messages.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full text-center p-8">
-                        <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-3">
+                        <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center mb-3">
                             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                             </svg>
@@ -484,9 +484,9 @@ function ChatWindow({ conversation, currentUser, onNewMessageSent }) {
                                 className={`flex ${isMe ? 'justify-end' : 'justify-start'} animate-fade-in`}
                             >
                                 <div
-                                    className={`max-w-xs sm:max-w-md lg:max-w-lg px-4 py-2.5 shadow-sm ${
+                                    className={`max-w-xs sm:max-w-md lg:max-w-lg px-4 py-2.5 shadow-xs ${
                                         isMe
-                                            ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl rounded-br-sm'
+                                            ? 'bg-gradient-to-r from-emerald-700 to-teal-600 text-white rounded-2xl rounded-br-sm'
                                             : 'bg-white text-slate-800 border border-slate-200/90 rounded-2xl rounded-bl-sm'
                                     }`}
                                 >
@@ -494,14 +494,14 @@ function ChatWindow({ conversation, currentUser, onNewMessageSent }) {
                                         {msg.message_text}
                                     </p>
                                     <div className="flex items-center justify-end gap-1 mt-1">
-                                        <span className={`text-[10px] ${isMe ? 'text-indigo-200' : 'text-slate-400'}`}>
+                                        <span className={`text-[10px] ${isMe ? 'text-emerald-100' : 'text-slate-400'}`}>
                                             {new Date(msg.created_at).toLocaleTimeString([], {
                                                 hour: '2-digit',
                                                 minute: '2-digit'
                                             })}
                                         </span>
                                         {isMe && (
-                                            <span className={`text-[10px] ${msg.is_read ? 'text-emerald-300' : 'text-indigo-200'}`} title={msg.is_read ? 'Read' : 'Delivered'}>
+                                            <span className={`text-[10px] ${msg.is_read ? 'text-amber-300 font-bold' : 'text-emerald-100'}`} title={msg.is_read ? 'Read' : 'Delivered'}>
                                                 {msg.is_read ? '✓✓' : '✓'}
                                             </span>
                                         )}
@@ -521,11 +521,11 @@ function ChatWindow({ conversation, currentUser, onNewMessageSent }) {
                             exit={{ opacity: 0, y: 5 }}
                             className="flex justify-start"
                         >
-                            <div className="bg-white border border-slate-200 px-3.5 py-2 rounded-2xl rounded-bl-sm shadow-sm flex items-center gap-2">
+                            <div className="bg-white border border-slate-200 px-3.5 py-2 rounded-2xl rounded-bl-sm shadow-xs flex items-center gap-2">
                                 <div className="flex items-center gap-1">
-                                    <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-bounce"></span>
-                                    <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-bounce [animation-delay:0.2s]"></span>
-                                    <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+                                    <span className="w-1.5 h-1.5 bg-emerald-600 rounded-full animate-bounce"></span>
+                                    <span className="w-1.5 h-1.5 bg-emerald-600 rounded-full animate-bounce [animation-delay:0.2s]"></span>
+                                    <span className="w-1.5 h-1.5 bg-emerald-600 rounded-full animate-bounce [animation-delay:0.4s]"></span>
                                 </div>
                                 <span className="text-[11px] text-slate-500 font-medium italic">
                                     {typingUserName} is typing...
@@ -545,7 +545,7 @@ function ChatWindow({ conversation, currentUser, onNewMessageSent }) {
                         value={newMessage}
                         onChange={handleInputChange}
                         placeholder="Type a message (Press Enter to send)..."
-                        className="flex-grow px-4 py-2.5 border border-slate-300 rounded-2xl text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 resize-none h-11 transition-all"
+                        className="flex-grow px-4 py-2.5 border border-slate-300 rounded-2xl text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 resize-none h-11 transition-all"
                         rows="1"
                         onKeyDown={(e) => {
                             if (e.key === 'Enter' && !e.shiftKey) {
@@ -557,7 +557,7 @@ function ChatWindow({ conversation, currentUser, onNewMessageSent }) {
                     <button
                         type="submit"
                         disabled={!newMessage.trim()}
-                        className="p-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 disabled:hover:bg-indigo-600 text-white shadow-md shadow-indigo-500/20 transition-all hover:scale-105 active:scale-95 flex-shrink-0"
+                        className="p-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 disabled:hover:bg-emerald-600 text-white shadow-md shadow-emerald-600/20 transition-all hover:scale-105 active:scale-95 flex-shrink-0"
                     >
                         <svg className="w-5 h-5 rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />

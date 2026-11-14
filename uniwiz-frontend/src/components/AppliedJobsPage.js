@@ -1,46 +1,44 @@
-// FILE: src/components/AppliedJobsPage.js (UPDATED - Job Status Display)
-// ===================================================
-// This component shows all jobs the student has applied to, with filters by application/job status.
-
+// FILE: src/components/AppliedJobsPage.js (BESPOKE UNIWIZ EMERALD & AMBER EDITION)
+// =================================================================================
 import React, { useState, useEffect, useCallback } from 'react';
 
-// --- LoadingSpinner: Shows a loading animation while fetching data ---
+// --- LoadingSpinner ---
 const LoadingSpinner = () => (
   <div className="flex justify-center items-center p-8">
-    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+    <div className="animate-spin rounded-full h-8 w-8 border-3 border-emerald-200 border-t-emerald-600"></div>
   </div>
 );
 
-// --- StatusBadge: Shows application/job status as a colored badge ---
+// --- StatusBadge ---
 const StatusBadge = ({ status }) => {
-    const baseClasses = "px-3 py-1 text-xs font-semibold rounded-full capitalize";
     const statusClasses = {
-        applied: "bg-blue-50 text-blue-600",
-        pending: "bg-yellow-100 text-yellow-800",
-        viewed: "bg-blue-100 text-blue-800",
-        accepted: "bg-green-100 text-green-800",
-        rejected: "bg-red-100 text-red-800",
-        // New statuses for job posts
-        closed: "bg-gray-200 text-gray-700", // For closed jobs
-        deleted: "bg-red-100 text-red-800", // For deleted jobs
-        default: "bg-gray-100 text-gray-800",
+        applied: "bg-emerald-50 text-emerald-800 border-emerald-200",
+        pending: "bg-amber-50 text-amber-800 border-amber-200",
+        viewed: "bg-sky-50 text-sky-800 border-sky-200",
+        accepted: "bg-emerald-50 text-emerald-800 border-emerald-200 font-extrabold",
+        rejected: "bg-rose-50 text-rose-800 border-rose-200",
+        active: "bg-emerald-50 text-emerald-700 border-emerald-200",
+        closed: "bg-slate-100 text-slate-700 border-slate-200",
+        deleted: "bg-rose-50 text-rose-700 border-rose-200",
+        default: "bg-slate-100 text-slate-800 border-slate-200",
     };
-    return <span className={`${baseClasses} ${statusClasses[status] || statusClasses.default}`}>{status}</span>;
+    return (
+        <span className={`px-2.5 py-0.5 text-xs font-bold rounded-md border capitalize inline-block ${statusClasses[status] || statusClasses.default}`}>
+            {status}
+        </span>
+    );
 };
 
 // --- Main AppliedJobsPage component ---
 function AppliedJobsPage({ user, initialFilter, setInitialFilter, handleViewJobDetails }) {
-    // --- State for all applications, filtered applications, loading, error, and active tab ---
     const [allApplications, setAllApplications] = useState([]);
     const [filteredApplications, setFilteredApplications] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [activeTab, setActiveTab] = useState(initialFilter || 'All');
 
-    // Tabs for filtering by application/job status
-    const tabs = ['All', 'Pending', 'Viewed', 'Accepted', 'Rejected', 'Closed', 'Deleted'];
+    const tabs = ['All', 'Pending', 'Viewed', 'Accepted', 'Rejected', 'Closed'];
 
-    // --- Fetch all applications for the student ---
     const fetchApplicationDetails = useCallback(async () => {
         if (!user || !user.id) {
             setIsLoading(false);
@@ -67,33 +65,24 @@ function AppliedJobsPage({ user, initialFilter, setInitialFilter, handleViewJobD
         }
     }, [user]);
 
-    // --- Filter applications by tab ---
     const filterApplications = useCallback((applicationsToFilter, tab) => {
         if (tab === 'All') {
             setFilteredApplications(applicationsToFilter);
-        } else if (tab === 'Closed') { // Filter by job_status for 'Closed'
+        } else if (tab === 'Closed') {
             setFilteredApplications(applicationsToFilter.filter(app => app.job_status === 'closed'));
-        } else if (tab === 'Deleted') { // Filter by job_status for 'Deleted'
-            setFilteredApplications(applicationsToFilter.filter(app => 
-                app.job_status !== 'active' && app.job_status !== 'draft' && app.job_status !== 'closed'
-            ));
-        }
-        else { // Filter by application_status for other tabs
-            setFilteredApplications(applicationsToFilter.filter(app => app.application_status.toLowerCase() === tab.toLowerCase()));
+        } else {
+            setFilteredApplications(applicationsToFilter.filter(app => app.application_status?.toLowerCase() === tab.toLowerCase()));
         }
     }, []);
 
-    // --- Fetch applications on mount ---
     useEffect(() => {
         fetchApplicationDetails();
     }, [fetchApplicationDetails]);
 
-    // --- Filter applications when tab or data changes ---
     useEffect(() => {
         filterApplications(allApplications, activeTab);
     }, [activeTab, allApplications, filterApplications]);
 
-    // --- Reset initial filter on unmount ---
     useEffect(() => {
         return () => {
             if (setInitialFilter) {
@@ -102,7 +91,6 @@ function AppliedJobsPage({ user, initialFilter, setInitialFilter, handleViewJobD
         };
     }, [setInitialFilter]);
     
-    // --- Handle tab click ---
     const handleTabClick = (tab) => {
         setActiveTab(tab);
         if (setInitialFilter) {
@@ -110,34 +98,39 @@ function AppliedJobsPage({ user, initialFilter, setInitialFilter, handleViewJobD
         }
     };
 
-    // --- Show loading spinner if user is not loaded ---
     if (!user) {
         return <LoadingSpinner />;
     }
 
-    // --- Main Render: Applications table and filter tabs ---
     return (
-        <div 
-            className="p-6 md:p-8 min-h-screen text-gray-800"
-            style={{
-                background: 'linear-gradient(to bottom right, #BFDDFF, #ffffff)'
-            }}
-        >
-            <div className="max-w-7xl mx-auto">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-                    <h2 className="text-2xl md:text-3xl font-bold text-gray-800">My Applications</h2>
+        <div className="p-4 sm:p-8 min-h-screen bg-[#F8FAFC] text-slate-800">
+            <div className="max-w-7xl mx-auto space-y-6">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                        <div className="flex items-center gap-2 mb-1.5">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-200">
+                                📋 Application Tracker
+                            </span>
+                        </div>
+                        <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                            My Part-Time Applications
+                        </h2>
+                        <p className="text-slate-500 text-xs sm:text-sm mt-0.5">
+                            Monitor employer reviews, interviews, and job acceptance statuses in real time.
+                        </p>
+                    </div>
                 </div>
 
                 {/* Filter Tabs */}
-                <div className="bg-white p-1 rounded-lg flex flex-wrap gap-1 mb-6 shadow-sm border border-gray-200">
+                <div className="bg-white p-1.5 rounded-2xl flex flex-wrap gap-1.5 shadow-sm border border-slate-200/90">
                     {tabs.map(tab => (
                         <button
                             key={tab}
                             onClick={() => handleTabClick(tab)}
-                            className={`px-3 py-2 rounded-md font-medium text-sm transition-colors ${
+                            className={`px-4 py-2 rounded-xl font-bold text-xs transition-all ${
                                 activeTab === tab 
-                                    ? 'bg-blue-500 text-white shadow-sm' 
-                                    : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600'
+                                    ? 'bg-emerald-700 text-white shadow-xs' 
+                                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                             }`}
                         >
                             {tab}
@@ -146,64 +139,69 @@ function AppliedJobsPage({ user, initialFilter, setInitialFilter, handleViewJobD
                 </div>
 
                 {/* Applications Table */}
-                <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
+                <div className="bg-white rounded-2xl shadow-card overflow-hidden border border-slate-200/90">
                     <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-blue-50">
+                        <table className="min-w-full divide-y divide-slate-200">
+                            <thead className="bg-slate-50/80">
                                 <tr>
-                                    <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Job Title</th>
-                                    <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Company</th>
-                                    <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Date Applied</th>
-                                    <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Application Status</th> {/* Renamed for clarity */}
-                                    <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Job Status</th> {/* NEW: Job Status Column */}
-                                    <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider">Actions</th>
+                                    <th className="px-5 py-3.5 text-left text-[11px] font-black text-slate-500 uppercase tracking-wider">Job Role</th>
+                                    <th className="px-5 py-3.5 text-left text-[11px] font-black text-slate-500 uppercase tracking-wider">Employer</th>
+                                    <th className="px-5 py-3.5 text-left text-[11px] font-black text-slate-500 uppercase tracking-wider">Date Applied</th>
+                                    <th className="px-5 py-3.5 text-left text-[11px] font-black text-slate-500 uppercase tracking-wider">Application Status</th>
+                                    <th className="px-5 py-3.5 text-left text-[11px] font-black text-slate-500 uppercase tracking-wider">Vacancy Status</th>
+                                    <th className="px-5 py-3.5 text-right text-[11px] font-black text-slate-500 uppercase tracking-wider">Action</th>
                                 </tr>
                             </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
+                            <tbody className="bg-white divide-y divide-slate-100">
                                 {isLoading ? (
-                                    <tr><td colSpan="6" className="text-center py-8 text-gray-500"><LoadingSpinner /></td></tr>
+                                    <tr><td colSpan="6" className="text-center py-12 text-slate-400"><LoadingSpinner /></td></tr>
                                 ) : error ? (
-                                    <tr><td colSpan="6" className="text-center py-8 bg-red-50 text-red-600">{error}</td></tr>
+                                    <tr><td colSpan="6" className="text-center py-10 bg-rose-50 text-rose-600 font-semibold">{error}</td></tr>
                                 ) : filteredApplications.length > 0 ? (
                                     filteredApplications.map(app => (
-                                        <tr key={app.job_id} className="hover:bg-blue-50 transition-colors duration-150">
-                                            <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{app.job_title}</td>
-                                            <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-600">{app.publisher_name}</td>
-                                            <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                        <tr key={app.job_id} className="hover:bg-slate-50/80 transition-colors">
+                                            <td className="px-5 py-4 whitespace-nowrap">
+                                                <span className="text-sm font-extrabold text-slate-900 block">
+                                                    {app.job_title}
+                                                </span>
+                                            </td>
+                                            <td className="px-5 py-4 whitespace-nowrap text-xs font-semibold text-slate-600">
+                                                {app.publisher_name}
+                                            </td>
+                                            <td className="px-5 py-4 whitespace-nowrap text-xs text-slate-500">
                                                 {new Date(app.applied_at).toLocaleDateString('en-US', {
                                                     year: 'numeric',
                                                     month: 'short',
                                                     day: 'numeric'
                                                 })}
                                             </td>
-                                            <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">
+                                            <td className="px-5 py-4 whitespace-nowrap text-xs">
                                                 <StatusBadge status={app.application_status} />
                                             </td>
-                                            {/* NEW: Job Status Column */}
-                                            <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">
-                                                {app.job_status === 'active' && <StatusBadge status="active" />}
-                                                {app.job_status === 'closed' && <StatusBadge status="closed" />}
-                                                {app.job_status === 'draft' && <StatusBadge status="pending" />} {/* Treat draft as pending for student view */}
-                                                {/* If job_status is not active, closed, or draft, assume it's deleted */}
-                                                {!['active', 'closed', 'draft'].includes(app.job_status) && <StatusBadge status="deleted" />}
+                                            <td className="px-5 py-4 whitespace-nowrap text-xs">
+                                                <StatusBadge status={app.job_status || 'active'} />
                                             </td>
-                                            <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                {/* Enable/Disable View button based on job_status */}
+                                            <td className="px-5 py-4 whitespace-nowrap text-right text-xs font-bold">
                                                 {app.job_status === 'active' ? (
                                                     <button 
                                                         onClick={() => handleViewJobDetails(app)}
-                                                        className="text-blue-500 hover:text-blue-600 hover:underline transition-colors duration-200"
+                                                        className="text-emerald-700 hover:text-emerald-800 hover:underline px-3 py-1.5 rounded-lg hover:bg-emerald-50 transition-colors"
                                                     >
-                                                        View
+                                                        View Job →
                                                     </button>
                                                 ) : (
-                                                    <span className="text-gray-400 cursor-not-allowed">View</span>
+                                                    <span className="text-slate-400 cursor-not-allowed">Closed</span>
                                                 )}
                                             </td>
                                         </tr>
                                     ))
                                 ) : (
-                                    <tr><td colSpan="6" className="px-6 py-8 text-center text-gray-500 bg-gray-50">No applications found for this status.</td></tr>
+                                    <tr>
+                                        <td colSpan="6" className="px-6 py-12 text-center text-slate-400 bg-slate-50/50">
+                                            <p className="font-bold text-sm text-slate-600">No applications found in this category.</p>
+                                            <p className="text-xs text-slate-400 mt-1">Explore available part-time jobs and apply today.</p>
+                                        </td>
+                                    </tr>
                                 )}
                             </tbody>
                         </table>

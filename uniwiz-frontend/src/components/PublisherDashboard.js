@@ -77,12 +77,12 @@ const BriefcaseIcon = (
       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
     </svg>
   );
-  // Stat card color mapping
+  // Stat card color mapping (Bespoke Emerald & Amber)
   const statCardColors = {
-    activeJobs: { bg: 'bg-accent-blue-light', text: 'text-accent-blue-dark' },
-    totalApplicants: { bg: 'bg-accent-purple-light', text: 'text-accent-purple-dark' },
-    pending: { bg: 'bg-accent-pink-light', text: 'text-accent-pink-dark' },
-    studentReviews: { bg: 'bg-yellow-100', text: 'text-yellow-700' },
+    activeJobs: { bg: 'bg-emerald-50 text-emerald-800 border border-emerald-200/80' },
+    totalApplicants: { bg: 'bg-teal-50 text-teal-800 border border-teal-200/80' },
+    pending: { bg: 'bg-amber-50 text-amber-800 border border-amber-200/80' },
+    studentReviews: { bg: 'bg-emerald-50 text-emerald-800 border border-emerald-200/80' },
   };
 
 // --- StarRating: Displays a row of stars for average rating ---
@@ -279,19 +279,24 @@ function PublisherDashboard({ user, onPostJobClick, onViewAllJobsClick, onViewAp
                         ) : null}
                     </div>
                 )}
-                {/* --- Modern Header Banner --- */}
-                <div className="relative rounded-3xl bg-gradient-to-r from-slate-900 via-purple-950 to-slate-900 p-6 sm:p-8 text-white shadow-xl overflow-hidden">
-                    <div className="absolute top-0 right-0 w-80 h-80 rounded-full bg-purple-500/20 blur-3xl pointer-events-none" />
+                {/* --- Modern Header Banner: Deep Pine & Emerald --- */}
+                <div className="relative rounded-3xl bg-gradient-to-r from-[#031f19] via-[#07362d] to-[#041d17] p-6 sm:p-8 text-white shadow-xl overflow-hidden border border-emerald-900/40">
+                    <div className="absolute top-0 right-0 w-80 h-80 rounded-full bg-emerald-500/15 blur-3xl pointer-events-none" />
                     <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
                         <div>
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-purple-500/20 text-purple-300 ring-1 ring-purple-400/30 mb-3">
-                                Employer Workspace
-                            </span>
-                            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+                            <div className="flex items-center gap-2 mb-2">
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 ring-1 ring-emerald-400/30">
+                                    🏢 Employer Hiring Workspace
+                                </span>
+                                <span className="text-xs font-semibold text-emerald-200/70">
+                                    Vetted University Talent
+                                </span>
+                            </div>
+                            <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
                                 Welcome back, {user?.company_name || user?.first_name || 'Employer'}! 🏢
                             </h1>
-                            <p className="text-slate-300 text-sm mt-1 max-w-xl">
-                                Track active job postings, review student applications, and connect with top undergraduate talent.
+                            <p className="text-emerald-100/80 text-xs sm:text-sm mt-1 max-w-xl">
+                                Manage part-time vacancies, review verified student applications, and message candidates in real time.
                             </p>
                         </div>
                         
@@ -299,7 +304,7 @@ function PublisherDashboard({ user, onPostJobClick, onViewAllJobsClick, onViewAp
                             whileHover={{ scale: 1.03 }}
                             whileTap={{ scale: 0.98 }}
                             onClick={() => onPostJobClick()}
-                            className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-xs sm:text-sm px-6 py-3 rounded-xl shadow-lg shadow-purple-500/25 hover:shadow-purple-500/35 transition-all"
+                            className="inline-flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs sm:text-sm px-6 py-3 rounded-xl shadow-md transition-all"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                                 <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />

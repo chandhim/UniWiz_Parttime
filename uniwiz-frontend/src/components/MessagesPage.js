@@ -25,7 +25,7 @@ const AppProblemModal = ({ isOpen, onClose, onSubmit }) => {
                 <h2 className="text-lg font-bold text-slate-900 mb-2">Report App Problem</h2>
                 <p className="text-xs text-slate-500 mb-4">Describe the issue or bug you encountered. This will be sent directly to the dev team.</p>
                 <textarea
-                    className="w-full p-3 border border-slate-300 rounded-xl text-sm focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all"
+                    className="w-full p-3 border border-slate-300 rounded-xl text-sm focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 focus:outline-none transition-all"
                     rows="4"
                     value={reason}
                     onChange={(e) => setReason(e.target.value)}
@@ -33,7 +33,7 @@ const AppProblemModal = ({ isOpen, onClose, onSubmit }) => {
                 ></textarea>
                 <div className="mt-4 flex justify-end space-x-2">
                     <button onClick={onClose} className="px-4 py-2 bg-slate-100 text-slate-700 text-xs font-bold rounded-xl hover:bg-slate-200 transition-colors">Cancel</button>
-                    <button onClick={handleSubmit} className="px-4 py-2 bg-indigo-600 text-white text-xs font-bold rounded-xl hover:bg-indigo-700 transition-colors shadow-sm">Submit</button>
+                    <button onClick={handleSubmit} className="px-4 py-2 bg-emerald-600 text-white text-xs font-bold rounded-xl hover:bg-emerald-700 transition-colors shadow-xs">Submit</button>
                 </div>
             </div>
         </div>
@@ -50,12 +50,12 @@ const ConversationItem = ({ conversation, onSelect, isActive }) => {
             onClick={() => onSelect(conversation)}
             className={`w-full text-left p-3.5 flex items-center gap-3 transition-all duration-200 border-b border-slate-100 relative ${
                 isActive 
-                    ? 'bg-indigo-50/70 border-l-4 border-l-indigo-600' 
+                    ? 'bg-emerald-50/80 border-l-4 border-l-emerald-600' 
                     : 'hover:bg-slate-50'
             }`}
         >
             <div className="relative flex-shrink-0">
-                <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 text-white font-bold flex items-center justify-center text-sm shadow-sm overflow-hidden">
+                <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-emerald-700 to-teal-500 text-white font-black flex items-center justify-center text-sm shadow-xs overflow-hidden ring-1 ring-emerald-500/20">
                     {conversation.profile_image_url ? (
                         <img 
                             src={`${API_BASE_URL}/${conversation.profile_image_url}`}
@@ -69,15 +69,15 @@ const ConversationItem = ({ conversation, onSelect, isActive }) => {
                 </div>
                 {conversation.unread_count > 0 && (
                     <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-3 w-3 bg-rose-500 ring-2 ring-white"></span>
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500 ring-2 ring-white"></span>
                     </span>
                 )}
             </div>
 
             <div className="flex-grow min-w-0">
                 <div className="flex justify-between items-baseline mb-0.5">
-                    <p className={`font-bold text-xs sm:text-sm truncate ${isActive ? 'text-indigo-950 font-extrabold' : 'text-slate-800'}`}>
+                    <p className={`font-bold text-xs sm:text-sm truncate ${isActive ? 'text-emerald-950 font-extrabold' : 'text-slate-800'}`}>
                         {displayName}
                     </p>
                     {conversation.last_message_time && (
@@ -91,7 +91,7 @@ const ConversationItem = ({ conversation, onSelect, isActive }) => {
                         {conversation.last_message || 'Start a conversation...'}
                     </p>
                     {conversation.unread_count > 0 && (
-                        <span className="ml-2 bg-indigo-600 text-white text-[10px] font-extrabold rounded-full h-4 min-w-[16px] px-1 flex items-center justify-center">
+                        <span className="ml-2 bg-emerald-600 text-white text-[10px] font-extrabold rounded-full h-4 min-w-[16px] px-1.5 flex items-center justify-center">
                             {conversation.unread_count}
                         </span>
                     )}
@@ -226,14 +226,14 @@ function MessagesPage({ user, setPage, conversationContext, setConversationConte
             <div className="max-w-7xl mx-auto space-y-6">
                 <div className="flex items-center justify-between">
                     <div>
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 border border-indigo-100 mb-2">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-200 mb-2">
                             Direct Communication
                         </span>
-                        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Messages</h1>
+                        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Messages</h1>
                     </div>
                     <button 
                         onClick={() => setAppProblemModalOpen(true)}
-                        className="text-xs font-bold text-slate-500 hover:text-indigo-600 flex items-center gap-1.5 p-2 rounded-xl hover:bg-slate-100 transition-all"
+                        className="text-xs font-bold text-slate-500 hover:text-emerald-700 flex items-center gap-1.5 p-2 rounded-xl hover:bg-slate-100 transition-all"
                     >
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -243,7 +243,7 @@ function MessagesPage({ user, setPage, conversationContext, setConversationConte
                 </div>
 
                 {/* Main Split Chat Layout */}
-                <div className="bg-white rounded-3xl shadow-sm border border-slate-200/90 h-[calc(100vh-13rem)] flex overflow-hidden">
+                <div className="bg-white rounded-3xl shadow-card border border-slate-200/90 h-[calc(100vh-13rem)] flex overflow-hidden">
                     {/* Left Panel: Conversation List */}
                     <div className="w-full md:w-1/3 border-r border-slate-200 flex flex-col">
                         <div className="p-3.5 border-b border-slate-100 bg-slate-50/50">
@@ -251,7 +251,7 @@ function MessagesPage({ user, setPage, conversationContext, setConversationConte
                                 <input 
                                     type="text" 
                                     placeholder="Search conversations..." 
-                                    className="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all"
+                                    className="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all"
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                 />
@@ -297,12 +297,12 @@ function MessagesPage({ user, setPage, conversationContext, setConversationConte
                         ) : (
                             <div className="flex-grow flex items-center justify-center bg-slate-50/50 p-8">
                                 <div className="text-center max-w-sm">
-                                    <div className="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 mx-auto flex items-center justify-center mb-4 shadow-sm">
+                                    <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-700 mx-auto flex items-center justify-center mb-4 shadow-xs ring-1 ring-emerald-500/20">
                                         <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                         </svg>
                                     </div>
-                                    <h3 className="text-base font-bold text-slate-800 mb-1">Select a Conversation</h3>
+                                    <h3 className="text-base font-extrabold text-slate-800 mb-1">Select a Conversation</h3>
                                     <p className="text-xs text-slate-500 leading-relaxed">
                                         Choose a chat on the left to start communicating in real-time with employers and candidates.
                                     </p>

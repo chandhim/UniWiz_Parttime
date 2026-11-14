@@ -59,7 +59,7 @@ const JobCard = ({ job, onRemove, onViewDetails, onApply }) => {
             {/* Job details */}
             <div className="space-y-2 mb-4">
                 <div className="flex items-center space-x-4 text-sm text-gray-600">
-                    <span className={`px-2 py-1 rounded-md text-xs font-medium ${colorClass.bg} ${colorClass.text}`}>
+                    <span className={`px-2 py-1 rounded-md text-xs font-medium ${colorClass}`}>
                         {categoryName}
                     </span>
                     <span className="flex items-center">
@@ -100,13 +100,13 @@ const JobCard = ({ job, onRemove, onViewDetails, onApply }) => {
                 <div className="flex space-x-2">
                     <button 
                         onClick={() => onViewDetails(job)}
-                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+                        className="px-4 py-2 text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors"
                     >
                         View Details
                     </button>
                     <button 
                         onClick={() => onApply(job)}
-                        className="px-4 py-2 text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 rounded-lg transition-colors"
+                        className="px-4 py-2 text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-colors shadow-xs"
                     >
                         Apply Now
                     </button>
