@@ -37,9 +37,9 @@ if ($data === null || !isset($data->notification_id) || !isset($data->user_id)) 
 }
 
 try {
-    // Update the notification status to 'read' (is_read = 1)
+    // Update the notification status to 'read' (is_read = TRUE)
     // Also check that the notification belongs to the user making the request for security.
-    $query = "UPDATE notifications SET is_read = 1 WHERE id = :notification_id AND user_id = :user_id";
+    $query = "UPDATE notifications SET is_read = TRUE WHERE id = :notification_id AND user_id = :user_id";
     $stmt = $db->prepare($query);
 
     // Sanitize and bind parameters

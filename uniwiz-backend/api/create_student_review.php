@@ -146,7 +146,7 @@ try {
             $notification_message = "$publisher_name has left a $rating-star review for your work.";
             $notification_link = "/profile"; // Link to student profile page
 
-            $query_notification = "INSERT INTO notifications (user_id, type, message, link, is_read) VALUES (:user_id, 'review_received', :message, :link, 0)";
+            $query_notification = "INSERT INTO notifications (user_id, type, message, link, is_read) VALUES (:user_id, 'review_received', :message, :link, FALSE)";
             $stmt_notification = $db->prepare($query_notification);
             $stmt_notification->bindParam(':user_id', $student_id);
             $stmt_notification->bindParam(':message', $notification_message);

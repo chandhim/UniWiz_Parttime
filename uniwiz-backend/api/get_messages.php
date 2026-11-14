@@ -31,7 +31,7 @@ try {
     $db->beginTransaction(); // Start transaction for atomicity
 
     // --- Mark messages as read for this user in this conversation ---
-    $query_update = "UPDATE messages SET is_read = 1 WHERE conversation_id = :conversation_id AND receiver_id = :user_id AND is_read = 0";
+    $query_update = "UPDATE messages SET is_read = TRUE WHERE conversation_id = :conversation_id AND receiver_id = :user_id AND is_read = FALSE";
     $stmt_update = $db->prepare($query_update);
     $stmt_update->bindParam(':conversation_id', $conversation_id, PDO::PARAM_INT);
     $stmt_update->bindParam(':user_id', $user_id, PDO::PARAM_INT);

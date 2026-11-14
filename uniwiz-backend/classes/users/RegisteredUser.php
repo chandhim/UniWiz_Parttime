@@ -131,7 +131,7 @@ abstract class RegisteredUser extends User {
         $params = ['user_id' => $this->id];
         
         if ($unreadOnly) {
-            $sql .= " AND is_read = 0";
+            $sql .= " AND is_read = false";
         }
         
         $sql .= " ORDER BY created_at DESC";

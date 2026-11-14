@@ -37,12 +37,12 @@ try {
             u.profile_image_url,
             (SELECT message_text FROM messages WHERE conversation_id = c.id ORDER BY created_at DESC LIMIT 1) as last_message,
             (SELECT created_at FROM messages WHERE conversation_id = c.id ORDER BY created_at DESC LIMIT 1) as last_message_time,
-            (SELECT COUNT(*) FROM messages WHERE conversation_id = c.id AND receiver_id = :user_id AND is_read = 0) as unread_count
+            (SELECT COUNT(*) FROM messages WHERE conversation_id = c.id AND receiver_id = :user_id AND is_read = false) as unread_count
         FROM conversations c
-        JOIN users u ON u.id = IF(c.user_one_id = :user_id, c.user_two_id, c.user_one_id)
+        JOIN users u ON u.id = CASE WHEN c.user_one_id = :user_id THEN c.user_two_id ELSE c.user_one_id END
         LEFT JOIN jobs j ON c.job_id = j.id 
         WHERE (c.user_one_id = :user_id OR c.user_two_id = :user_id)
-        ORDER BY last_message_time DESC
+        ORDER BY last_message_time DESC NULLS LAST
     ";
     
     $stmt = $db->prepare($query);
@@ -50,6 +50,12 @@ try {
     $stmt->execute();
     
     $conversations = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Format unread_count as integer for frontend
+    foreach ($conversations as &$conv) {
+        $conv['unread_count'] = (int)($conv['unread_count'] ?? 0);
+    }
+    unset($conv);
     
     http_response_code(200);
     echo json_encode($conversations);
