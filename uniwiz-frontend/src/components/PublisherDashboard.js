@@ -219,23 +219,8 @@ function PublisherDashboard({ user, onPostJobClick, onViewAllJobsClick, onViewAp
     // --- State hooks for stats, loading, error, and verification messages ---
     const [stats, setStats] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [showVerifyMsg, setShowVerifyMsg] = useState(false);
     const isVerified = user && (user.is_verified === true || user.is_verified === 1);
-    const prevIsVerifiedRef = useRef(user && (user.is_verified === true || user.is_verified === 1));
-    const [showPostVerifyMessage, setShowPostVerifyMessage] = useState(false);
     const [showPendingAdminVerification, setShowPendingAdminVerification] = useState(false);
-
-    // --- Show post-verification message if just verified ---
-    useEffect(() => {
-        const isVerified = user && (user.is_verified === true || user.is_verified === 1);
-        if (prevIsVerifiedRef.current === false && isVerified === true) {
-            setShowPostVerifyMessage(true);
-            const timer = setTimeout(() => setShowPostVerifyMessage(false), 60000);
-            return () => clearTimeout(timer);
-        }
-        prevIsVerifiedRef.current = isVerified;
-    }, [user]);
 
     // --- Show pending admin verification message if docs uploaded ---
     useEffect(() => {
@@ -280,11 +265,6 @@ function PublisherDashboard({ user, onPostJobClick, onViewAllJobsClick, onViewAp
                 background: 'linear-gradient(to bottom right, #A980FF, #ffffff)'
             }}
         >
-            {showVerifyMsg && (
-                <div className="mb-4 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 rounded">
-                    Please verify your account before posting a job.
-                </div>
-            )}
             <div className="max-w-6xl mx-auto">
                 {/* --- Profile Completion Card for Publisher --- */}
                 {user && user.role === 'publisher' && !isVerified && (

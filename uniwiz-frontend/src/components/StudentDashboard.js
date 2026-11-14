@@ -163,14 +163,6 @@ function StudentDashboard({ currentUser, handleApply, setPage, setPublisherIdFor
 
     // Verification no longer blocks applying
 
-    const [showPostVerifyMessage, setShowPostVerifyMessage] = useState(currentUser && currentUser.is_verified);
-    useEffect(() => {
-        if (currentUser && currentUser.is_verified) {
-            setShowPostVerifyMessage(true);
-            const timer = setTimeout(() => setShowPostVerifyMessage(false), 60000);
-            return () => clearTimeout(timer);
-        }
-    }, [currentUser]);
 
     // --- Fetch student stats from backend ---
     useEffect(() => {
@@ -234,8 +226,6 @@ function StudentDashboard({ currentUser, handleApply, setPage, setPublisherIdFor
         views: { bg: 'bg-accent-pink-light', text: 'text-accent-pink-dark' },
     };
 
-    // Only show warning if not verified AND profile not complete
-    const showVerificationWarning = currentUser && !currentUser.is_verified && (stats?.profile_completion_percentage ?? 0) < 100;
     return (
         <div 
             className="p-8 min-h-screen text-gray-800"
