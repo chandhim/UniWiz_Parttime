@@ -4,8 +4,8 @@
 // and includes vacancy and accepted counts in the Job Overview section.
 // It also features a modern, colorful UI for the stat cards.
 
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import StudentReviewsSection from './StudentReviewsSection';
 
 // --- StatCard: Displays a dashboard stat with icon and action ---
@@ -219,6 +219,7 @@ function PublisherDashboard({ user, onPostJobClick, onViewAllJobsClick, onViewAp
     // --- State hooks for stats, loading, error, and verification messages ---
     const [stats, setStats] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
     const isVerified = user && (user.is_verified === true || user.is_verified === 1);
     const [showPendingAdminVerification, setShowPendingAdminVerification] = useState(false);
 
@@ -259,43 +260,53 @@ function PublisherDashboard({ user, onPostJobClick, onViewAllJobsClick, onViewAp
 
     // --- Show message if verified but still restricted (e.g., after first login post-verification) ---
     return (
-        <div 
-            className="p-8 min-h-screen text-gray-800"
-            style={{
-                background: 'linear-gradient(to bottom right, #A980FF, #ffffff)'
-            }}
-        >
-            <div className="max-w-6xl mx-auto">
+        <div className="min-h-screen bg-[#F8FAFC] text-slate-800 p-4 sm:p-8">
+            <div className="max-w-7xl mx-auto space-y-8">
                 {/* --- Profile Completion Card for Publisher --- */}
                 {user && user.role === 'publisher' && !isVerified && (
-                    <div className={`mb-8 p-6 rounded-xl shadow-md border-2 ${isProfileComplete ? 'border-green-400 bg-green-50' : 'border-yellow-400 bg-yellow-50'}`}>
-                        <h3 className="text-xl font-bold mb-2 text-primary-dark">Profile Completion</h3>
+                    <div className={`p-6 rounded-2xl shadow-sm border ${isProfileComplete ? 'border-emerald-200 bg-emerald-50' : 'border-amber-200 bg-amber-50'}`}>
+                        <h3 className="text-base font-bold mb-1 text-slate-900">Profile Completion</h3>
                         {isProfileComplete && showPendingAdminVerification ? (
-                            <div className="flex items-center text-green-700 font-semibold">
-                                <svg className="h-6 w-6 mr-2 text-green-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                                Your profile is complete and pending admin verification.
+                            <div className="flex items-center text-emerald-700 text-sm font-semibold">
+                                <svg className="h-5 w-5 mr-2 text-emerald-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                                Your business profile is complete and pending admin verification.
                             </div>
                         ) : !isProfileComplete ? (
-                            <div className="flex items-center text-yellow-800 font-semibold">
-                                <svg className="h-6 w-6 mr-2 text-yellow-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01" /></svg>
+                            <div className="flex items-center text-amber-800 text-sm font-semibold">
+                                <svg className="h-5 w-5 mr-2 text-amber-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01" /></svg>
                                 <span>Account verification required: Please upload your <b>Business Registration Certificate (BR)</b> or <b>NIC</b> for admin review.</span>
                             </div>
                         ) : null}
                     </div>
                 )}
-                {/* --- Header --- */}
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
-                    <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
-                        <h1 className="text-3xl md:text-4xl font-bold text-gray-800">Welcome back, {user.first_name}!</h1>
-                        <p className="text-gray-500 mt-2">Here's your activity overview</p>
-                    </motion.div>
-                    
-                    <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }} onClick={() => {
-                        onPostJobClick();
-                    }} className="flex items-center space-x-2 bg-primary-main text-white px-5 py-2.5 rounded-lg hover:shadow-md transition-all duration-300 hover:bg-primary-dark mt-4 md:mt-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" /></svg>
-                        <span>Post New Job</span>
-                    </motion.button>
+                {/* --- Modern Header Banner --- */}
+                <div className="relative rounded-3xl bg-gradient-to-r from-slate-900 via-purple-950 to-slate-900 p-6 sm:p-8 text-white shadow-xl overflow-hidden">
+                    <div className="absolute top-0 right-0 w-80 h-80 rounded-full bg-purple-500/20 blur-3xl pointer-events-none" />
+                    <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                        <div>
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-purple-500/20 text-purple-300 ring-1 ring-purple-400/30 mb-3">
+                                Employer Workspace
+                            </span>
+                            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+                                Welcome back, {user?.company_name || user?.first_name || 'Employer'}! 🏢
+                            </h1>
+                            <p className="text-slate-300 text-sm mt-1 max-w-xl">
+                                Track active job postings, review student applications, and connect with top undergraduate talent.
+                            </p>
+                        </div>
+                        
+                        <motion.button
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => onPostJobClick()}
+                            className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-xs sm:text-sm px-6 py-3 rounded-xl shadow-lg shadow-purple-500/25 hover:shadow-purple-500/35 transition-all"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                            </svg>
+                            <span>Post New Vacancy</span>
+                        </motion.button>
+                    </div>
                 </div>
 
                 {/* --- Stats Grid --- */}

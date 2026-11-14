@@ -1,7 +1,7 @@
 // FILE: src/components/FindJobsPage.js (UPDATED with Application Status)
 // =================================================================================
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { getCategoryColorClass } from '../utils/categoryColors';
 
 // --- Constants ---
@@ -238,122 +238,171 @@ function FindJobsPage({ currentUser, handleApply, setPage, setPublisherIdForProf
     };
 
     return (
-        <div 
-            className="p-6 md:p-8 min-h-screen text-gray-800"
-            style={{
-                background: 'linear-gradient(to bottom right, #BFDDFF, #ffffff)'
-            }}
-        >
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-                <div>
-                    <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Find Your Next Job</h1>
-                    <p className="text-gray-600 mt-2">Use the filters below to find your perfect match.</p>
+        <div className="p-4 sm:p-8 min-h-screen bg-[#F8FAFC] text-slate-800">
+            <div className="max-w-7xl mx-auto space-y-6">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 border border-indigo-100 mb-2">
+                            Explore Vacancies
+                        </span>
+                        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Find Your Next Job</h1>
+                        <p className="text-slate-500 text-xs sm:text-sm mt-1">Discover verified campus and remote opportunities across Sri Lanka.</p>
+                    </div>
                 </div>
-            </div>
 
-            {/* --- Ultra-Compact Filter Section --- */}
-            <div className="mb-6 p-3 bg-white rounded-xl shadow-sm border border-gray-200">
-                <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-8 gap-2 text-sm items-end">
-                    {/* --- Row 1 --- */}
-                    <div className="lg:col-span-2 md:col-span-4">
-                        <label className="block text-gray-600 font-medium mb-1">Search</label>
-                        <input type="text" placeholder="Job, company..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full p-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-blue-400" />
-                    </div>
-                    <div className="lg:col-span-2 md:col-span-2">
-                        <label className="block text-gray-600 font-medium mb-1">Category</label>
-                        <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} className="w-full p-2 rounded-lg border bg-white focus:ring-1 focus:ring-blue-400">
-                            <option value="">All Categories</option>
-                            {categories.map(cat => (<option key={cat.id} value={cat.id}>{cat.name}</option>))}
-                        </select>
-                    </div>
-                    <div className="lg:col-span-2 md:col-span-2">
-                        <label className="block text-gray-600 font-medium mb-1">Job Type</label>
-                        <select value={jobTypeFilter} onChange={(e) => setJobTypeFilter(e.target.value)} className="w-full p-2 rounded-lg border bg-white focus:ring-1 focus:ring-blue-400">
-                            <option value="">All Job Types</option>
-                            <option value="freelance">Freelance</option><option value="part-time">Part-time</option><option value="internship">Internship</option><option value="task-based">Task-based</option>
-                        </select>
-                    </div>
-                     <div className="lg:col-span-2 md:col-span-4">
-                        <label className="block text-gray-600 font-medium mb-1">District</label>
-                        <select value={selectedDistrict} onChange={(e) => setSelectedDistrict(e.target.value)} className="w-full p-2 rounded-lg border bg-white focus:ring-1 focus:ring-blue-400">
-                            <option value="">All Districts</option>
-                            {sriLankaDistricts.sort().map(dist => (<option key={dist} value={dist}>{dist}</option>))}
-                        </select>
-                    </div>
-
-                    {/* --- Row 2 --- */}
-                     <div className="lg:col-span-3 md:col-span-4">
-                        <label className="block text-gray-600 font-medium mb-1">Salary Range (LKR)</label>
-                        <div className="flex items-center gap-2">
+                {/* --- Ultra-Clean Filter Card --- */}
+                <div className="p-5 bg-white rounded-2xl border border-slate-200/80 shadow-sm">
+                    <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-8 gap-3 text-xs items-end">
+                        {/* --- Search --- */}
+                        <div className="lg:col-span-2 md:col-span-4">
+                            <label className="block text-slate-700 font-bold mb-1">Search Keywords</label>
                             <input
-                                type="number"
-                                min="0"
-                                max={maxSalary}
-                                value={minSalary}
-                                onChange={e => {
-                                    const val = Number(e.target.value);
-                                    setMinSalary(val);
-                                    if (val > maxSalary) setMaxSalary(val);
-                                }}
-                                className="w-24 p-2 rounded-lg border"
-                                placeholder="Min"
-                            />
-                            <span>-</span>
-                            <input
-                                type="number"
-                                min={minSalary}
-                                max={MAX_SALARY}
-                                value={maxSalary}
-                                onChange={e => setMaxSalary(Number(e.target.value))}
-                                className="w-24 p-2 rounded-lg border"
-                                placeholder="Max"
+                                type="text"
+                                placeholder="Job title, skill, or employer..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all"
                             />
                         </div>
-                    </div>
-                     <div className="lg:col-span-2 md:col-span-2">
-                        <label className="block text-gray-600 font-medium mb-1">Date Posted</label>
-                        <select value={postedDateFilter} onChange={(e) => setPostedDateFilter(e.target.value)} className="w-full p-2 rounded-lg border bg-white focus:outline-none focus:ring-1 focus:ring-blue-400">
-                            <option value="anytime">Anytime</option>
-                            <option value="24hours">Last 24h</option>
-                            <option value="7days">Last 7d</option>
-                            <option value="30days">Last 30d</option>
-                        </select>
-                    </div>
-                     <div className="lg:col-span-2 md:col-span-2">
-                        <label className="block text-gray-600 font-medium mb-1">Job Start Date</label>
-                        <input type="date" value={jobDateFrom} onChange={(e) => setJobDateFrom(e.target.value)} className="w-full p-2 rounded-lg border bg-white focus:ring-1 focus:ring-blue-400"/>
-                     </div>
-                    <button onClick={handleResetFilters} className="lg:col-span-1 md:col-span-2 w-full p-2 rounded-lg bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300">Reset</button>
-                </div>
-            </div>
+                        {/* --- Category --- */}
+                        <div className="lg:col-span-2 md:col-span-2">
+                            <label className="block text-slate-700 font-bold mb-1">Category</label>
+                            <select
+                                value={selectedCategory}
+                                onChange={(e) => setSelectedCategory(e.target.value)}
+                                className="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-xs text-slate-800 bg-white focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all cursor-pointer"
+                            >
+                                <option value="">All Categories</option>
+                                {categories.map(cat => (<option key={cat.id} value={cat.id}>{cat.name}</option>))}
+                            </select>
+                        </div>
+                        {/* --- Job Type --- */}
+                        <div className="lg:col-span-2 md:col-span-2">
+                            <label className="block text-slate-700 font-bold mb-1">Job Type</label>
+                            <select
+                                value={jobTypeFilter}
+                                onChange={(e) => setJobTypeFilter(e.target.value)}
+                                className="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-xs text-slate-800 bg-white focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all cursor-pointer"
+                            >
+                                <option value="">All Job Types</option>
+                                <option value="freelance">Freelance</option>
+                                <option value="part-time">Part-time</option>
+                                <option value="internship">Internship</option>
+                                <option value="task-based">Task-based</option>
+                            </select>
+                        </div>
+                        {/* --- District --- */}
+                        <div className="lg:col-span-2 md:col-span-4">
+                            <label className="block text-slate-700 font-bold mb-1">District</label>
+                            <select
+                                value={selectedDistrict}
+                                onChange={(e) => setSelectedDistrict(e.target.value)}
+                                className="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-xs text-slate-800 bg-white focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all cursor-pointer"
+                            >
+                                <option value="">All Districts</option>
+                                {sriLankaDistricts.sort().map(dist => (<option key={dist} value={dist}>{dist}</option>))}
+                            </select>
+                        </div>
 
-            {isLoading ? <LoadingSpinner /> : error ? <div className="text-center text-red-500 py-16 bg-white rounded-xl">{`Failed to load jobs: ${error}`}</div> : (
-                <>
-                    <h2 className="text-xl font-bold text-gray-800 mb-4">Available Jobs ({filteredJobs.length} found)</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                        {filteredJobs.length > 0 ? filteredJobs.slice(0, visibleJobsCount).map(job => (
-                            <JobCard 
-                                key={job.id} 
-                                job={job} 
-                                currentUser={currentUser} 
-                                handleApply={handleApply} 
-                                handleViewCompanyProfile={handleViewCompanyProfile} 
-                                handleViewJobDetails={handleViewJobDetails} 
-                                applyingStatus={applyingStatus} 
-                                addToWishlist={addToWishlist}
-                                isInWishlist={isInWishlist}
+                        {/* --- Row 2 --- */}
+                        <div className="lg:col-span-3 md:col-span-4">
+                            <label className="block text-slate-700 font-bold mb-1">Salary Range (LKR)</label>
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="number"
+                                    min="0"
+                                    max={maxSalary}
+                                    value={minSalary}
+                                    onChange={e => {
+                                        const val = Number(e.target.value);
+                                        setMinSalary(val);
+                                        if (val > maxSalary) setMaxSalary(val);
+                                    }}
+                                    className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs"
+                                    placeholder="Min"
+                                />
+                                <span className="text-slate-400 font-bold">-</span>
+                                <input
+                                    type="number"
+                                    min={minSalary}
+                                    max={MAX_SALARY}
+                                    value={maxSalary}
+                                    onChange={e => setMaxSalary(Number(e.target.value))}
+                                    className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs"
+                                    placeholder="Max"
+                                />
+                            </div>
+                        </div>
+                        <div className="lg:col-span-2 md:col-span-2">
+                            <label className="block text-slate-700 font-bold mb-1">Date Posted</label>
+                            <select
+                                value={postedDateFilter}
+                                onChange={(e) => setPostedDateFilter(e.target.value)}
+                                className="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-xs text-slate-800 bg-white focus:outline-none focus:border-indigo-500 cursor-pointer"
+                            >
+                                <option value="anytime">Anytime</option>
+                                <option value="24hours">Last 24h</option>
+                                <option value="7days">Last 7d</option>
+                                <option value="30days">Last 30d</option>
+                            </select>
+                        </div>
+                        <div className="lg:col-span-2 md:col-span-2">
+                            <label className="block text-slate-700 font-bold mb-1">Job Start Date</label>
+                            <input
+                                type="date"
+                                value={jobDateFrom}
+                                onChange={(e) => setJobDateFrom(e.target.value)}
+                                className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-slate-800 bg-white focus:outline-none focus:border-indigo-500"
                             />
-                        )) : (
-                            <div className="col-span-3 text-center text-gray-500 py-16 bg-white rounded-xl shadow-sm border">No jobs found matching your criteria.</div>
+                        </div>
+                        <button
+                            onClick={handleResetFilters}
+                            className="lg:col-span-1 md:col-span-2 w-full py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-colors"
+                        >
+                            Reset
+                        </button>
+                    </div>
+                </div>
+
+                {isLoading ? <LoadingSpinner /> : error ? <div className="text-center text-rose-500 py-16 bg-white rounded-2xl border border-slate-200">{`Failed to load jobs: ${error}`}</div> : (
+                    <>
+                        <div className="flex items-center justify-between">
+                            <h2 className="text-base font-extrabold text-slate-900">
+                                Available Jobs ({filteredJobs.length} found)
+                            </h2>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {filteredJobs.length > 0 ? filteredJobs.slice(0, visibleJobsCount).map(job => (
+                                <JobCard 
+                                    key={job.id} 
+                                    job={job} 
+                                    currentUser={currentUser} 
+                                    handleApply={handleApply} 
+                                    handleViewCompanyProfile={handleViewCompanyProfile} 
+                                    handleViewJobDetails={handleViewJobDetails} 
+                                    applyingStatus={applyingStatus} 
+                                    addToWishlist={addToWishlist}
+                                    isInWishlist={isInWishlist}
+                                />
+                            )) : (
+                                <div className="col-span-3 text-center text-slate-500 py-16 bg-white rounded-2xl border border-slate-200 shadow-sm">
+                                    No jobs found matching your criteria. Try adjusting your filters.
+                                </div>
+                            )}
+                        </div>
+                        {visibleJobsCount < filteredJobs.length && (
+                            <div className="text-center mt-8">
+                                <button
+                                    onClick={() => setVisibleJobsCount(prev => prev + JOBS_PER_LOAD)}
+                                    className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-6 rounded-xl text-xs shadow-sm transition-all"
+                                >
+                                    Load More Jobs
+                                </button>
+                            </div>
                         )}
-                    </div>
-                    {visibleJobsCount < filteredJobs.length && (
-                        <div className="text-center mt-8">
-                            <button onClick={() => setVisibleJobsCount(prev => prev + JOBS_PER_LOAD)} className="bg-blue-500 text-white font-medium py-2.5 px-6 rounded-lg hover:bg-blue-600 shadow-sm">Load More</button>
-                        </div>
-                    )}
-                </>
-            )}
+                    </>
+                )}
+            </div>
         </div>
     );
 }

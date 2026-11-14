@@ -2,7 +2,7 @@
 // ====================================================================================
 // This component renders the sidebar navigation for publisher/admin users, with animated expand/collapse and notification dot.
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // --- NavLink: Reusable navigation link with icon, text, and notification dot ---
@@ -21,10 +21,10 @@ const NavLink = ({ icon, text, isActive, isExpanded, onClick, isLogout = false, 
         className={`w-full flex items-center transition-all duration-200
           ${!isExpanded ? 'px-3 justify-center' : 'px-4 justify-between'} 
           ${isActive
-            ? 'bg-gradient-to-r from-primary-light to-primary-lighter border-l-4 border-primary-main text-primary-dark shadow-sm py-3.5 rounded-lg' 
+            ? 'bg-purple-50/80 border-l-4 border-purple-600 text-purple-700 shadow-sm py-3.5 rounded-r-xl font-bold' 
             : isLogout
-              ? 'text-red-500 hover:bg-red-50 py-3 rounded-lg'
-              : 'text-gray-600 hover:bg-gray-50 py-3 rounded-lg'
+              ? 'text-rose-600 hover:bg-rose-50 py-3 rounded-xl'
+              : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 py-3 rounded-xl font-medium'
           }
         `}
       >
@@ -106,7 +106,7 @@ function Sidebar({ currentPage, setPage, onLogout, isLocked, toggleLock, hasUnre
     // --- Main Render: Sidebar layout ---
     return (
         <motion.aside 
-            className={`bg-white h-full flex-shrink-0 p-4 flex flex-col shadow-xl transition-all duration-200 ease-out relative z-20 ${isExpanded ? 'w-64' : 'w-20'}`}
+            className={`bg-white h-full flex-shrink-0 p-4 flex flex-col border-r border-slate-200/80 shadow-sm transition-all duration-200 ease-out relative z-20 ${isExpanded ? 'w-64' : 'w-20'}`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             initial={{ width: isLocked ? 256 : 80 }}
@@ -120,17 +120,21 @@ function Sidebar({ currentPage, setPage, onLogout, isLocked, toggleLock, hasUnre
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -10 }}
-                      className="flex items-center gap-3"
+                      className="flex items-center gap-2.5"
                     >
-                        <img src="/logo.png" alt="UniWiz Logo" className="h-12" />
-                        <motion.h1 className="text-xl font-bold text-primary-dark">UniWiz</motion.h1>
+                        <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-sm">
+                          UW
+                        </div>
+                        <motion.h1 className="text-lg font-extrabold bg-gradient-to-r from-slate-900 to-purple-700 bg-clip-text text-transparent">UniWiz</motion.h1>
                     </motion.div>
                   )}
                 </AnimatePresence>
                 
                 {!isExpanded && (
                     <div className="flex justify-center w-full">
-                        <img src="/logo.png" alt="UniWiz Logo" className="h-12" />
+                        <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-sm">
+                          UW
+                        </div>
                     </div>
                 )}
                 
