@@ -4,7 +4,7 @@
 // This endpoint allows publishers to create a new job post, including payment calculation and admin notifications.
 
 // --- Headers, DB Connection ---
-header("Access-Control-Allow-Origin: http://localhost:3000"); // Allow requests from frontend
+header('Access-Control-Allow-Origin: ' . (getenv('FRONTEND_URL') ?: 'http://localhost:3000')); // Allow requests from frontend
 header("Content-Type: application/json; charset=UTF-8"); // Respond with JSON
 header("Access-Control-Allow-Methods: POST, OPTIONS"); // Allow POST and OPTIONS methods
 header("Access-Control-Max-Age: 3600");

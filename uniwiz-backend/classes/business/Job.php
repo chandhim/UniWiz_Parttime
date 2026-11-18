@@ -121,7 +121,7 @@ class Job {
         }
         
         if (isset($filters['search'])) {
-            $sql .= " AND (j.title LIKE :search OR j.description LIKE :search)";
+            $sql .= " AND (LOWER(j.title) LIKE LOWER(:search) OR LOWER(j.description) LIKE LOWER(:search))";
             $params['search'] = '%' . $filters['search'] . '%';
         }
         

@@ -2,8 +2,8 @@
 // =================================================================================
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { API_BASE_URL } from '../config';
 
-const API_BASE_URL = 'http://uniwiz-backend.test/api';
 
 // --- StatCard: Displays a dashboard stat with icon and action ---
 const ModernStatCard = ({ title, value, icon, onLinkClick, description, gradient, textColor }) => (
@@ -243,7 +243,7 @@ function StudentDashboard({
       if (!currentUser || !currentUser.id) return;
       setIsLoadingStats(true);
       try {
-        const response = await fetch(`http://uniwiz-backend.test/api/get_student_stats.php?student_id=${currentUser.id}`);
+        const response = await fetch(`${API_BASE_URL}/get_student_stats.php?student_id=${currentUser.id}`);
         const data = await response.json();
         if (response.ok) setStats(data);
         else throw new Error(data.message || 'Failed to fetch student stats.');
@@ -261,7 +261,7 @@ function StudentDashboard({
       if (!currentUser || !currentUser.id) return;
       setIsLoadingJobs(true);
       try {
-        const response = await fetch(`http://uniwiz-backend.test/api/get_recommended_jobs.php?student_id=${currentUser.id}`);
+        const response = await fetch(`${API_BASE_URL}/get_recommended_jobs.php?student_id=${currentUser.id}`);
         const data = await response.json();
         if (response.ok) setRecommendedJobs(data);
         else throw new Error(data.message || 'Failed to fetch recommended jobs.');

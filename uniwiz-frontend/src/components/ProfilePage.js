@@ -1,5 +1,6 @@
 // FILE: src/components/ProfilePage.js (ENHANCED for Full Image Management & Suggestions)
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { API_BASE_URL } from '../config';
 
 // Reusable Notification Component
 const Notification = ({ message, type, onClose }) => {
@@ -88,7 +89,7 @@ function ProfilePage({ user, onProfileUpdate }) {
     const fetchPublisherImages = useCallback(async () => {
         if (user && user.role === 'publisher') {
             try {
-                const response = await fetch(`http://uniwiz-backend.test/api/get_company_profile.php?publisher_id=${user.id}`);
+                const response = await fetch(`${API_BASE_URL}/get_company_profile.php?publisher_id=${user.id}`);
                 const data = await response.json();
                 if (response.ok && data.gallery_images) {
                     setExistingGalleryImages(data.gallery_images);
@@ -112,8 +113,8 @@ function ProfilePage({ user, onProfileUpdate }) {
                 languages_spoken: user.languages_spoken || '', preferred_categories: user.preferred_categories || '',
                 skills: user.skills || '',
             });
-            setProfilePicturePreview(user.profile_image_url ? `http://uniwiz-backend.test/api/${user.profile_image_url}` : null);
-            setCoverImagePreview(user.cover_image_url ? `http://uniwiz-backend.test/api/${user.cover_image_url}` : null);
+            setProfilePicturePreview(user.profile_image_url ? `${API_BASE_URL}/${user.profile_image_url}` : null);
+            setCoverImagePreview(user.cover_image_url ? `${API_BASE_URL}/${user.cover_image_url}` : null);
             fetchPublisherImages();
         }
 
@@ -121,7 +122,7 @@ function ProfilePage({ user, onProfileUpdate }) {
         if (user && user.role === 'student') {
             const fetchSuggestions = async () => {
                 try {
-                    const response = await fetch('http://uniwiz-backend.test/api/get_suggestions.php');
+                    const response = await fetch(`${API_BASE_URL}/get_suggestions.php`);
                     const data = await response.json();
                     if (response.ok) {
                         setSuggestions({
@@ -239,7 +240,7 @@ function ProfilePage({ user, onProfileUpdate }) {
         if (user.role === 'publisher' && selectedRequiredDoc) submissionData.append('required_doc', selectedRequiredDoc);
 
         try {
-            const response = await fetch('http://uniwiz-backend.test/api/update_profile.php', { method: 'POST', body: submissionData });
+            const response = await fetch(`${API_BASE_URL}/update_profile.php`, { method: 'POST', body: submissionData });
             const result = await response.json();
             if (!response.ok) throw new Error(result.message || 'An unknown error occurred.');
             
@@ -373,7 +374,7 @@ function ProfilePage({ user, onProfileUpdate }) {
                                         <div className="mt-2 grid grid-cols-3 gap-4">
                                             {existingGalleryImages.map(image => (
                                                 <div key={image.id} className="relative group">
-                                                    <img src={`http://uniwiz-backend.test/api/${image.image_url}`} alt="Gallery item" className="h-24 w-full object-cover rounded-md"/>
+                                                    <img src={`${API_BASE_URL}/${image.image_url}`} alt="Gallery item" className="h-24 w-full object-cover rounded-md"/>
                                                     <button 
                                                         type="button" 
                                                         onClick={() => handleRemoveGalleryImage(image.id)} 
@@ -421,7 +422,7 @@ function ProfilePage({ user, onProfileUpdate }) {
                                     {/* Show current document if already uploaded */}
                                     {user.required_doc_url && !selectedRequiredDoc && (
                                         <p className="mt-2 text-sm text-green-700">
-                                            Current Document: <a href={`http://uniwiz-backend.test/api/${user.required_doc_url}`} target="_blank" rel="noopener noreferrer" className="underline">View/Download</a>
+                                            Current Document: <a href={`${API_BASE_URL}/${user.required_doc_url}`} target="_blank" rel="noopener noreferrer" className="underline">View/Download</a>
                                         </p>
                                     )}
                                 </div>
@@ -489,7 +490,7 @@ function ProfilePage({ user, onProfileUpdate }) {
                                             />
                                             {user.cv_url && !selectedCV && (
                                                 <p className="mt-2 text-sm text-gray-500">
-                                                    Current CV: <a href={`http://uniwiz-backend.test/api/${user.cv_url}`} target="_blank" rel="noopener noreferrer" className="text-primary-main hover:underline">View Current CV</a>
+                                                    Current CV: <a href={`${API_BASE_URL}/${user.cv_url}`} target="_blank" rel="noopener noreferrer" className="text-primary-main hover:underline">View Current CV</a>
                                                 </p>
                                             )}
                                             {selectedCV && (

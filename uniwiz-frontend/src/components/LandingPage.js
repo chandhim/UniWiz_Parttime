@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { API_BASE_URL } from '../config';
 
 // --- Constants ---
-const API_BASE_URL = 'http://uniwiz-backend.test/api';
 
 // --- Category Data with Modern Icons & Gradients ---
 const CATEGORIES = [

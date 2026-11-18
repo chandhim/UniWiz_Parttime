@@ -4,7 +4,7 @@
 // Handle password reset with token
 
 // --- Set CORS and Content-Type Headers ---
-header("Access-Control-Allow-Origin: http://localhost:3000"); // Allow requests from frontend
+header('Access-Control-Allow-Origin: ' . (getenv('FRONTEND_URL') ?: 'http://localhost:3000')); // Allow requests from frontend
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS"); // Allow these HTTP methods
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 header('Content-Type: application/json'); // Respond with JSON
@@ -20,11 +20,11 @@ require_once '../config/database.php';
 require_once 'password_validator.php';
 
 // --- Database Connection ---
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch(PDOException $e) {
-    http_response_code(500);
+// Use the shared connection (Supabase PostgreSQL or local MySQL, per config/database.php)
+$database = new Database();
+$pdo = $database->getConnection();
+if ($pdo === null) {
+    http_response_code(503);
     echo json_encode(['error' => 'Database connection failed']);
     exit;
 }

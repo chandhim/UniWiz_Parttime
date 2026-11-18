@@ -3,8 +3,8 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import ChatWindow from './ChatWindow';
 import { initSocket } from '../utils/socket';
+import { API_BASE_URL } from '../config';
 
-const API_BASE_URL = 'http://uniwiz-backend.test/api';
 
 // App Problem Modal for Messages Page
 const AppProblemModal = ({ isOpen, onClose, onSubmit }) => {

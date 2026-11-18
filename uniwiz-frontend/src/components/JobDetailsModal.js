@@ -1,7 +1,7 @@
 // FILE: src/components/JobDetailsModal.js
 import React, { useState, useEffect, useCallback } from 'react';
+import { API_BASE_URL } from '../config';
 
-const API_BASE_URL = 'http://uniwiz-backend.test/api';
 
 // --- Reusable Components ---
 const LoadingSpinner = () => (

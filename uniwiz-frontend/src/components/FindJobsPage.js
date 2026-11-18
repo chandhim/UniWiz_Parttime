@@ -2,8 +2,8 @@
 // =================================================================================
 import React, { useState, useEffect, useCallback } from 'react';
 import { getCategoryColorClass } from '../utils/categoryColors';
+import { API_BASE_URL } from '../config';
 
-const API_BASE_URL = 'http://uniwiz-backend.test/api';
 const MAX_SALARY = 50000;
 
 // --- LoadingSpinner: Shows an emerald spinner ---

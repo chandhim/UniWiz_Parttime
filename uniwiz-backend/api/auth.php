@@ -3,12 +3,15 @@
 // ======================================================================
 // This endpoint handles user authentication and registration, including email verification and admin notifications.
 
-// For debugging purposes ONLY. Remove these lines in a live environment.
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+// Never print PHP errors/stack traces to API clients; log them instead.
+// Set APP_DEBUG=true locally to show them while developing.
+$appDebug = filter_var(getenv('APP_DEBUG') ?: 'false', FILTER_VALIDATE_BOOLEAN);
+ini_set('display_errors', $appDebug ? '1' : '0');
+ini_set('display_startup_errors', $appDebug ? '1' : '0');
+ini_set('log_errors', '1');
 error_reporting(E_ALL);
 
-header("Access-Control-Allow-Origin: http://localhost:3000"); // Allow requests from frontend
+header('Access-Control-Allow-Origin: ' . (getenv('FRONTEND_URL') ?: 'http://localhost:3000')); // Allow requests from frontend
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS"); // Allow these HTTP methods
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 header('Content-Type: application/json'); // Respond with JSON
@@ -153,7 +156,7 @@ if ($data->action === 'register') {
             }
 
             // Insert new user (auto-verified, mail verification removed)
-            $query = "INSERT INTO users (email, password, first_name, last_name, company_name, role, is_verified, email_verified_at) VALUES (:email, :password, :first_name, :last_name, :company_name, :role, 1, CURRENT_TIMESTAMP)";
+            $query = "INSERT INTO users (email, password, first_name, last_name, company_name, role, is_verified, email_verified_at) VALUES (:email, :password, :first_name, :last_name, :company_name, :role, TRUE, CURRENT_TIMESTAMP)";
             $stmt = $db->prepare($query);
 
             $email = htmlspecialchars(strip_tags($data->email));

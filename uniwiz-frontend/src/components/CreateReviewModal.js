@@ -3,6 +3,7 @@
 // This version can now be used for both creating and editing a review.
 
 import React, { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../config';
 
 // --- Star: Reusable star icon component for rating ---
 const Star = ({ selected = false, onSelect = f => f }) => (
@@ -55,7 +56,7 @@ function CreateReviewModal({ isOpen, onClose, publisherId, studentId, companyNam
         setError(null);
 
         try {
-            const response = await fetch('http://uniwiz-backend.test/api/create_review.php', {
+            const response = await fetch(`${API_BASE_URL}/create_review.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

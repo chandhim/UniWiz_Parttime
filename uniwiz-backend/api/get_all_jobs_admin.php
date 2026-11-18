@@ -4,7 +4,7 @@
 // This endpoint provides all job data specifically for the admin panel,
 // with improved filtering for status, search, and handling of expired jobs.
 
-header("Access-Control-Allow-Origin: http://localhost:3000"); // Allow requests from frontend
+header('Access-Control-Allow-Origin: ' . (getenv('FRONTEND_URL') ?: 'http://localhost:3000')); // Allow requests from frontend
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS"); // Allow these HTTP methods
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 header('Content-Type: application/json'); // Respond with JSON
@@ -58,7 +58,7 @@ try {
     // Add status filter if specified
     if ($status_filter !== 'All') {
         if ($status_filter === 'expired') {
-            $query .= " AND j.application_deadline IS NOT NULL AND j.application_deadline < CURDATE() AND j.status != 'closed'";
+            $query .= " AND j.application_deadline IS NOT NULL AND j.application_deadline < CURRENT_DATE AND j.status != 'closed'";
         } else {
             $query .= " AND j.status = :status_filter";
             $params[':status_filter'] = $status_filter;
@@ -67,7 +67,7 @@ try {
 
     // Add search term filter (matches job title, company name, or publisher's name)
     if (!empty($search_term)) {
-        $query .= " AND (j.title LIKE :search_term OR u.company_name LIKE :search_term OR u.first_name LIKE :search_term OR u.last_name LIKE :search_term)";
+        $query .= " AND (LOWER(j.title) LIKE LOWER(:search_term) OR LOWER(u.company_name) LIKE LOWER(:search_term) OR LOWER(u.first_name) LIKE LOWER(:search_term) OR LOWER(u.last_name) LIKE LOWER(:search_term))";
         $params[':search_term'] = "%" . $search_term . "%";
     }
 

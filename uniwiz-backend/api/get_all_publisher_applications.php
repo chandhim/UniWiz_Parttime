@@ -5,7 +5,7 @@
 // including vacancy and accepted counts for each job.
 
 // --- Headers ---
-header("Access-Control-Allow-Origin: http://localhost:3000"); // Allow requests from frontend
+header('Access-Control-Allow-Origin: ' . (getenv('FRONTEND_URL') ?: 'http://localhost:3000')); // Allow requests from frontend
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS"); // Allow these HTTP methods
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 header('Content-Type: application/json'); // Respond with JSON
@@ -89,7 +89,7 @@ try {
     
     // Filter by application status (e.g., today, accepted, pending, etc.)
     if ($status_filter === 'today') {
-        $query .= " AND DATE(ja.applied_at) = CURDATE()";
+        $query .= " AND DATE(ja.applied_at) = CURRENT_DATE";
     } elseif ($status_filter !== 'All') {
         $query .= " AND ja.status = :status";
         $params[':status'] = $status_filter;
@@ -97,7 +97,7 @@ try {
 
     // Filter by search term (matches student name, job title, or skills)
     if (!empty($search_term)) {
-        $query .= " AND (u.first_name LIKE :search_term OR u.last_name LIKE :search_term OR j.title LIKE :search_term OR sp.skills LIKE :search_term)";
+        $query .= " AND (LOWER(u.first_name) LIKE LOWER(:search_term) OR LOWER(u.last_name) LIKE LOWER(:search_term) OR LOWER(j.title) LIKE LOWER(:search_term) OR LOWER(sp.skills) LIKE LOWER(:search_term))";
         $params[':search_term'] = "%" . $search_term . "%";
     }
 

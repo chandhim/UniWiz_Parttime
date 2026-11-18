@@ -1,6 +1,7 @@
 // FILE: src/components/EditJob.js
 
 import React, { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../config';
 
 const LoadingSpinner = () => (
     <div className="flex justify-center items-center h-64">
@@ -29,7 +30,7 @@ function EditJob({ user, jobData, onJobUpdated, onBackClick }) {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await fetch('http://uniwiz-backend.test/api/get_categories.php');
+                const response = await fetch(`${API_BASE_URL}/get_categories.php`);
                 const data = await response.json();
                 if (response.ok) setCategories(data);
             } catch (err) { console.error("Failed to fetch categories:", err); }
@@ -136,7 +137,7 @@ function EditJob({ user, jobData, onJobUpdated, onBackClick }) {
         };
 
         try {
-            const response = await fetch('http://uniwiz-backend.test/api/update_job.php', {
+            const response = await fetch(`${API_BASE_URL}/update_job.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updatedJobData),

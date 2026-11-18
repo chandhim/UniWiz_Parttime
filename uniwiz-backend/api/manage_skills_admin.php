@@ -6,7 +6,7 @@
 header("Content-Type: application/json; charset=UTF-8"); // Respond with JSON
 header("Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS"); // Allow these HTTP methods
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-header("Access-Control-Allow-Origin: http://localhost:3000"); // Allow requests from frontend
+header('Access-Control-Allow-Origin: ' . (getenv('FRONTEND_URL') ?: 'http://localhost:3000')); // Allow requests from frontend
 
 // Handle preflight (OPTIONS) request for CORS
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {

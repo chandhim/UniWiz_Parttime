@@ -4,7 +4,7 @@
 // This endpoint provides various statistics for a publisher's dashboard, including
 // job overview, applicant counts, recent applicants, reviews, and ratings.
 
-header("Access-Control-Allow-Origin: http://localhost:3000"); // Allow requests from frontend
+header('Access-Control-Allow-Origin: ' . (getenv('FRONTEND_URL') ?: 'http://localhost:3000')); // Allow requests from frontend
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS"); // Allow these HTTP methods
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 header('Content-Type: application/json'); // Respond with JSON
@@ -43,7 +43,7 @@ try {
     $stats['total_applicants'] = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
 
     // 3. New Applicants Today
-    $stmt = $db->prepare("SELECT COUNT(ja.id) as count FROM job_applications ja INNER JOIN jobs j ON ja.job_id = j.id WHERE j.publisher_id = :publisher_id AND DATE(ja.applied_at) = CURDATE()");
+    $stmt = $db->prepare("SELECT COUNT(ja.id) as count FROM job_applications ja INNER JOIN jobs j ON ja.job_id = j.id WHERE j.publisher_id = :publisher_id AND DATE(ja.applied_at) = CURRENT_DATE");
     $stmt->bindParam(':publisher_id', $publisher_id, PDO::PARAM_INT);
     $stmt->execute();
     $stats['new_applicants_today'] = $stmt->fetch(PDO::FETCH_ASSOC)['count'];

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { API_BASE_URL } from '../config';
 
 // --- LoginModal: Modal popup for user login ---
 // Receives props to control visibility, handle close, and handle login success
@@ -18,7 +19,7 @@ function LoginModal({ isOpen, onClose, onLoginSuccess }) {
         setIsLoading(true);
 
         try {
-            const apiUrl = 'http://uniwiz-backend.test/api/auth.php';
+            const apiUrl = `${API_BASE_URL}/auth.php`;
             const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

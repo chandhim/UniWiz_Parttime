@@ -4,7 +4,7 @@
 // This endpoint fetches various statistics for the Admin Dashboard.
 
 // --- Headers ---
-header("Access-Control-Allow-Origin: http://localhost:3000"); // Allow requests from frontend
+header('Access-Control-Allow-Origin: ' . (getenv('FRONTEND_URL') ?: 'http://localhost:3000')); // Allow requests from frontend
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS"); // Allow these HTTP methods
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 header('Content-Type: application/json'); // Respond with JSON
@@ -57,7 +57,7 @@ try {
     $stats['totalPublishers'] = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
 
     // 6. Unverified Users Count (excluding admins)
-    $stmt = $db->prepare("SELECT COUNT(*) as count FROM users WHERE is_verified = 0 AND role != 'admin'");
+    $stmt = $db->prepare("SELECT COUNT(*) as count FROM users WHERE is_verified = FALSE AND role != 'admin'");
     $stmt->execute();
     $stats['unverifiedUsers'] = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
 

@@ -138,7 +138,7 @@ abstract class User {
         }
         
         if (isset($filters['search'])) {
-            $sql .= " AND (first_name LIKE :search OR last_name LIKE :search OR email LIKE :search OR company_name LIKE :search)";
+            $sql .= " AND (LOWER(first_name) LIKE LOWER(:search) OR LOWER(last_name) LIKE LOWER(:search) OR LOWER(email) LIKE LOWER(:search) OR LOWER(company_name) LIKE LOWER(:search))";
             $params['search'] = '%' . $filters['search'] . '%';
         }
         
