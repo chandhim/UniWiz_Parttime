@@ -1,8 +1,16 @@
 <?php
+// Development-only script: refuse to run on a deployed server unless APP_ENV=development.
+if (php_sapi_name() !== 'cli' && getenv('APP_ENV') !== 'development') {
+    http_response_code(403);
+    header('Content-Type: application/json');
+    echo json_encode(['message' => 'This endpoint is disabled outside development.']);
+    exit;
+}
+
 // FILE: uniwiz-backend/api/test_db.php
 // Test database connection and check if site_settings table exists
 
-header("Access-Control-Allow-Origin: http://localhost:3000");
+header('Access-Control-Allow-Origin: ' . (getenv('FRONTEND_URL') ?: 'http://localhost:3000'));
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 header('Content-Type: application/json');
@@ -16,7 +24,7 @@ try {
     $result = ['status' => 'connected'];
     
     // Check if site_settings table exists
-    $sql = "SHOW TABLES LIKE 'site_settings'";
+    $sql = "SELECT table_name FROM information_schema.tables WHERE table_name = 'site_settings'";
     $tableExists = $db->selectOne($sql);
     
     if ($tableExists) {

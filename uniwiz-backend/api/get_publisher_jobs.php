@@ -5,7 +5,7 @@
 // accepted counts, and a dynamic status for expired jobs.
 
 // --- Headers & DB Connection ---
-header("Access-Control-Allow-Origin: http://localhost:3000"); // Allow requests from frontend
+header('Access-Control-Allow-Origin: ' . (getenv('FRONTEND_URL') ?: 'http://localhost:3000')); // Allow requests from frontend
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS"); // Allow these HTTP methods
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 header('Content-Type: application/json'); // Respond with JSON
@@ -44,7 +44,7 @@ try {
     ";
 
     if (!empty($search_term)) {
-        $query .= " AND j.title LIKE :search_term";
+        $query .= " AND LOWER(j.title) LIKE LOWER(:search_term)";
     }
 
     $query .= " ORDER BY j.created_at DESC";

@@ -95,12 +95,12 @@ class Admin extends User {
             // Recent activity
             $sql = "SELECT 'user_registration' as type, first_name, last_name, role, created_at as timestamp
                     FROM users 
-                    WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+                    WHERE created_at >= NOW() - INTERVAL '7' DAY
                     UNION ALL
                     SELECT 'job_posted' as type, j.title as first_name, '' as last_name, u.role, j.created_at as timestamp
                     FROM jobs j 
                     JOIN users u ON j.publisher_id = u.id
-                    WHERE j.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+                    WHERE j.created_at >= NOW() - INTERVAL '7' DAY
                     ORDER BY timestamp DESC 
                     LIMIT 10";
             $stats['recent_activity'] = $this->db->select($sql);
@@ -150,8 +150,8 @@ class Admin extends User {
             }
             
             if (isset($filters['search'])) {
-                $sql .= " AND (u.first_name LIKE :search OR u.last_name LIKE :search 
-                          OR u.email LIKE :search OR u.company_name LIKE :search)";
+                $sql .= " AND (LOWER(u.first_name) LIKE LOWER(:search) OR LOWER(u.last_name) LIKE LOWER(:search) 
+                          OR LOWER(u.email) LIKE LOWER(:search) OR LOWER(u.company_name) LIKE LOWER(:search))";
                 $params['search'] = '%' . $filters['search'] . '%';
             }
             
@@ -289,7 +289,7 @@ class Admin extends User {
             }
             
             if (isset($filters['search'])) {
-                $sql .= " AND (j.title LIKE :search OR j.description LIKE :search)";
+                $sql .= " AND (LOWER(j.title) LIKE LOWER(:search) OR LOWER(j.description) LIKE LOWER(:search))";
                 $params['search'] = '%' . $filters['search'] . '%';
             }
             

@@ -486,16 +486,18 @@ class Payment {
                 $stats['by_status'][$row['status']] = $row['count'];
             }
             
-            // Monthly stats (current year)
+            // Monthly stats (current year) - works on PostgreSQL and MySQL
+            $isPgsql = $db->getConnection()->getAttribute(PDO::ATTR_DRIVER_NAME) === 'pgsql';
+            $monthExpr = $isPgsql ? "TO_CHAR(payment_date, 'YYYY-MM')" : "DATE_FORMAT(payment_date, '%Y-%m')";
             $sql = "SELECT 
-                        DATE_FORMAT(payment_date, '%Y-%m') as month,
+                        {$monthExpr} as month,
                         COUNT(*) as payment_count,
                         SUM(amount) as total_amount
                     FROM payments 
                     WHERE publisher_id = :publisher_id 
                     AND status = 'completed'
-                    AND YEAR(payment_date) = YEAR(NOW())
-                    GROUP BY DATE_FORMAT(payment_date, '%Y-%m')
+                    AND EXTRACT(YEAR FROM payment_date) = EXTRACT(YEAR FROM CURRENT_DATE)
+                    GROUP BY {$monthExpr}
                     ORDER BY month";
             $stats['monthly'] = $db->select($sql, ['publisher_id' => $publisherId]);
             

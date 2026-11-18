@@ -16,6 +16,7 @@
 // =======================================================
 
 import React, { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../../config';
 
 // A reusable card for displaying stats with dynamic colors
 // StatCard displays a single statistic with icon and action
@@ -84,7 +85,7 @@ function AdminDashboard({ setPage }) {
             setIsLoading(true);
             setError(null);
             try {
-                const response = await fetch('http://uniwiz-backend.test/api/get_admin_stats.php');
+                const response = await fetch(`${API_BASE_URL}/get_admin_stats.php`);
                 const data = await response.json();
                 if (response.ok) {
                     setStats(data);

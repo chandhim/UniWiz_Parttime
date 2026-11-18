@@ -131,7 +131,7 @@ abstract class RegisteredUser extends User {
         $params = ['user_id' => $this->id];
         
         if ($unreadOnly) {
-            $sql .= " AND is_read = 0";
+            $sql .= " AND is_read = false";
         }
         
         $sql .= " ORDER BY created_at DESC";
@@ -144,6 +144,16 @@ abstract class RegisteredUser extends User {
         return $this->db->select($sql, $params);
     }
     
+    public function getProfileData() {
+        // This method can be overridden by child classes to return specific profile data
+        return $this->profileData;
+    }
+    // This method can be overridden by child classes to set specific profile data
+    public function setProfileData($profileData) {
+        $this->profileData = $profileData;
+    }
+
+
     /**
      * Mark notification as read
      * @param int $notificationId

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CreateStudentReviewModal from './CreateStudentReviewModal';
+import { API_BASE_URL } from '../config';
 
 // --- Star Rating Component ---
 const StarRating = ({ rating, size = 'w-4 h-4' }) => {
@@ -34,7 +35,7 @@ const StudentCard = ({ student, onReviewClick }) => (
             <div className="flex items-center space-x-3">
                 <img 
                     src={student.profile_image_url ? 
-                        `http://uniwiz-backend.test/api/${student.profile_image_url}` : 
+                        `${API_BASE_URL}/${student.profile_image_url}` : 
                         `https://ui-avatars.com/api/?name=${student.first_name}+${student.last_name}&background=E8EAF6&color=211C84`
                     }
                     alt="Student profile"
@@ -90,7 +91,7 @@ function StudentReviewsSection({ publisherId, currentUser }) {
     const fetchStudents = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`http://uniwiz-backend.test/api/get_reviewable_students.php?publisher_id=${publisherId}`);
+            const response = await fetch(`${API_BASE_URL}/get_reviewable_students.php?publisher_id=${publisherId}`);
             const data = await response.json();
             
             if (data.success) {

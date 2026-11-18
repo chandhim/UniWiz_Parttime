@@ -1,520 +1,886 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { API_BASE_URL } from '../config';
 
 // --- Constants ---
-const API_BASE_URL = 'http://uniwiz-backend.test/api';
 
-// --- FeatureCard: Displays a single feature with icon, title, and description ---
-const FeatureCard = ({ icon, title, text }) => (
-    <div className="bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100">
-        <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={icon}></path>
-            </svg>
-        </div>
-        <h3 className="text-2xl font-bold text-gray-900 mb-3">{title}</h3>
-        <p className="text-gray-600 leading-relaxed">{text}</p>
-    </div>
-);
+// --- Category Data with Modern Icons & Gradients ---
+const CATEGORIES = [
+  {
+    name: 'Information Technology',
+    slug: 'it',
+    count: '14+ Openings',
+    icon: (
+      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+      </svg>
+    ),
+    color: 'from-blue-500 to-indigo-600',
+    bg: 'bg-blue-50',
+    border: 'hover:border-blue-300'
+  },
+  {
+    name: 'Design & Creative',
+    slug: 'design',
+    count: '9+ Openings',
+    icon: (
+      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+      </svg>
+    ),
+    color: 'from-purple-500 to-pink-600',
+    bg: 'bg-purple-50',
+    border: 'hover:border-purple-300'
+  },
+  {
+    name: 'Marketing & Sales',
+    slug: 'marketing',
+    count: '11+ Openings',
+    icon: (
+      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+      </svg>
+    ),
+    color: 'from-rose-500 to-orange-500',
+    bg: 'bg-rose-50',
+    border: 'hover:border-rose-300'
+  },
+  {
+    name: 'Tutoring & Education',
+    slug: 'tutoring',
+    count: '16+ Openings',
+    icon: (
+      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M12 14l9-5-9-5-9 5 9 5z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M12 14l6.16-3.422A12.083 12.083 0 0112 21a12.083 12.083 0 01-6.16-9.422L12 14z" />
+      </svg>
+    ),
+    color: 'from-emerald-500 to-teal-600',
+    bg: 'bg-emerald-50',
+    border: 'hover:border-emerald-300'
+  },
+  {
+    name: 'Writing & Translation',
+    slug: 'writing',
+    count: '7+ Openings',
+    icon: (
+      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+      </svg>
+    ),
+    color: 'from-amber-500 to-yellow-600',
+    bg: 'bg-amber-50',
+    border: 'hover:border-amber-300'
+  },
+  {
+    name: 'Administrative Support',
+    slug: 'admin',
+    count: '12+ Openings',
+    icon: (
+      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+    ),
+    color: 'from-cyan-500 to-blue-600',
+    bg: 'bg-cyan-50',
+    border: 'hover:border-cyan-300'
+  },
+  {
+    name: 'Customer Service',
+    slug: 'support',
+    count: '8+ Openings',
+    icon: (
+      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
+      </svg>
+    ),
+    color: 'from-indigo-500 to-violet-600',
+    bg: 'bg-indigo-50',
+    border: 'hover:border-indigo-300'
+  },
+  {
+    name: 'Hospitality & Events',
+    slug: 'events',
+    count: '6+ Openings',
+    icon: (
+      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+    ),
+    color: 'from-fuchsia-500 to-pink-600',
+    bg: 'bg-fuchsia-50',
+    border: 'hover:border-fuchsia-300'
+  }
+];
 
-// --- HowItWorksStep: Displays a single step in the 'How It Works' section ---
-const HowItWorksStep = ({ number, title, text, color }) => (
-    <div className="text-center p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 h-full">
-        <div className={`w-20 h-20 mx-auto mb-6 rounded-full flex items-center justify-center text-3xl font-bold text-white ${color} shadow-lg`}>
-            {number}
-        </div>
-        <h3 className="text-xl font-bold text-gray-900 mb-3">{title}</h3>
-        <p className="text-gray-600 px-4 leading-relaxed">{text}</p>
-    </div>
-);
+// --- Modern Job Card ---
+const ModernJobCard = ({ job, setPage, isNew }) => {
+  const companyName = job.company_name || 'Verified Employer';
+  const logo = job.profile_image_url;
 
-// --- JobCard: Displays a single job listing card ---
-const JobCard = ({ job, setPage, isNew }) => (
-    <div className="relative bg-white rounded-2xl shadow-lg p-6 flex flex-col hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 h-full border-l-8 border-blue-400 group transform hover:scale-105">
-        {isNew && (
-            <span className="absolute -top-3 left-4 bg-gradient-to-r from-green-400 to-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg z-10 animate-bounce">New</span>
-        )}
-        <div className="flex items-center mb-5">
-            <img
-                src={job.profile_image_url ? `${API_BASE_URL}/${job.profile_image_url}` : 'https://placehold.co/100x100/E2E8F0/4A5568?text=Logo'}
-                alt={`${job.company_name} logo`}
-                className="w-16 h-16 rounded-xl mr-4 object-cover border border-gray-200 bg-gray-100 group-hover:ring-4 group-hover:ring-blue-200 transition-all duration-300"
-            />
+  return (
+    <motion.div
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.2 }}
+      className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_12px_30px_-4px_rgba(99,102,241,0.12)] hover:border-indigo-200 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden"
+    >
+      {/* Top Accent Gradient Line on Hover */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+      <div>
+        {/* Header: Company & Badges */}
+        <div className="flex items-start justify-between gap-3 mb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-slate-100 border border-slate-200/70 overflow-hidden flex items-center justify-center flex-shrink-0 text-indigo-600 font-bold text-lg">
+              {logo ? (
+                <img
+                  src={logo.startsWith('http') ? logo : `${API_BASE_URL}/${logo}`}
+                  alt={companyName}
+                  className="w-full h-full object-cover"
+                  onError={(e) => { e.target.style.display = 'none'; }}
+                />
+              ) : (
+                companyName.charAt(0)
+              )}
+            </div>
             <div>
-                <h3 className="text-xl font-bold text-gray-900 line-clamp-1 group-hover:text-blue-700 transition-colors duration-300">{job.title}</h3>
-                <p className="text-gray-600 font-medium line-clamp-1">{job.company_name}</p>
+              <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                {companyName}
+                <svg className="w-3.5 h-3.5 text-blue-500 inline" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+              </h4>
+              <h3 className="text-base font-bold text-slate-900 group-hover:text-emerald-700 transition-colors line-clamp-1 mt-0.5">
+                {job.title}
+              </h3>
             </div>
-        </div>
-        <div className="flex-grow mb-5">
-            <p className="text-gray-700 mb-2 line-clamp-3 leading-relaxed">{job.description}</p>
-        </div>
-        <div className="mt-auto pt-5 border-t border-gray-200">
-            <div className="flex flex-wrap gap-2 mb-4">
-                <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">{job.job_type}</span>
-                <span className="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded flex items-center">
-                    <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                    </svg>
-                    {job.location || 'Remote'}
-                </span>
-            </div>
-            <div className="flex justify-between items-center">
-                <p className="text-green-600 font-bold text-lg">{job.payment_range}</p>
-                <button 
-                    onClick={() => setPage('login', { signup: true, role: 'student' })} 
-                    className="bg-gradient-to-r from-green-400 to-blue-500 text-white font-semibold py-2 px-6 rounded-xl shadow-lg hover:from-blue-600 hover:to-blue-700 hover:scale-105 transition-all duration-300 border-2 border-blue-400"
-                >
-                    <span className="inline-flex items-center gap-2">
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path>
-                        </svg>
-                        Apply Now
-                    </span>
-                </button>
-            </div>
-        </div>
-    </div>
-);
+          </div>
 
-// --- LandingPage: Main landing page component for UniWiz ---
+          {isNew && (
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600/20">
+              New
+            </span>
+          )}
+        </div>
+
+        {/* Job Description */}
+        <p className="text-sm text-slate-600 line-clamp-2 leading-relaxed mb-4">
+          {job.description}
+        </p>
+
+        {/* Meta Chips */}
+        <div className="flex flex-wrap items-center gap-2 mb-5">
+          <span className="inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200">
+            {job.job_type || 'Part-time'}
+          </span>
+          <span className="inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700">
+            <svg className="w-3 h-3 mr-1 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+            </svg>
+            {job.location || 'Remote'}
+          </span>
+          {job.category_name && (
+            <span className="inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-lg bg-amber-50 text-amber-800 border border-amber-200">
+              {job.category_name}
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Footer: Rate & CTA */}
+      <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+        <div>
+          <span className="text-xs text-slate-400 block font-medium">Estimated Pay</span>
+          <span className="text-sm font-extrabold text-emerald-800">
+            {job.payment_range || 'Competitive'}
+          </span>
+        </div>
+
+        <button
+          onClick={() => setPage('login', { signup: true, role: 'student' })}
+          className="inline-flex items-center gap-1 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 px-3.5 py-2 rounded-xl transition-all shadow-xs hover:shadow group-hover:scale-105 active:scale-95"
+        >
+          Apply Now
+          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </button>
+      </div>
+    </motion.div>
+  );
+};
+
+// --- Main LandingPage Component ---
 const LandingPage = ({ setPage }) => {
-    // --- State hooks for UI and data ---
-    const [activeTab, setActiveTab] = useState('students'); // Tab for 'How It Works' section
-    const [jobs, setJobs] = useState([]); // Latest jobs
-    const [footerLinks, setFooterLinks] = useState(null); // Footer links from API
-    const [isScrolled, setIsScrolled] = useState(false); // Header scroll effect
-    const [showBackToTop, setShowBackToTop] = useState(false); // Show back-to-top button
+  const [activeTab, setActiveTab] = useState('students');
+  const [jobs, setJobs] = useState([]);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
 
-    // --- Fetch jobs and footer links, handle header scroll effect ---
-    useEffect(() => {
-        // Fetch public jobs from backend
-        fetch(`${API_BASE_URL}/get_public_jobs.php`)
-            .then(response => response.json())
-            .then(data => {
-                if (Array.isArray(data)) {
-                    setJobs(data);
-                }
-            })
-            .catch(error => console.error('Error fetching jobs:', error));
-        
-        // Fetch footer links from backend
-        fetch(`${API_BASE_URL}/get_site_settings.php`)
-            .then(response => response.json())
-            .then(data => {
-                setFooterLinks(data);
-            })
-            .catch(error => console.error('Error fetching footer links:', error));
+  // Fetch jobs
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/get_public_jobs.php`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) setJobs(data);
+      })
+      .catch((err) => console.error('Error fetching jobs:', err));
 
-        // Handle scroll for header background
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 10);
-        };
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+      setShowBackToTop(window.scrollY > 400);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-    // --- Show back-to-top button on scroll ---
-    useEffect(() => {
-      const onScroll = () => setShowBackToTop(window.scrollY > 300);
-      window.addEventListener('scroll', onScroll);
-      return () => window.removeEventListener('scroll', onScroll);
-    }, []);
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    setPage('public-jobs', { search: searchQuery, category: selectedCategory });
+  };
 
-    return (
-        <div className="bg-gray-50 text-gray-800 font-sans antialiased">
-            {/* --- Enhanced Header with glass morphism and smooth transition --- */}
-            <header className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white/90 backdrop-blur-md shadow-sm py-2' : 'bg-transparent py-4'}`}>
-                <nav className="container mx-auto px-6 py-2 flex justify-between items-center">
-                    <div className="flex items-center">
-                        <img src="/logo.png" alt="UniWiz Logo" className="h-12" />
-                        <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">UniWiz</h1>
-                    </div>
-                    <div className="flex items-center space-x-4">
-                        <button 
-                            onClick={() => setPage('login')} 
-                            className="font-semibold text-gray-700 hover:text-blue-600 transition-colors duration-300 hidden sm:inline-block"
-                        >
-                            Login
-                        </button>
-                        <button 
-                            onClick={() => setPage('login', { signup: true, role: 'student' })} 
-                            className="bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold py-2 px-6 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-md hover:shadow-lg"
-                        >
-                            Sign Up
-                        </button>
-                    </div>
-                </nav>
-            </header>
-
-            {/* --- Back to Top Button --- */}
-            {showBackToTop && (
-                <button
-                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                    className="fixed bottom-8 right-8 z-50 bg-gradient-to-r from-blue-500 to-blue-700 text-white p-4 rounded-full shadow-xl hover:scale-110 hover:shadow-2xl transition-all duration-300"
-                    aria-label="Back to Top"
-                >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7" /></svg>
-                </button>
-            )}
-            {/* --- Quick Sign Up Button (floating) --- */}
-            <button
-                onClick={() => setPage('login', { signup: true, role: 'student' })}
-                className="hidden lg:flex fixed bottom-8 right-24 z-40 bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-3 px-8 rounded-full shadow-2xl hover:scale-110 hover:shadow-2xl transition-all duration-300 text-lg items-center gap-2 animate-bounce"
-                style={{animationDelay: '1s'}}
+  return (
+    <div className="min-h-screen bg-[#F8FAFC] text-slate-800 font-sans antialiased selection:bg-emerald-100 selection:text-emerald-900">
+      {/* =========================================================================
+          1. FLOATING MODERN HEADER / NAVBAR
+         ========================================================================= */}
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          isScrolled
+            ? 'glass-nav shadow-[0_4px_20px_-4px_rgba(0,0,0,0.06)] py-3'
+            : 'bg-transparent py-5'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between">
+            {/* Brand Logo */}
+            <div
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="flex items-center gap-2.5 cursor-pointer group"
             >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" /></svg>
-                Quick Sign Up
-            </button>
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-700 via-emerald-600 to-teal-500 flex items-center justify-center text-white shadow-md shadow-emerald-600/20 group-hover:scale-105 transition-transform ring-2 ring-emerald-500/20">
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M12 14l9-5-9-5-9 5 9 5z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M12 14l6.16-3.422A12.083 12.083 0 0112 21a12.083 12.083 0 01-6.16-9.422L12 14z" />
+                </svg>
+              </div>
+              <div>
+                <span className="text-xl font-black tracking-tight text-slate-900">
+                  Uni<span className="text-emerald-700">Wiz</span>
+                </span>
+                <span className="hidden sm:inline-block ml-1.5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-amber-50 text-amber-800 ring-1 ring-amber-500/20">
+                  Campus Gigs
+                </span>
+              </div>
+            </div>
 
-            <main className="pt-16">
-                {/* --- Hero Section: Main banner with call to action --- */}
-                <section className="relative h-screen min-h-[600px] flex items-center text-white overflow-hidden">
-                    {/* --- Background image and overlays --- */}
-                    <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{backgroundImage: "url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=2084&auto=format&fit=crop')"}}></div>
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 to-blue-800/80"></div>
-                    {/* --- Floating circles decoration --- */}
-                    <div className="absolute top-20 left-20 w-40 h-40 rounded-full bg-blue-500/20 blur-xl"></div>
-                    <div className="absolute bottom-20 right-20 w-60 h-60 rounded-full bg-blue-400/20 blur-xl"></div>
-                    <div className="relative container mx-auto px-6 text-center z-10">
-                        <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 animate-fade-in">
-                            <span className="bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">Earn While</span> <span className="bg-gradient-to-r from-blue-300 to-blue-400 bg-clip-text text-transparent">You Learn</span>
-                        </h1>
-                        <p className="text-xl md:text-2xl max-w-3xl mx-auto text-blue-100 mb-10 leading-relaxed">
-                            Connecting Sri Lankan university students with verified part-time and freelance opportunities.
-                        </p>
-                        <div className="flex flex-col sm:flex-row justify-center gap-4">
-                            <button 
-                                onClick={() => setPage('login', { signup: true, role: 'student' })} 
-                                className="bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold py-4 px-8 rounded-xl text-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-                            >
-                                I'm a Student
-                            </button>
-                            <button 
-                                onClick={() => setPage('login', { signup: true, role: 'publisher' })} 
-                                className="bg-white text-blue-600 font-semibold py-4 px-8 rounded-xl text-lg hover:bg-gray-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-                            >
-                                I'm Hiring
-                            </button>
-                        </div>
-                    </div>
-                    {/* --- Scroll indicator --- */}
-                    <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
-                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-                        </svg>
-                    </div>
-                </section>
+            {/* Center Navigation Links */}
+            <nav className="hidden md:flex items-center gap-8">
+              <a href="#browse-categories" className="text-sm font-semibold text-slate-600 hover:text-emerald-700 transition-colors">
+                Categories
+              </a>
+              <a href="#featured-jobs" className="text-sm font-semibold text-slate-600 hover:text-emerald-700 transition-colors">
+                Featured Jobs
+              </a>
+              <a href="#how-it-works" className="text-sm font-semibold text-slate-600 hover:text-emerald-700 transition-colors">
+                How It Works
+              </a>
+              <a href="#testimonials" className="text-sm font-semibold text-slate-600 hover:text-emerald-700 transition-colors">
+                Reviews
+              </a>
+            </nav>
 
-                {/* --- Why Choose UniWiz Section --- */}
-                <section className="py-20 bg-gradient-to-b from-white to-gray-50 relative overflow-hidden">
-                    {/* --- Background decoration --- */}
-                    <div className="absolute -top-20 -right-20 w-96 h-96 rounded-full bg-blue-100/30 blur-3xl"></div>
-                    <div className="absolute -bottom-20 -left-20 w-96 h-96 rounded-full bg-blue-200/20 blur-3xl"></div>
-                    <div className="container mx-auto px-6 text-center relative z-10">
-                        <div className="inline-block mb-2 bg-blue-100 text-blue-600 text-sm font-semibold px-4 py-1 rounded-full">
-                            Why Choose Us
-                        </div>
-                        <h2 className="text-4xl font-bold mb-6">The UniWiz Advantage</h2>
-                        <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-16">
-                            Designed specifically for Sri Lankan university students and employers who value talent and flexibility.
-                        </p>
-                        <div className="grid md:grid-cols-3 gap-8">
-                            <FeatureCard 
-                                icon="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" 
-                                title="Verified Opportunities" 
-                                text="Every job is verified by our team to ensure legitimacy and fair compensation for students." 
-                            />
-                            <FeatureCard 
-                                icon="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" 
-                                title="Flexible Scheduling" 
-                                text="Find opportunities that fit around your class schedule and academic commitments." 
-                            />
-                            <FeatureCard 
-                                icon="M12 14l9-5-9-5-9 5 9 5zM12 14l6.16-3.422A12.083 12.083 0 0112 21a12.083 12.083 0 01-6.16-9.422L12 14z" 
-                                title="Student-Focused" 
-                                text="Built specifically for university students with features that support your academic journey." 
-                            />
-                        </div>
-                    </div>
-                </section>
-
-                {/* --- How It Works Section with tabbed interface --- */}
-                <section className="py-20 bg-white relative overflow-hidden">
-                    <div className="absolute -top-40 right-0 w-80 h-80 bg-blue-100/30 rounded-full blur-3xl"></div>
-                    <div className="container mx-auto px-6 text-center relative z-10">
-                        <div className="inline-block mb-2 bg-blue-100 text-blue-600 text-sm font-semibold px-4 py-1 rounded-full">
-                            Simple Process
-                        </div>
-                        <h2 className="text-4xl font-bold mb-6">How It Works</h2>
-                        <p className="text-lg text-gray-600 mb-12 max-w-2xl mx-auto">
-                            {activeTab === 'students' ? 
-                                'Find the perfect part-time job in just a few steps' : 
-                                'Connect with talented university students quickly and easily'}
-                        </p>
-                        {/* --- Tab switcher for students/employers --- */}
-                        <div className="flex justify-center mb-16">
-                            <div className="inline-flex bg-gray-100 p-1 rounded-xl">
-                                <button 
-                                    onClick={() => setActiveTab('students')} 
-                                    className={`py-3 px-8 font-semibold rounded-xl transition-all duration-300 ${activeTab === 'students' ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md' : 'text-gray-700 hover:text-blue-600'}`}
-                                >
-                                    For Students
-                                </button>
-                                <button 
-                                    onClick={() => setActiveTab('employers')} 
-                                    className={`py-3 px-8 font-semibold rounded-xl transition-all duration-300 ${activeTab === 'employers' ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-md' : 'text-gray-700 hover:text-green-600'}`}
-                                >
-                                    For Employers
-                                </button>
-                            </div>
-                        </div>
-                        {/* --- Steps for each tab --- */}
-                        {activeTab === 'students' && (
-                            <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                                <HowItWorksStep 
-                                    number="1" 
-                                    title="Create Your Profile" 
-                                    text="Sign up and build your student profile with your skills, availability, and university details." 
-                                    color="bg-gradient-to-r from-blue-500 to-blue-600" 
-                                />
-                                <HowItWorksStep 
-                                    number="2" 
-                                    title="Browse Opportunities" 
-                                    text="Explore verified job listings that match your skills and schedule preferences." 
-                                    color="bg-gradient-to-r from-blue-500 to-blue-600" 
-                                />
-                                <HowItWorksStep 
-                                    number="3" 
-                                    title="Apply & Connect" 
-                                    text="Submit applications and communicate directly with potential employers." 
-                                    color="bg-gradient-to-r from-blue-500 to-blue-600" 
-                                />
-                            </div>
-                        )}
-                        {activeTab === 'employers' && (
-                            <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                                <HowItWorksStep 
-                                    number="1" 
-                                    title="Create Company Profile" 
-                                    text="Set up your company profile and choose a subscription plan that fits your hiring needs." 
-                                    color="bg-gradient-to-r from-green-500 to-green-600" 
-                                />
-                                <HowItWorksStep 
-                                    number="2" 
-                                    title="Post Job Opportunities" 
-                                    text="Create detailed job listings specifying skills, hours, and compensation for university students." 
-                                    color="bg-gradient-to-r from-green-500 to-green-600" 
-                                />
-                                <HowItWorksStep 
-                                    number="3" 
-                                    title="Review & Hire" 
-                                    text="Evaluate student applications, communicate with candidates, and find your perfect match." 
-                                    color="bg-gradient-to-r from-green-500 to-green-600" 
-                                />
-                            </div>
-                        )}
-                    </div>
-                </section>
-                {/* --- Latest Active Jobs Section --- */}
-                <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
-                    <div className="container mx-auto px-6">
-                        <div className="text-center mb-16">
-                            <div className="inline-block mb-2 bg-blue-100 text-blue-600 text-sm font-semibold px-4 py-1 rounded-full">
-                                Opportunities
-                            </div>
-                            <h2 className="text-4xl font-bold mb-4">Latest Job Openings</h2>
-                            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                                Browse through our curated selection of student-friendly jobs
-                            </p>
-                        </div>
-                        {jobs.length > 0 ? (
-                            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                                {jobs.slice(0, 6).map((job, idx) => (
-                                    <JobCard key={job.id} job={job} setPage={setPage} isNew={idx === 0} />
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="bg-white rounded-2xl shadow-sm p-12 text-center flex flex-col items-center">
-                                <svg className="w-20 h-20 mx-auto text-gray-300 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a4 4 0 004 4h10a4 4 0 004-4V7M16 3v4M8 3v4m-5 4h18"></path>
-                                </svg>
-                                <h3 className="text-2xl font-semibold text-gray-700 mb-2">No active jobs available</h3>
-                                <p className="text-gray-500 max-w-md mx-auto">We're currently updating our job listings. Please check back later for new opportunities.</p>
-                            </div>
-                        )}
-                        <div className="text-center mt-16">
-                            <button 
-                                onClick={() => setPage('public-jobs')} 
-                                className="bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold py-3 px-8 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-md hover:shadow-lg inline-flex items-center"
-                            >
-                                View All Jobs
-                                <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </section>
-                {/* --- Testimonials Section --- */}
-                <section className="py-20 bg-white">
-                    <div className="container mx-auto px-6">
-                        <div className="text-center mb-16">
-                            <div className="inline-block mb-2 bg-blue-100 text-blue-600 text-sm font-semibold px-4 py-1 rounded-full">
-                                Testimonials
-                            </div>
-                            <h2 className="text-4xl font-bold mb-4">Success Stories</h2>
-                            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                                Hear from students and employers who found success with UniWiz
-                            </p>
-                        </div>
-                        {/* --- Two example testimonials --- */}
-                        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-                            {/* --- Student testimonial --- */}
-                            <div className="bg-white p-8 rounded-2xl shadow-xl border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
-                                <div className="flex items-start mb-6">
-                                    <img 
-                                        src="https://placehold.co/100x100/E2E8F0/4A5568?text=AP" 
-                                        alt="Amal Perera" 
-                                        className="w-14 h-14 rounded-xl mr-4 object-cover border-2 border-blue-100" 
-                                    />
-                                    <div>
-                                        <p className="font-bold text-lg">Amal Perera</p>
-                                        <p className="text-sm text-gray-500">Computer Science Student, University of Colombo</p>
-                                        <div className="flex mt-2">
-                                            {[...Array(5)].map((_, i) => (
-                                                <svg key={i} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                                </svg>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-                                <p className="text-gray-600 leading-relaxed italic relative pl-6">
-                                    <svg className="w-6 h-6 text-blue-200 absolute left-0 top-0" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"></path>
-                                    </svg>
-                                    "UniWiz helped me find a part-time web development job that perfectly fits around my class schedule. I'm gaining real-world experience while earning money to support my studies. The platform is incredibly easy to use!"
-                                </p>
-                            </div>
-                            {/* --- Employer testimonial --- */}
-                            <div className="bg-white p-8 rounded-2xl shadow-xl border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
-                                <div className="flex items-start mb-6">
-                                    <img 
-                                        src="https://placehold.co/100x100/E2E8F0/4A5568?text=SJ" 
-                                        alt="Sarah Johnson" 
-                                        className="w-14 h-14 rounded-xl mr-4 object-cover border-2 border-blue-100" 
-                                    />
-                                    <div>
-                                        <p className="font-bold text-lg">Sarah Johnson</p>
-                                        <p className="text-sm text-gray-500">HR Manager, TechSolutions Lanka</p>
-                                        <div className="flex mt-2">
-                                            {[...Array(5)].map((_, i) => (
-                                                <svg key={i} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                                </svg>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-                                <p className="text-gray-600 leading-relaxed italic relative pl-6">
-                                    <svg className="w-6 h-6 text-blue-200 absolute left-0 top-0" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"></path>
-                                    </svg>
-                                    "As a growing tech company, we needed access to bright, motivated talent. UniWiz has been instrumental in helping us find qualified student workers who bring fresh perspectives to our projects. The subscription model gives us great flexibility."
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                {/* --- CTA Section --- */}
-                <section className="py-20 bg-gradient-to-r from-blue-600 to-blue-800 text-white">
-                    <div className="container mx-auto px-6 text-center">
-                        <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to get started?</h2>
-                        <p className="text-xl text-blue-100 max-w-2xl mx-auto mb-10 leading-relaxed">
-                            Join UniWiz today and take the first step towards balancing work and study.
-                        </p>
-                        <div className="flex flex-col sm:flex-row justify-center gap-4">
-                            <button 
-                                onClick={() => setPage('login', { signup: true, role: 'student' })} 
-                                className="bg-white text-blue-600 font-semibold py-3 px-8 rounded-lg hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-                            >
-                                Sign up as Student
-                            </button>
-                            <button 
-                                onClick={() => setPage('login', { signup: true, role: 'publisher' })} 
-                                className="bg-green-500 text-white font-semibold py-3 px-8 rounded-lg hover:bg-green-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 border border-green-400"
-                            >
-                                Sign up as Employer
-                            </button>
-                        </div>
-                    </div>
-                </section>
-            </main>
-
-            {/* --- Enhanced Footer --- */}
-            <footer className="relative bg-gray-900 text-gray-300 mt-24">
-                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-400 via-blue-600 to-blue-400 opacity-60 rounded-t-xl"></div>
-                <div className="container mx-auto px-6 py-16">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 items-start">
-                        {/* --- Logo and About --- */}
-                        <div className="col-span-2 flex flex-col items-start">
-                            <div className="flex items-center mb-6">
-                                <img src="/logo.png" alt="UniWiz Logo" className="h-16 w-16 rounded-2xl shadow-lg mr-3" />
-                                <h2 className="text-3xl font-extrabold bg-gradient-to-r from-blue-400 to-blue-300 bg-clip-text text-transparent drop-shadow-lg">UniWiz</h2>
-                            </div>
-                            <p className="text-gray-400 mb-6 leading-relaxed text-lg">
-                                Connecting Sri Lankan university students with verified part-time and freelance opportunities.
-                            </p>
-                            <div className="flex space-x-4 mt-2">
-                                <a href="#" title="Facebook" className="text-blue-400 hover:text-white transition-colors duration-300 text-2xl"><i className="fab fa-facebook-square"></i></a>
-                                <a href="#" title="Twitter" className="text-blue-300 hover:text-white transition-colors duration-300 text-2xl"><i className="fab fa-twitter"></i></a>
-                                <a href="#" title="Instagram" className="text-pink-400 hover:text-white transition-colors duration-300 text-2xl"><i className="fab fa-instagram"></i></a>
-                                <a href="#" title="YouTube" className="text-red-400 hover:text-white transition-colors duration-300 text-2xl"><i className="fab fa-youtube"></i></a>
-                                <a href="#" title="LinkedIn" className="text-blue-500 hover:text-white transition-colors duration-300 text-2xl"><i className="fab fa-linkedin"></i></a>
-                            </div>
-                        </div>
-                        {/* --- Dynamic Footer Links --- */}
-                        {footerLinks ? (
-                            Object.keys(footerLinks)
-                                .filter(category => Array.isArray(footerLinks[category]) && footerLinks[category].some(link => link && link.text && link.text.trim() !== ''))
-                                .map(category => (
-                                    <div key={category} className="mt-8 md:mt-0">
-                                        <h4 className="text-white font-bold text-lg mb-4 uppercase tracking-wider">{category}</h4>
-                                        {category === 'LEGAL' ? (
-                                            <div className="flex flex-wrap items-center space-x-4">
-                                                {footerLinks[category].filter(link => link && link.text && link.text.trim() !== '').map((link, index, arr) => (
-                                                    <React.Fragment key={index}>
-                                                        {index > 0 && <span className="text-gray-500">|</span>}
-                                                        <a href={link.url} className="text-gray-400 hover:text-blue-400 hover:underline transition-colors duration-300 font-medium">{link.text}</a>
-                                                    </React.Fragment>
-                                                ))}
-                                            </div>
-                                        ) : (
-                                            <ul className="space-y-2">
-                                                {footerLinks[category].filter(link => link && link.text && link.text.trim() !== '').map((link, index) => (
-                                                    <li key={index}>
-                                                        <a href={link.url} className="text-gray-400 hover:text-blue-400 hover:underline transition-colors duration-300 font-medium">{link.text}</a>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        )}
-                                    </div>
-                                ))
-                        ) : (
-                            <div className="col-span-3">
-                                <p>Loading footer links...</p>
-                            </div>
-                        )}
-                    </div>
-                </div>
-                <div className="border-t border-gray-800 pt-8 pb-4 text-center">
-                    <p className="text-gray-500 text-sm">
-                        &copy; {new Date().getFullYear()} UniWiz. All rights reserved.
-                    </p>
-                </div>
-            </footer>
+            {/* Right Action Buttons */}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setPage('login')}
+                className="text-sm font-bold text-slate-700 hover:text-emerald-700 px-4 py-2 rounded-xl hover:bg-slate-100 transition-all"
+              >
+                Sign In
+              </button>
+              <button
+                onClick={() => setPage('login', { signup: true, role: 'student' })}
+                className="text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 px-5 py-2.5 rounded-xl shadow-md shadow-emerald-600/20 hover:shadow-lg hover:shadow-emerald-600/30 transition-all hover:scale-[1.02] active:scale-95"
+              >
+                Get Started
+              </button>
+            </div>
+          </div>
         </div>
-    );
+      </header>
+
+      {/* =========================================================================
+          2. ULTRA-MODERN HERO SECTION
+         ========================================================================= */}
+      <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-radial-gradient bg-grid-slate">
+        {/* Ambient background glow orbs */}
+        <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-gradient-to-tr from-emerald-500/15 via-amber-500/12 to-transparent blur-3xl pointer-events-none -z-10" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+          <div className="text-center lg:text-left max-w-3xl mx-auto lg:mx-0">
+            {/* Pill Announcement */}
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-slate-200/90 shadow-sm mb-6 text-xs font-semibold text-slate-700"
+            >
+              <span className="flex h-2 w-2 relative">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              The #1 Campus Talent & Part-Time Job Platform in Sri Lanka
+            </motion.div>
+
+            {/* Hero Main Heading */}
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 leading-[1.15] mb-6"
+            >
+              Power Your Degree with <br className="hidden sm:inline" />
+              <span className="bg-gradient-to-r from-emerald-800 via-emerald-600 to-amber-500 bg-clip-text text-transparent">
+                Real-World Experience.
+              </span>
+            </motion.h1>
+
+            {/* Subheading */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-lg sm:text-xl text-slate-600 leading-relaxed mb-10 max-w-2xl mx-auto lg:mx-0"
+            >
+              Connect with vetted employers, earn competitive part-time income, and build a stand-out portfolio that fits seamlessly around your lectures.
+            </motion.p>
+
+            {/* Interactive Hero Search Bar */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="bg-white p-2.5 rounded-2xl border border-slate-200/90 shadow-[0_10px_35px_-5px_rgba(0,0,0,0.08)] max-w-3xl mx-auto lg:mx-0 mb-10"
+            >
+              <form onSubmit={handleSearchSubmit} className="flex flex-col sm:flex-row lg:flex-col xl:flex-row items-center gap-2">
+                <div className="flex items-center gap-2 px-3.5 py-2.5 flex-1 w-full bg-slate-50/80 rounded-xl border border-slate-200/60 focus-within:border-emerald-500 focus-within:bg-white transition-all">
+                  <svg className="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Job title, skill (e.g. React, Tutor, Design)..."
+                    className="w-full bg-transparent text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none"
+                  />
+                </div>
+
+                <div className="flex items-center gap-2 px-3.5 py-2.5 sm:w-56 lg:w-full xl:w-56 w-full bg-slate-50/80 rounded-xl border border-slate-200/60 focus-within:border-emerald-500 focus-within:bg-white transition-all">
+                  <svg className="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                  </svg>
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    className="w-full bg-transparent text-sm font-medium text-slate-800 focus:outline-none cursor-pointer"
+                  >
+                    <option value="">All Categories</option>
+                    {CATEGORIES.map((cat) => (
+                      <option key={cat.slug} value={cat.name}>
+                        {cat.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full sm:w-auto lg:w-full xl:w-auto px-7 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold transition-all shadow-md shadow-emerald-600/20 hover:shadow-lg hover:shadow-emerald-600/30 flex items-center justify-center gap-2 group active:scale-95"
+                >
+                  Explore Jobs
+                  <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </button>
+              </form>
+            </motion.div>
+
+            {/* Quick Hero Value Points / Trust Badges */}
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-3 text-xs font-semibold text-slate-500">
+              <span className="flex items-center gap-1.5">
+                <svg className="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                Verified Student Identity
+              </span>
+              <span className="flex items-center gap-1.5">
+                <svg className="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                100% Guaranteed Pay
+              </span>
+              <span className="flex items-center gap-1.5">
+                <svg className="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                Flexible Lecture Hours
+              </span>
+            </div>
+          </div>
+
+          {/* Hero Illustration */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+            className="relative mx-auto w-full max-w-md lg:max-w-none"
+          >
+            <img
+              src="/hero-illustration.svg"
+              alt="A university student finding a verified part-time job on UniWiz"
+              className="w-full h-auto drop-shadow-xl"
+              loading="eager"
+            />
+          </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          3. CATEGORIES BENTO GRID
+         ========================================================================= */}
+      <section id="browse-categories" className="py-20 bg-white border-y border-slate-200/60">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12">
+            <div>
+              <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 block">
+                Explore Sectors
+              </span>
+              <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+                Popular Job Categories
+              </h2>
+            </div>
+            <button
+              onClick={() => setPage('public-jobs')}
+              className="mt-4 sm:mt-0 text-sm font-bold text-indigo-600 hover:text-indigo-700 inline-flex items-center gap-1 group"
+            >
+              Browse all categories
+              <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {CATEGORIES.map((cat, idx) => (
+              <motion.div
+                key={cat.slug}
+                whileHover={{ y: -4 }}
+                onClick={() => setPage('public-jobs', { category: cat.name })}
+                className={`p-6 rounded-2xl bg-slate-50/70 border border-slate-200/80 ${cat.border} hover:bg-white hover:shadow-card-hover transition-all duration-300 cursor-pointer group flex flex-col justify-between`}
+              >
+                <div>
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-tr ${cat.color} text-white flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform`}>
+                    {cat.icon}
+                  </div>
+                  <h3 className="text-base font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
+                    {cat.name}
+                  </h3>
+                </div>
+                <div className="mt-4 pt-3 border-t border-slate-200/50 flex items-center justify-between text-xs font-semibold text-slate-500">
+                  <span>{cat.count}</span>
+                  <span className="text-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5">
+                    View
+                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          4. FEATURED JOBS SECTION
+         ========================================================================= */}
+      <section id="featured-jobs" className="py-24 bg-[#F8FAFC]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 block">
+              Hand-Picked Openings
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
+              Latest Verified Opportunities
+            </h2>
+            <p className="text-slate-600 text-sm sm:text-base">
+              Apply to active vacancies designed specifically for undergraduates with flexible schedules and fair wages.
+            </p>
+          </div>
+
+          {jobs.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {jobs.slice(0, 6).map((job, idx) => (
+                <ModernJobCard key={job.id || idx} job={job} setPage={setPage} isNew={idx < 2} />
+              ))}
+            </div>
+          ) : (
+            <div className="bg-white rounded-2xl p-12 text-center border border-slate-200 shadow-sm max-w-lg mx-auto">
+              <div className="w-16 h-16 rounded-full bg-indigo-50 text-indigo-500 mx-auto flex items-center justify-center mb-4">
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-bold text-slate-800 mb-1">Loading Available Openings...</h3>
+              <p className="text-sm text-slate-500">Checking the database for the newest opportunities.</p>
+            </div>
+          )}
+
+          <div className="text-center mt-12">
+            <button
+              onClick={() => setPage('public-jobs')}
+              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-white border border-slate-300 hover:border-indigo-400 text-slate-800 hover:text-indigo-600 font-bold text-sm shadow-sm hover:shadow transition-all group"
+            >
+              Browse All Job Openings
+              <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          5. HOW IT WORKS (STUDENTS & EMPLOYERS)
+         ========================================================================= */}
+      <section id="how-it-works" className="py-24 bg-white border-t border-slate-200/60">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 block">
+              Effortless Workflow
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
+              How UniWiz Works
+            </h2>
+            <p className="text-slate-600 text-sm sm:text-base">
+              A transparent, secure process designed for Sri Lankan university talent and modern companies.
+            </p>
+
+            {/* Segmented Control Switcher */}
+            <div className="mt-8 inline-flex p-1 rounded-2xl bg-slate-100 border border-slate-200">
+              <button
+                onClick={() => setActiveTab('students')}
+                className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${
+                  activeTab === 'students'
+                    ? 'bg-white text-indigo-600 shadow-sm'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                For Students
+              </button>
+              <button
+                onClick={() => setActiveTab('employers')}
+                className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${
+                  activeTab === 'employers'
+                    ? 'bg-white text-indigo-600 shadow-sm'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                For Employers
+              </button>
+            </div>
+          </div>
+
+          {/* Steps Display */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {activeTab === 'students' ? (
+              <>
+                <div className="bg-slate-50/70 rounded-2xl p-8 border border-slate-200/70 relative">
+                  <div className="w-12 h-12 rounded-xl bg-indigo-600 text-white font-extrabold text-lg flex items-center justify-center mb-6 shadow-md shadow-indigo-500/20">
+                    01
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-2">Build Your Campus Profile</h3>
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    Sign up with your university email, list your key skills, availability slots, and showcase your past projects.
+                  </p>
+                </div>
+
+                <div className="bg-slate-50/70 rounded-2xl p-8 border border-slate-200/70 relative">
+                  <div className="w-12 h-12 rounded-xl bg-purple-600 text-white font-extrabold text-lg flex items-center justify-center mb-6 shadow-md shadow-purple-500/20">
+                    02
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-2">Apply with 1-Click</h3>
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    Filter by category, pay rate, or remote work. Send customized proposals directly to hiring managers.
+                  </p>
+                </div>
+
+                <div className="bg-slate-50/70 rounded-2xl p-8 border border-slate-200/70 relative">
+                  <div className="w-12 h-12 rounded-xl bg-emerald-600 text-white font-extrabold text-lg flex items-center justify-center mb-6 shadow-md shadow-emerald-500/20">
+                    03
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-2">Work & Earn Safely</h3>
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    Chat in-app, complete tasks, receive verified employer reviews, and build your corporate reputation.
+                  </p>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="bg-slate-50/70 rounded-2xl p-8 border border-slate-200/70 relative">
+                  <div className="w-12 h-12 rounded-xl bg-indigo-600 text-white font-extrabold text-lg flex items-center justify-center mb-6 shadow-md shadow-indigo-500/20">
+                    01
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-2">Post Your Requirement</h3>
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    Define the task, required university disciplines, hourly rates, and working hours in less than 2 minutes.
+                  </p>
+                </div>
+
+                <div className="bg-slate-50/70 rounded-2xl p-8 border border-slate-200/70 relative">
+                  <div className="w-12 h-12 rounded-xl bg-purple-600 text-white font-extrabold text-lg flex items-center justify-center mb-6 shadow-md shadow-purple-500/20">
+                    02
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-2">Review Top Applicants</h3>
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    Filter verified students by degree, GPA, and student review score. Interview candidates via built-in chat.
+                  </p>
+                </div>
+
+                <div className="bg-slate-50/70 rounded-2xl p-8 border border-slate-200/70 relative">
+                  <div className="w-12 h-12 rounded-xl bg-emerald-600 text-white font-extrabold text-lg flex items-center justify-center mb-6 shadow-md shadow-emerald-500/20">
+                    03
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-2">Onboard & Scale</h3>
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    Hire motivated young minds for part-time, seasonal, or project gigs with predictable pricing and zero friction.
+                  </p>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          6. TESTIMONIALS & REVIEWS
+         ========================================================================= */}
+      <section id="testimonials" className="py-24 bg-[#F8FAFC]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2 block">
+              Success Stories
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
+              Trusted by Students & Employers
+            </h2>
+            <p className="text-slate-600 text-sm sm:text-base">
+              See what undergraduates and industry partners say about their experience on UniWiz.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            {/* Review 1 */}
+            <div className="bg-white rounded-2xl p-7 border border-slate-200/80 shadow-sm flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-1 text-amber-400 mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <svg key={i} className="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-sm text-slate-700 leading-relaxed italic mb-6">
+                  "UniWiz allowed me to work as a junior React developer for Tech Solutions Lanka while completing my 3rd year at UWU. The flexible 15 hrs/week schedule never interfered with my exams!"
+                </p>
+              </div>
+              <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
+                <div className="w-10 h-10 rounded-full bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center text-sm">
+                  KP
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900">Kasun Perera</h4>
+                  <p className="text-xs text-slate-500">CS Undergrad, Uva Wellassa University</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Review 2 */}
+            <div className="bg-white rounded-2xl p-7 border border-slate-200/80 shadow-sm flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-1 text-amber-400 mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <svg key={i} className="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-sm text-slate-700 leading-relaxed italic mb-6">
+                  "Finding skilled undergraduates with fresh ideas in Figma and UI design used to take weeks. With UniWiz, we found Dineth from Moratuwa within 48 hours. The quality of student work is top notch!"
+                </p>
+              </div>
+              <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
+                <div className="w-10 h-10 rounded-full bg-purple-100 text-purple-700 font-bold flex items-center justify-center text-sm">
+                  KS
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900">Kavindi Silva</h4>
+                  <p className="text-xs text-slate-500">Design Lead, Creative Studio Colombo</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Review 3 */}
+            <div className="bg-white rounded-2xl p-7 border border-slate-200/80 shadow-sm flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-1 text-amber-400 mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <svg key={i} className="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-sm text-slate-700 leading-relaxed italic mb-6">
+                  "UniWiz made student peer-tutoring coordination seamless. Senior students get fair stipends while junior students get personalized academic mentoring."
+                </p>
+              </div>
+              <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
+                <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center text-sm">
+                  NF
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900">Dr. Nihal Fernando</h4>
+                  <p className="text-xs text-slate-500">Coordinator, Uva Wellassa Support</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          7. MODERN HIGH-IMPACT CALL TO ACTION (CTA)
+         ========================================================================= */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="relative rounded-3xl bg-gradient-to-tr from-slate-950 via-indigo-950 to-slate-900 p-8 sm:p-14 lg:p-16 overflow-hidden shadow-2xl">
+            {/* Ambient circular gradients inside card */}
+            <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-indigo-500/20 blur-3xl" />
+            <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-purple-500/20 blur-3xl" />
+
+            <div className="relative z-10 max-w-3xl">
+              <span className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-500/20 text-indigo-300 ring-1 ring-indigo-400/30 mb-4">
+                Start Today
+              </span>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight mb-5 leading-tight">
+                Ready to take control of your student journey?
+              </h2>
+              <p className="text-base sm:text-lg text-slate-300 mb-8 max-w-xl leading-relaxed">
+                Join thousands of Sri Lankan undergraduates already discovering verified part-time jobs, internships, and project work.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button
+                  onClick={() => setPage('login', { signup: true, role: 'student' })}
+                  className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold text-sm shadow-lg shadow-indigo-500/30 hover:scale-[1.02] active:scale-95 transition-all"
+                >
+                  Sign Up as Student
+                </button>
+                <button
+                  onClick={() => setPage('login', { signup: true, role: 'publisher' })}
+                  className="px-8 py-3.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-sm border border-white/20 hover:scale-[1.02] active:scale-95 transition-all backdrop-blur-sm"
+                >
+                  Hire Campus Talent
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          8. MODERN DARK FOOTER
+         ========================================================================= */}
+      <footer className="bg-slate-950 text-slate-400 pt-16 pb-12 border-t border-slate-900 text-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-10 mb-12">
+            {/* Col 1: Brand Info */}
+            <div className="md:col-span-2">
+              <div className="flex items-center gap-2.5 mb-4">
+                <div className="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-sm">
+                  UW
+                </div>
+                <span className="text-lg font-extrabold text-white tracking-tight">UniWiz</span>
+              </div>
+              <p className="text-xs text-slate-400 leading-relaxed max-w-sm mb-4">
+                The leading platform connecting Sri Lankan university students with verified part-time employment, academic tutoring, and corporate freelance gigs.
+              </p>
+              <div className="text-xs text-slate-500">
+                Created for Sri Lankan University undergraduates.
+              </div>
+            </div>
+
+            {/* Col 2: For Students */}
+            <div>
+              <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-4">For Students</h4>
+              <ul className="space-y-2.5 text-xs">
+                <li><a href="#featured-jobs" className="hover:text-indigo-400 transition-colors">Browse Jobs</a></li>
+                <li><button onClick={() => setPage('login', { signup: true, role: 'student' })} className="hover:text-indigo-400 transition-colors">Student Sign Up</button></li>
+                <li><a href="#how-it-works" className="hover:text-indigo-400 transition-colors">How It Works</a></li>
+              </ul>
+            </div>
+
+            {/* Col 3: For Employers */}
+            <div>
+              <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-4">For Employers</h4>
+              <ul className="space-y-2.5 text-xs">
+                <li><button onClick={() => setPage('login', { signup: true, role: 'publisher' })} className="hover:text-indigo-400 transition-colors">Post a Vacancy</button></li>
+                <li><a href="#browse-categories" className="hover:text-indigo-400 transition-colors">Talent Disciplines</a></li>
+                <li><button onClick={() => setPage('login')} className="hover:text-indigo-400 transition-colors">Employer Login</button></li>
+              </ul>
+            </div>
+
+            {/* Col 4: Platform */}
+            <div>
+              <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-4">Platform</h4>
+              <ul className="space-y-2.5 text-xs">
+                <li><span className="hover:text-indigo-400 transition-colors cursor-pointer">Terms of Service</span></li>
+                <li><span className="hover:text-indigo-400 transition-colors cursor-pointer">Privacy Policy</span></li>
+                <li><span className="hover:text-indigo-400 transition-colors cursor-pointer">Support Desk</span></li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="pt-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+            <p>© {new Date().getFullYear()} UniWiz Portal. All rights reserved.</p>
+            <div className="flex gap-6">
+              <span>Backed by Supabase & Prisma</span>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      {/* =========================================================================
+          9. FLOATING BACK TO TOP
+         ========================================================================= */}
+      {showBackToTop && (
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="fixed bottom-6 right-6 z-40 p-3 rounded-xl bg-slate-900 text-white shadow-xl hover:bg-indigo-600 transition-all hover:scale-110 active:scale-95"
+          aria-label="Back to top"
+        >
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 15l7-7 7 7" />
+          </svg>
+        </button>
+      )}
+    </div>
+  );
 };
 
 export default LandingPage;

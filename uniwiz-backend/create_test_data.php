@@ -1,4 +1,12 @@
 <?php
+// Development-only script: refuse to run on a deployed server unless APP_ENV=development.
+if (php_sapi_name() !== 'cli' && getenv('APP_ENV') !== 'development') {
+    http_response_code(403);
+    header('Content-Type: application/json');
+    echo json_encode(['message' => 'This endpoint is disabled outside development.']);
+    exit;
+}
+
 // FILE: uniwiz-backend/create_test_data.php
 // ========================================
 // Creates test job applications and student reviews

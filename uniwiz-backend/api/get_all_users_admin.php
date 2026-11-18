@@ -8,7 +8,7 @@ header("Content-Type: application/json; charset=UTF-8"); // Respond with JSON
 header("Access-Control-Allow-Methods: GET, OPTIONS"); // Allow GET and OPTIONS methods
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-header("Access-Control-Allow-Origin: http://localhost:3000"); // Allow requests from frontend
+header('Access-Control-Allow-Origin: ' . (getenv('FRONTEND_URL') ?: 'http://localhost:3000')); // Allow requests from frontend
 
 // Handle preflight OPTIONS request for CORS
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -99,7 +99,7 @@ try {
 
     // Add search term filter (matches first name, last name, email, or company name)
     if (!empty($search_term)) {
-        $query .= " AND (u.first_name LIKE :search_term OR u.last_name LIKE :search_term OR u.email LIKE :search_term OR u.company_name LIKE :search_term)";
+        $query .= " AND (LOWER(u.first_name) LIKE LOWER(:search_term) OR LOWER(u.last_name) LIKE LOWER(:search_term) OR LOWER(u.email) LIKE LOWER(:search_term) OR LOWER(u.company_name) LIKE LOWER(:search_term))";
         $params[':search_term'] = "%" . $search_term . "%";
     }
 

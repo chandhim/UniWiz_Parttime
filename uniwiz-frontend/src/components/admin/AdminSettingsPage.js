@@ -16,8 +16,8 @@
 // =======================================================
 import React, { useState, useEffect, useCallback } from 'react';
 import { getCategoryColorClass, getAllCategoryColors } from '../../utils/categoryColors';
+import { API_BASE_URL } from '../../config';
 
-const API_BASE_URL = 'http://uniwiz-backend.test/api';
 
 // Reusable component to manage a list (Skills or Categories)
 // ListManager handles fetching, adding, and deleting items (categories/skills)

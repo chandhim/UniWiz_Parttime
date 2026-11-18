@@ -3,7 +3,7 @@
 // ====================================================
 // This endpoint allows publishers to create/update reviews for students
 
-header('Access-Control-Allow-Origin: http://localhost:3000');
+header('Access-Control-Allow-Origin: ' . (getenv('FRONTEND_URL') ?: 'http://localhost:3000'));
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
 header('Access-Control-Allow-Credentials: true');
@@ -146,7 +146,7 @@ try {
             $notification_message = "$publisher_name has left a $rating-star review for your work.";
             $notification_link = "/profile"; // Link to student profile page
 
-            $query_notification = "INSERT INTO notifications (user_id, type, message, link, is_read) VALUES (:user_id, 'review_received', :message, :link, 0)";
+            $query_notification = "INSERT INTO notifications (user_id, type, message, link, is_read) VALUES (:user_id, 'review_received', :message, :link, FALSE)";
             $stmt_notification = $db->prepare($query_notification);
             $stmt_notification->bindParam(':user_id', $student_id);
             $stmt_notification->bindParam(':message', $notification_message);

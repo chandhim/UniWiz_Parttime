@@ -51,12 +51,17 @@ class Database {
      * Load database configuration from environment or defaults
      */
     private function loadConfig() {
-        // Load environment variables if available
         if (file_exists(__DIR__ . '/../../vendor/autoload.php')) {
             require_once __DIR__ . '/../../vendor/autoload.php';
             try {
-                $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../..');
-                $dotenv->load();
+                if (file_exists(__DIR__ . '/../../../.env')) {
+                    $rootDotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../..');
+                    $rootDotenv->safeLoad();
+                }
+                if (file_exists(__DIR__ . '/../..')) {
+                    $backendDotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../..');
+                    $backendDotenv->safeLoad();
+                }
             } catch (Exception $e) {
                 // Continue with default values
             }
@@ -72,17 +77,37 @@ class Database {
      * Establish database connection
      */
     private function connect() {
+        $dbUrl = $_ENV['DATABASE_URL'] ?? getenv('DATABASE_URL') ?? null;
+        $directUrl = $_ENV['DIRECT_URL'] ?? getenv('DIRECT_URL') ?? null;
+        $connectionUrl = $directUrl ?: $dbUrl;
+
         try {
-            $this->connection = new PDO(
-                "mysql:host=" . $this->host . ";dbname=" . $this->db_name . ";charset=utf8mb4",
-                $this->username,
-                $this->password,
-                [
+            if ($connectionUrl && (strpos($connectionUrl, 'postgres://') === 0 || strpos($connectionUrl, 'postgresql://') === 0)) {
+                $parts = parse_url($connectionUrl);
+                $host = $parts['host'] ?? 'localhost';
+                $port = $parts['port'] ?? 5432;
+                $user = isset($parts['user']) ? urldecode($parts['user']) : 'postgres';
+                $pass = isset($parts['pass']) ? urldecode($parts['pass']) : '';
+                $dbname = isset($parts['path']) ? ltrim($parts['path'], '/') : 'postgres';
+
+                $dsn = "pgsql:host={$host};port={$port};dbname={$dbname};sslmode=require";
+                $this->connection = new PDO($dsn, $user, $pass, [
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                     PDO::ATTR_EMULATE_PREPARES => false
-                ]
-            );
+                ]);
+            } else {
+                $this->connection = new PDO(
+                    "mysql:host=" . $this->host . ";dbname=" . $this->db_name . ";charset=utf8mb4",
+                    $this->username,
+                    $this->password,
+                    [
+                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                        PDO::ATTR_EMULATE_PREPARES => false
+                    ]
+                );
+            }
         } catch (PDOException $exception) {
             throw new Exception("Database connection failed: " . $exception->getMessage());
         }
@@ -303,9 +328,9 @@ class Database {
      * @return array
      */
     public function getTableColumns($table) {
-        $sql = "DESCRIBE {$table}";
-        $columns = $this->select($sql);
-        return array_column($columns, 'Field');
+        $sql = "SELECT column_name AS field FROM information_schema.columns WHERE table_name = :table_name";
+        $columns = $this->select($sql, ['table_name' => $table]);
+        return array_column($columns, 'field');
     }
     
     /**

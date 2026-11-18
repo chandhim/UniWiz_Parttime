@@ -6,6 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import { validatePasswordStrength } from '../utils/passwordValidator';
 import PasswordStrengthMeter from './PasswordStrengthMeter';
+import { API_BASE_URL } from '../config';
 
 // --- Notification: Shows a temporary message at the top right ---
 const Notification = ({ message, type, onClose }) => {
@@ -89,7 +90,7 @@ function SettingsPage({ user, onLogout }) {
 
         setIsLoading(true);
         try {
-            const response = await fetch('http://uniwiz-backend.test/api/update_account_settings.php', {
+            const response = await fetch(`${API_BASE_URL}/update_account_settings.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -132,7 +133,7 @@ function SettingsPage({ user, onLogout }) {
 
         setIsLoading(true);
         try {
-            const response = await fetch('http://uniwiz-backend.test/api/update_account_settings.php', {
+            const response = await fetch(`${API_BASE_URL}/update_account_settings.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { API_BASE_URL } from '../config';
 
 // --- Star Rating Component ---
 const StarRating = ({ rating, size = 'w-4 h-4' }) => {
@@ -32,7 +33,7 @@ const ReviewCard = ({ review }) => (
         <div className="flex items-start space-x-3">
             <img 
                 src={review.publisher_image_url ? 
-                    `http://uniwiz-backend.test/api/${review.publisher_image_url}` : 
+                    `${API_BASE_URL}/${review.publisher_image_url}` : 
                     `https://ui-avatars.com/api/?name=${review.company_name || review.publisher_first_name}&background=E8EAF6&color=211C84`
                 }
                 alt="Publisher profile"
@@ -120,7 +121,7 @@ function StudentReviewsReceived({ studentId, showTitle = true }) {
     const fetchReviews = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`http://uniwiz-backend.test/api/get_student_reviews_received.php?student_id=${studentId}`);
+            const response = await fetch(`${API_BASE_URL}/get_student_reviews_received.php?student_id=${studentId}`);
             const data = await response.json();
             
             if (response.ok) {

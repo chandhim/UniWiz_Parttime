@@ -16,6 +16,7 @@
 // ==============================================================================
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { API_BASE_URL } from '../../config';
 
 // Reusable navigation link component
 // NavLink renders a single navigation button with icon, text, and optional notification badge.
@@ -116,7 +117,7 @@ function AdminSidebar({ currentPage, setPage, onLogout, isLocked, toggleLock, ha
         const fetchPendingReports = async () => {
             try {
                 // Fetch only the count of pending reports
-                const response = await fetch('http://uniwiz-backend.test/api/get_reports_admin.php?pending_count_only=1');
+                const response = await fetch(`${API_BASE_URL}/get_reports_admin.php?pending_count_only=1`);
                 const data = await response.json();
                 setHasPendingReports((data.pending_count ?? 0) > 0);
             } catch (err) {

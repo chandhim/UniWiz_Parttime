@@ -1,6 +1,7 @@
 // FILE: src/components/ManageJobs.js
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { API_BASE_URL } from '../config';
 
 // --- Notification: Shows a temporary message at the top right ---
 const Notification = ({ message, type, onClose }) => {
@@ -157,7 +158,7 @@ function ManageJobs({ user, onPostJobClick, onViewJobDetails, onEditJob, onViewA
         setIsLoading(true);
         setError(null);
         try {
-            const url = `http://uniwiz-backend.test/api/get_publisher_jobs.php?publisher_id=${user.id}&search=${searchTerm}`;
+            const url = `${API_BASE_URL}/get_publisher_jobs.php?publisher_id=${user.id}&search=${searchTerm}`;
             const response = await fetch(url);
             const data = await response.json();
             if (response.ok) setMyJobs(data);
@@ -191,7 +192,7 @@ function ManageJobs({ user, onPostJobClick, onViewJobDetails, onEditJob, onViewA
 
         const confirmAction = async () => {
             try {
-                const response = await fetch('http://uniwiz-backend.test/api/manage_job_action.php', {
+                const response = await fetch(`${API_BASE_URL}/manage_job_action.php`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ job_id: job.id, action: action }),
@@ -229,7 +230,7 @@ function ManageJobs({ user, onPostJobClick, onViewJobDetails, onEditJob, onViewA
     const handlePaymentSuccess = async () => {
         // Call backend to update deadline
         try {
-            const response = await fetch('http://uniwiz-backend.test/api/extend_job_deadline.php', {
+            const response = await fetch(`${API_BASE_URL}/extend_job_deadline.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ job_id: extendJob.id, new_deadline: extendDeadline }),

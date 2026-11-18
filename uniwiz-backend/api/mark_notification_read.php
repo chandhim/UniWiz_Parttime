@@ -3,7 +3,7 @@
 // =====================================================================
 // This endpoint marks a specific notification as read for a user.
 
-header("Access-Control-Allow-Origin: http://localhost:3000"); // Allow requests from frontend
+header('Access-Control-Allow-Origin: ' . (getenv('FRONTEND_URL') ?: 'http://localhost:3000')); // Allow requests from frontend
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS"); // Allow these HTTP methods
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 header('Content-Type: application/json'); // Respond with JSON
@@ -37,9 +37,9 @@ if ($data === null || !isset($data->notification_id) || !isset($data->user_id)) 
 }
 
 try {
-    // Update the notification status to 'read' (is_read = 1)
+    // Update the notification status to 'read' (is_read = TRUE)
     // Also check that the notification belongs to the user making the request for security.
-    $query = "UPDATE notifications SET is_read = 1 WHERE id = :notification_id AND user_id = :user_id";
+    $query = "UPDATE notifications SET is_read = TRUE WHERE id = :notification_id AND user_id = :user_id";
     $stmt = $db->prepare($query);
 
     // Sanitize and bind parameters

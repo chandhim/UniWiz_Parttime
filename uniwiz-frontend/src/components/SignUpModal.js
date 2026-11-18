@@ -6,6 +6,7 @@
 import React, { useState } from 'react';
 import { validateUniversityEmail } from '../utils/emailValidator';
 import EmailValidationIndicator from './EmailValidationIndicator';
+import { API_BASE_URL } from '../config';
 
 // --- SignUpModal: Modal popup for user registration ---
 // Receives props to control visibility, handle close, and handle registration success
@@ -36,7 +37,7 @@ function SignUpModal({ isOpen, onClose, onRegisterSuccess }) {
         }
 
         try {
-            const apiUrl = 'http://uniwiz-backend.test/api/auth.php';
+            const apiUrl = `${API_BASE_URL}/auth.php`;
             const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

@@ -20,6 +20,7 @@
 // including approving, rejecting, closing, reopening, and deleting jobs.
 
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { API_BASE_URL } from '../../config';
 
 // Reusable Notification Component (Toast)
 // Shows a notification message for success/error actions
@@ -172,7 +173,7 @@ function JobManagement({ user, setPage, setSelectedJobIdForDetailsPage, initialF
                 status: statusFilter, // Send statusFilter directly
                 sort_order: sortOrder, // Send sort order
             });
-            const response = await fetch(`http://uniwiz-backend.test/api/get_all_jobs_admin.php?${params.toString()}`);
+            const response = await fetch(`${API_BASE_URL}/get_all_jobs_admin.php?${params.toString()}`);
             const data = await response.json();
             if (response.ok) {
                 setJobs(data);
@@ -208,19 +209,19 @@ function JobManagement({ user, setPage, setSelectedJobIdForDetailsPage, initialF
 
         switch (actionType) {
             case 'active': // Approve or Reopen
-                apiUrl = 'http://uniwiz-backend.test/api/update_job_status_admin.php';
+                apiUrl = `${API_BASE_URL}/update_job_status_admin.php`;
                 payload.status = 'active';
                 successMessage = 'Job approved/reopened successfully!';
                 errorMessage = 'Failed to approve/reopen job.';
                 break;
             case 'closed': // Reject or Close
-                apiUrl = 'http://uniwiz-backend.test/api/update_job_status_admin.php';
+                apiUrl = `${API_BASE_URL}/update_job_status_admin.php`;
                 payload.status = 'closed';
                 successMessage = 'Job rejected/closed successfully!';
                 errorMessage = 'Failed to reject/close job.';
                 break;
             case 'delete':
-                apiUrl = 'http://uniwiz-backend.test/api/manage_job_action_admin.php'; 
+                apiUrl = `${API_BASE_URL}/manage_job_action_admin.php`; 
                 payload.action = 'delete'; 
                 successMessage = 'Job deleted successfully!';
                 errorMessage = 'Failed to delete job.';

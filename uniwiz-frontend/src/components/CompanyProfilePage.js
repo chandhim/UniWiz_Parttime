@@ -4,6 +4,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import CreateReviewModal from './CreateReviewModal';
+import { API_BASE_URL } from '../config';
 
 // --- LoadingSpinner: Shows a loading animation while fetching data ---
 const LoadingSpinner = () => (
@@ -45,7 +46,7 @@ const ReviewCard = ({ review }) => (
     <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
         <div className="flex items-center mb-2">
             <img 
-                src={review.student_image_url ? `http://uniwiz-backend.test/api/${review.student_image_url}` : `https://placehold.co/40x40/E8EAF6/211C84?text=${(review.first_name || 'S').charAt(0)}`} 
+                src={review.student_image_url ? `${API_BASE_URL}/${review.student_image_url}` : `https://placehold.co/40x40/E8EAF6/211C84?text=${(review.first_name || 'S').charAt(0)}`} 
                 alt="student profile"
                 className="h-10 w-10 rounded-full object-cover mr-3"
             />
@@ -169,7 +170,7 @@ function CompanyProfilePage({ publisherId, currentUser, handleApply, handleViewJ
         setReviewCheckLoading(true);
         try {
             const response = await fetch(
-                `http://uniwiz-backend.test/api/can_review_publisher.php?student_id=${currentUser.id}&publisher_id=${publisherId}`
+                `${API_BASE_URL}/can_review_publisher.php?student_id=${currentUser.id}&publisher_id=${publisherId}`
             );
             const data = await response.json();
             
@@ -206,7 +207,7 @@ function CompanyProfilePage({ publisherId, currentUser, handleApply, handleViewJ
         }
         setIsLoading(true);
         try {
-            const response = await fetch(`http://uniwiz-backend.test/api/get_company_profile.php?publisher_id=${publisherId}`);
+            const response = await fetch(`${API_BASE_URL}/get_company_profile.php?publisher_id=${publisherId}`);
             const data = await response.json();
             if (!response.ok) {
                 throw new Error(data.message || "Failed to fetch company profile.");
@@ -221,7 +222,7 @@ function CompanyProfilePage({ publisherId, currentUser, handleApply, handleViewJ
                 // --- For students, fetch application status for each job ---
                 const jobsWithApplicationStatus = await Promise.all(
                     data.jobs.map(async (job) => {
-                        const appStatusResponse = await fetch(`http://uniwiz-backend.test/api/get_job_details.php?job_id=${job.id}&student_id=${currentUser.id}`);
+                        const appStatusResponse = await fetch(`${API_BASE_URL}/get_job_details.php?job_id=${job.id}&student_id=${currentUser.id}`);
                         const appStatusData = await appStatusResponse.json();
                         return { ...job, application_status: appStatusData.application_status };
                     })
@@ -285,7 +286,7 @@ function CompanyProfilePage({ publisherId, currentUser, handleApply, handleViewJ
                     {/* Cover Image */}
                     {company.cover_image_url ? (
                         <div className="h-64 rounded-xl overflow-hidden mb-8 shadow-lg">
-                            <img src={`http://uniwiz-backend.test/api/${company.cover_image_url}`} alt={`${company.company_name} cover`} className="w-full h-full object-cover"/>
+                            <img src={`${API_BASE_URL}/${company.cover_image_url}`} alt={`${company.company_name} cover`} className="w-full h-full object-cover"/>
                         </div>
                     ) : (
                         <div className="h-48 bg-gray-200 rounded-xl mb-8"></div>
@@ -294,7 +295,7 @@ function CompanyProfilePage({ publisherId, currentUser, handleApply, handleViewJ
                     {/* Company Profile Header */}
                     <div className="bg-white p-8 rounded-xl shadow-lg mb-8 flex flex-col md:flex-row items-center text-center md:text-left gap-6 border -mt-24 md:-mt-16 relative">
                         <img 
-                            src={company.profile_image_url ? `http://uniwiz-backend.test/api/${company.profile_image_url}` : `https://placehold.co/128x128/E8EAF6/211C84?text=${(company.company_name || 'C').charAt(0)}`} 
+                            src={company.profile_image_url ? `${API_BASE_URL}/${company.profile_image_url}` : `https://placehold.co/128x128/E8EAF6/211C84?text=${(company.company_name || 'C').charAt(0)}`} 
                             alt={`${company.company_name || company.first_name}'s Profile`} 
                             className="h-32 w-32 rounded-full object-cover shadow-md border-4 border-white" 
                         />
@@ -333,7 +334,7 @@ function CompanyProfilePage({ publisherId, currentUser, handleApply, handleViewJ
                                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                                         {galleryImages.map(image => (
                                             <div key={image.id} className="rounded-lg overflow-hidden shadow-sm">
-                                                <img src={`http://uniwiz-backend.test/api/${image.image_url}`} alt="Company gallery" className="h-32 w-full object-cover hover:scale-105 transition-transform duration-300"/>
+                                                <img src={`${API_BASE_URL}/${image.image_url}`} alt="Company gallery" className="h-32 w-full object-cover hover:scale-105 transition-transform duration-300"/>
                                             </div>
                                         ))}
                                     </div>

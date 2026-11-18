@@ -49,7 +49,7 @@ abstract class User {
         $this->role = $data['role'] ?? null;
         $this->profileImageUrl = $data['profile_image_url'] ?? null;
         $this->status = $data['status'] ?? 'active';
-        $this->isVerified = $data['is_verified'] ?? false;
+        $this->isVerified = $data['is_verified'] ?? true;
         $this->emailVerifiedAt = $data['email_verified_at'] ?? null;
         $this->createdAt = $data['created_at'] ?? null;
         $this->updatedAt = $data['updated_at'] ?? null;
@@ -138,7 +138,7 @@ abstract class User {
         }
         
         if (isset($filters['search'])) {
-            $sql .= " AND (first_name LIKE :search OR last_name LIKE :search OR email LIKE :search OR company_name LIKE :search)";
+            $sql .= " AND (LOWER(first_name) LIKE LOWER(:search) OR LOWER(last_name) LIKE LOWER(:search) OR LOWER(email) LIKE LOWER(:search) OR LOWER(company_name) LIKE LOWER(:search))";
             $params['search'] = '%' . $filters['search'] . '%';
         }
         

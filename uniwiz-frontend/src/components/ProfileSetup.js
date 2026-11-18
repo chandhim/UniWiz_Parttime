@@ -6,6 +6,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion'; // Import Framer Motion for animations
+import { API_BASE_URL } from '../config';
 
 // --- BackButton: Navigates back to sign up ---
 const BackButton = ({ onClick }) => (
@@ -79,7 +80,7 @@ function ProfileSetup({ user, onSetupComplete, onBackClick }) { // ADDED: onBack
         // e.g., submissionData.append('some_other_field', someOtherState);
 
         try {
-            const apiUrl = 'http://uniwiz-backend.test/api/update_profile.php';
+            const apiUrl = `${API_BASE_URL}/update_profile.php`;
             const response = await fetch(apiUrl, {
                 method: 'POST',
                 // headers: { 'Content-Type': 'application/json' }, // REMOVED: FormData handles this

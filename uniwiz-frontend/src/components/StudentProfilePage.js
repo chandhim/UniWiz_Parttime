@@ -2,6 +2,7 @@
 // =====================================================================
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { API_BASE_URL } from '../config';
 
 // --- LoadingSpinner: Shows a loading animation while fetching data ---
 const LoadingSpinner = () => (
@@ -49,7 +50,7 @@ function StudentProfilePage({ studentId, onBackClick, currentUser }) {
         }
         setIsLoading(true);
         try {
-            const response = await fetch(`http://uniwiz-backend.test/api/get_student_profile.php?student_id=${studentId}`);
+            const response = await fetch(`${API_BASE_URL}/get_student_profile.php?student_id=${studentId}`);
             const data = await response.json();
             if (!response.ok) {
                 throw new Error(data.message || "Failed to fetch student profile.");
@@ -103,7 +104,7 @@ function StudentProfilePage({ studentId, onBackClick, currentUser }) {
                 {/* --- Profile Header --- */}
                 <div className="bg-white p-6 md:p-8 rounded-xl shadow-sm border border-gray-200 mb-8 flex flex-col md:flex-row items-center gap-6">
                     <img
-                        src={student.profile_image_url ? `http://uniwiz-backend.test/api/${student.profile_image_url}` : `https://placehold.co/128x128/E8EAF6/211C84?text=${student.first_name.charAt(0)}`}
+                        src={student.profile_image_url ? `${API_BASE_URL}/${student.profile_image_url}` : `https://placehold.co/128x128/E8EAF6/211C84?text=${student.first_name.charAt(0)}`}
                         alt="Profile"
                         className="h-28 w-28 md:h-32 md:w-32 rounded-full object-cover border-4 border-blue-100 shadow-sm"
                     />
@@ -157,7 +158,7 @@ function StudentProfilePage({ studentId, onBackClick, currentUser }) {
                         <ProfileSection title="Resume / CV">
                             {student.cv_url ? (
                                 <a 
-                                    href={`http://uniwiz-backend.test/api/${student.cv_url}`} 
+                                    href={`${API_BASE_URL}/${student.cv_url}`} 
                                     target="_blank" 
                                     rel="noopener noreferrer" 
                                     className="inline-flex items-center bg-blue-500 text-white font-medium py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors duration-200"
