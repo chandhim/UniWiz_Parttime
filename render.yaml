@@ -12,6 +12,8 @@ services:
         sync: false
       - key: DIRECT_URL
         sync: false
+      - key: FRONTEND_URL
+        sync: false
 
   # 2. Node.js Real-Time Socket.IO Chat Service
   - type: web

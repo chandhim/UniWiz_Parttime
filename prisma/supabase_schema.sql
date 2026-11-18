@@ -23,7 +23,7 @@ EXCEPTION
 END $$;
 
 DO $$ BEGIN
-    CREATE TYPE job_status AS ENUM ('active', 'draft', 'pending', 'inactive', 'expired');
+    CREATE TYPE job_status AS ENUM ('active', 'draft', 'pending', 'inactive', 'expired', 'closed');
 EXCEPTION
     WHEN duplicate_object THEN null;
 END $$;

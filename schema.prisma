@@ -20,12 +20,16 @@ enum UserRole {
   STUDENT   @map("student")
   PUBLISHER @map("publisher")
   ADMIN     @map("admin")
+
+  @@map("user_role")
 }
 
 enum UserStatus {
   ACTIVE   @map("active")
   BLOCKED  @map("blocked")
   INACTIVE @map("inactive")
+
+  @@map("user_status")
 }
 
 enum JobStatus {
@@ -34,12 +38,17 @@ enum JobStatus {
   PENDING  @map("pending")
   INACTIVE @map("inactive")
   EXPIRED  @map("expired")
+  CLOSED   @map("closed")
+
+  @@map("job_status")
 }
 
 enum JobPaymentStatus {
   PENDING @map("pending")
   PAID    @map("paid")
   FAILED  @map("failed")
+
+  @@map("job_payment_status")
 }
 
 enum ApplicationStatus {
@@ -47,12 +56,16 @@ enum ApplicationStatus {
   VIEWED   @map("viewed")
   ACCEPTED @map("accepted")
   REJECTED @map("rejected")
+
+  @@map("application_status")
 }
 
 enum ReviewStatus {
   ACTIVE  @map("active")
   HIDDEN  @map("hidden")
   FLAGGED @map("flagged")
+
+  @@map("review_status")
 }
 
 enum PaymentRecordStatus {
@@ -62,18 +75,24 @@ enum PaymentRecordStatus {
   FAILED     @map("failed")
   CANCELLED  @map("cancelled")
   REFUNDED   @map("refunded")
+
+  @@map("payment_record_status")
 }
 
 enum ReportType {
   USER         @map("user")
   CONVERSATION @map("conversation")
   APP_PROBLEM  @map("app_problem")
+
+  @@map("report_type")
 }
 
 enum ReportStatus {
   PENDING   @map("pending")
   RESOLVED  @map("resolved")
   DISMISSED @map("dismissed")
+
+  @@map("report_status")
 }
 
 // -----------------------------------------------------------------------------
@@ -96,7 +115,7 @@ model User {
   resetToken             String?   @map("reset_token") @db.VarChar(255)
   resetTokenExpiry       DateTime? @map("reset_token_expiry")
   createdAt              DateTime  @default(now()) @map("created_at")
-  updatedAt              DateTime  @updatedAt @map("updated_at")
+  updatedAt              DateTime  @default(now()) @updatedAt @map("updated_at")
 
   // Profiles
   studentProfile   StudentProfile?
@@ -150,7 +169,7 @@ model StudentProfile {
   skills              String?  @db.Text
   cvUrl               String?  @map("cv_url") @db.Text
   createdAt           DateTime @default(now()) @map("created_at")
-  updatedAt           DateTime @updatedAt @map("updated_at")
+  updatedAt           DateTime @default(now()) @updatedAt @map("updated_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -171,7 +190,7 @@ model PublisherProfile {
   coverImageUrl  String?  @map("cover_image_url") @db.Text
   requiredDocUrl String?  @map("required_doc_url") @db.Text
   createdAt      DateTime @default(now()) @map("created_at")
-  updatedAt      DateTime @updatedAt @map("updated_at")
+  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -188,7 +207,7 @@ model JobCategory {
   description String?  @db.Text
   isActive    Boolean  @default(true) @map("is_active")
   createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
 
   jobs Job[]
 
@@ -220,7 +239,7 @@ model Job {
   paymentAmount       Decimal?         @map("payment_amount") @db.Decimal(10, 2)
   paymentMethod       String?          @map("payment_method") @db.VarChar(50)
   createdAt           DateTime         @default(now()) @map("created_at")
-  updatedAt           DateTime         @updatedAt @map("updated_at")
+  updatedAt           DateTime         @default(now()) @updatedAt @map("updated_at")
 
   // Relations
   publisher      User             @relation("PublisherJobs", fields: [publisherId], references: [id], onDelete: Cascade)
@@ -246,7 +265,7 @@ model JobApplication {
   proposal  String?           @db.Text
   status    ApplicationStatus @default(PENDING)
   appliedAt DateTime          @default(now()) @map("applied_at")
-  updatedAt DateTime          @updatedAt @map("updated_at")
+  updatedAt DateTime          @default(now()) @updatedAt @map("updated_at")
 
   job     Job  @relation(fields: [jobId], references: [id], onDelete: Cascade)
   student User @relation("StudentApplications", fields: [studentId], references: [id], onDelete: Cascade)
@@ -268,7 +287,7 @@ model Conversation {
   userTwoId Int      @map("user_two_id")
   jobId     Int?     @map("job_id")
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   userOne  User      @relation("ConversationsAsUserOne", fields: [userOneId], references: [id], onDelete: Cascade)
   userTwo  User      @relation("ConversationsAsUserTwo", fields: [userTwoId], references: [id], onDelete: Cascade)
@@ -328,7 +347,7 @@ model CompanyReview {
   isAnonymous Boolean      @default(false) @map("is_anonymous")
   status      ReviewStatus @default(ACTIVE)
   createdAt   DateTime     @default(now()) @map("created_at")
-  updatedAt   DateTime     @updatedAt @map("updated_at")
+  updatedAt   DateTime     @default(now()) @updatedAt @map("updated_at")
 
   publisher User @relation("PublisherCompanyReviews", fields: [publisherId], references: [id], onDelete: Cascade)
   student   User @relation("StudentCompanyReviews", fields: [studentId], references: [id], onDelete: Cascade)
@@ -351,7 +370,7 @@ model StudentReview {
   reviewText  String       @map("review_text") @db.Text
   status      ReviewStatus @default(ACTIVE)
   createdAt   DateTime     @default(now()) @map("created_at")
-  updatedAt   DateTime     @updatedAt @map("updated_at")
+  updatedAt   DateTime     @default(now()) @updatedAt @map("updated_at")
 
   publisher User @relation("PublisherStudentReviews", fields: [publisherId], references: [id], onDelete: Cascade)
   student   User @relation("StudentReviewsReceived", fields: [studentId], references: [id], onDelete: Cascade)
@@ -426,7 +445,7 @@ model Payment {
   description    String?             @db.Text
   metadata       Json?
   createdAt      DateTime            @default(now()) @map("created_at")
-  updatedAt      DateTime            @updatedAt @map("updated_at")
+  updatedAt      DateTime            @default(now()) @updatedAt @map("updated_at")
 
   publisher User? @relation("PublisherPayments", fields: [publisherId], references: [id], onDelete: SetNull)
   student   User? @relation("StudentPayments", fields: [studentId], references: [id], onDelete: SetNull)
@@ -472,7 +491,7 @@ model SiteSetting {
   settingKey   String   @unique @map("setting_key") @db.VarChar(255)
   settingValue String   @map("setting_value") @db.Text
   createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("site_settings")
 }

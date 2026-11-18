@@ -6,6 +6,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { validatePasswordStrength } from '../utils/passwordValidator';
 import PasswordStrengthMeter from './PasswordStrengthMeter';
+import { API_BASE_URL } from '../config';
 
 function ResetPasswordPage({ setPage }) {
     const [password, setPassword] = useState('');
@@ -44,7 +45,7 @@ function ResetPasswordPage({ setPage }) {
             setIsLoading(false);
             return;
         }        try {
-            const response = await fetch('http://uniwiz-backend.test/api/reset_password.php', {
+            const response = await fetch(`${API_BASE_URL}/reset_password.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 

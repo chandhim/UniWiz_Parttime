@@ -157,7 +157,7 @@ class Publisher extends RegisteredUser {
                     FROM job_applications ja 
                     INNER JOIN jobs j ON ja.job_id = j.id 
                     WHERE j.publisher_id = :publisher_id 
-                    AND DATE(ja.applied_at) = CURDATE()";
+                    AND DATE(ja.applied_at) = CURRENT_DATE";
             $result = $this->db->selectOne($sql, ['publisher_id' => $this->id]);
             $stats['todays_applications'] = $result['count'] ?? 0;
             

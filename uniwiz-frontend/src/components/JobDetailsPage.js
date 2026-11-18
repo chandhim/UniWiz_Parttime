@@ -3,6 +3,7 @@
 // This component displays the full details of a single job for the publisher and students.
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { API_BASE_URL } from '../config';
 
 // --- Reusable Loading Spinner ---
 const LoadingSpinner = () => (
@@ -50,7 +51,7 @@ function JobDetailsPage({ jobId, onBackClick, onDeleteClick, onCompanyClick }) {
         }
         setIsLoading(true);
         try {
-            const response = await fetch(`http://uniwiz-backend.test/api/get_job_details.php?job_id=${jobId}`);
+            const response = await fetch(`${API_BASE_URL}/get_job_details.php?job_id=${jobId}`);
             const data = await response.json();
             if (!response.ok) {
                 throw new Error(data.message || "Failed to fetch job details.");

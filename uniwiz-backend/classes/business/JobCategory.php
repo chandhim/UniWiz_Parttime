@@ -93,7 +93,7 @@ class JobCategory {
         $params = [];
         
         if ($activeOnly) {
-            $sql .= " AND jc.is_active = 1";
+            $sql .= " AND jc.is_active = TRUE";
         }
         
         $sql .= " ORDER BY jc.name ASC";
@@ -124,7 +124,7 @@ class JobCategory {
                 WHERE 1=1";
         
         if ($activeOnly) {
-            $sql .= " AND jc.is_active = 1";
+            $sql .= " AND jc.is_active = TRUE";
         }
         
         $sql .= " GROUP BY jc.id ORDER BY jc.name ASC";
@@ -360,7 +360,7 @@ class JobCategory {
         $sql = "SELECT jc.*, COUNT(j.id) as job_count
                 FROM job_categories jc
                 LEFT JOIN jobs j ON jc.id = j.category_id AND j.status = 'active'
-                WHERE jc.is_active = 1
+                WHERE jc.is_active = TRUE
                 GROUP BY jc.id
                 ORDER BY job_count DESC, jc.name ASC
                 LIMIT :limit";

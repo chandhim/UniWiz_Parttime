@@ -220,7 +220,8 @@ io.on('connection', (socket) => {
           last_name: message.sender.lastName,
           company_name: message.sender.companyName,
           profile_image_url: message.sender.profileImageUrl,
-          role: message.sender.role
+          // Prisma returns enum keys (e.g. 'STUDENT'); the PHP API and frontend use the DB values ('student')
+          role: message.sender.role ? String(message.sender.role).toLowerCase() : null
         }
       };
 

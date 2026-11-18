@@ -328,9 +328,9 @@ class Database {
      * @return array
      */
     public function getTableColumns($table) {
-        $sql = "DESCRIBE {$table}";
-        $columns = $this->select($sql);
-        return array_column($columns, 'Field');
+        $sql = "SELECT column_name AS field FROM information_schema.columns WHERE table_name = :table_name";
+        $columns = $this->select($sql, ['table_name' => $table]);
+        return array_column($columns, 'field');
     }
     
     /**

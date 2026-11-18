@@ -2,6 +2,7 @@
 // ========================================================================
 
 import React, { useState, useEffect, useRef } from 'react';
+import { API_BASE_URL } from '../config';
 
 // --- InputIcon: Reusable icon wrapper for input fields ---
 const InputIcon = ({ children }) => (
@@ -104,7 +105,7 @@ function CreateJob({ user, onJobPosted }) {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await fetch('http://uniwiz-backend.test/api/get_categories.php');
+                const response = await fetch(`${API_BASE_URL}/get_categories.php`);
                 const data = await response.json();
                 if (response.ok) {
                     setCategories(data);
@@ -183,7 +184,7 @@ function CreateJob({ user, onJobPosted }) {
                     experience_level: experienceLevel
                 };
                 try {
-                    const response = await fetch('http://uniwiz-backend.test/api/create_job.php', {
+                    const response = await fetch(`${API_BASE_URL}/create_job.php`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(jobData),
@@ -236,7 +237,7 @@ function CreateJob({ user, onJobPosted }) {
                     break;
             }
             
-            const response = await fetch('http://uniwiz-backend.test/api/process_payment.php', {
+            const response = await fetch(`${API_BASE_URL}/process_payment.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(paymentData),
@@ -377,7 +378,7 @@ function CreateJob({ user, onJobPosted }) {
         };
 
         try {
-            const apiUrl = 'http://uniwiz-backend.test/api/create_job.php';
+            const apiUrl = `${API_BASE_URL}/create_job.php`;
             const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

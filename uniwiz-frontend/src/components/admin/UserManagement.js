@@ -21,6 +21,7 @@
 // and verify/unverify users, delete users, and now also view full user profiles.
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { API_BASE_URL } from '../../config';
 
 // Reusable Notification Component (Toast)
 // Shows a notification message for success/error actions
@@ -175,7 +176,7 @@ const UserDetailsPopup = ({ user, onClose }) => {
             <div className="bg-white rounded-xl shadow-lg p-6 min-w-[300px] max-w-xs relative" onClick={e => e.stopPropagation()}>
                 <button onClick={onClose} className="absolute top-2 right-2 text-gray-400 hover:text-gray-700 text-xl">&times;</button>
                 <div className="flex flex-col items-center">
-                    <img className="h-16 w-16 rounded-full object-cover mb-2" src={user.profile_image_url ? `http://uniwiz-backend.test/api/${user.profile_image_url}` : `https://placehold.co/64x64/E8EAF6/211C84?text=${user.first_name?.charAt(0) || 'U'}`} alt="Profile" />
+                    <img className="h-16 w-16 rounded-full object-cover mb-2" src={user.profile_image_url ? `${API_BASE_URL}/${user.profile_image_url}` : `https://placehold.co/64x64/E8EAF6/211C84?text=${user.first_name?.charAt(0) || 'U'}`} alt="Profile" />
                     <div className="font-bold text-lg mb-1">{user.first_name} {user.last_name}</div>
                     <div className="text-sm text-gray-500 mb-2">{user.email}</div>
                     <div className="text-xs text-gray-600 mb-1">Role: <span className="font-semibold">{user.role}</span></div>
@@ -184,7 +185,7 @@ const UserDetailsPopup = ({ user, onClose }) => {
                         <div className="mt-2">
                             <span className="text-xs font-semibold">BR/NIC: </span>
                             {user.required_doc_url ? (
-                                <a href={`http://uniwiz-backend.test/api/${user.required_doc_url}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-2 py-1 bg-green-100 text-green-800 rounded hover:bg-green-200 font-semibold transition text-xs" title="View BR/NIC Document">
+                                <a href={`${API_BASE_URL}/${user.required_doc_url}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-2 py-1 bg-green-100 text-green-800 rounded hover:bg-green-200 font-semibold transition text-xs" title="View BR/NIC Document">
                                     <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                                     View
                                 </a>
@@ -271,7 +272,7 @@ function UserManagement({ user: adminUser, setPage, setStudentIdForProfile, setP
                 params.append('status', 'blocked');
             }
 
-            const response = await fetch(`http://uniwiz-backend.test/api/get_all_users_admin.php?${params.toString()}`);
+            const response = await fetch(`${API_BASE_URL}/get_all_users_admin.php?${params.toString()}`);
             const data = await response.json();
             if (response.ok) {
                 setUsers(data);
@@ -314,7 +315,7 @@ function UserManagement({ user: adminUser, setPage, setStudentIdForProfile, setP
                 actionMessage = `Are you sure you want to block this user? They will not be able to log in.`;
                 confirmBtnText = "Block User";
                 confirmBtnColor = "red";
-                apiUrl = 'http://uniwiz-backend.test/api/update_user_status_admin.php';
+                apiUrl = `${API_BASE_URL}/update_user_status_admin.php`;
                 payload = { target_user_id: targetUserId, admin_id: adminUser.id, status: statusToUpdate };
                 break;
             case 'unblock':
@@ -322,7 +323,7 @@ function UserManagement({ user: adminUser, setPage, setStudentIdForProfile, setP
                 actionMessage = `Are you sure you want to unblock this user? They will regain access.`;
                 confirmBtnText = "Unblock User";
                 confirmBtnColor = "green";
-                apiUrl = 'http://uniwiz-backend.test/api/update_user_status_admin.php';
+                apiUrl = `${API_BASE_URL}/update_user_status_admin.php`;
                 payload = { target_user_id: targetUserId, admin_id: adminUser.id, status: statusToUpdate };
                 break;
             case 'verify':
@@ -330,7 +331,7 @@ function UserManagement({ user: adminUser, setPage, setStudentIdForProfile, setP
                 actionMessage = `Are you sure you want to verify this user?`;
                 confirmBtnText = "Verify User";
                 confirmBtnColor = "blue";
-                apiUrl = 'http://uniwiz-backend.test/api/update_user_status_admin.php';
+                apiUrl = `${API_BASE_URL}/update_user_status_admin.php`;
                 payload = { target_user_id: targetUserId, admin_id: adminUser.id, is_verified: isVerifiedToUpdate };
                 break;
             case 'unverify':
@@ -338,14 +339,14 @@ function UserManagement({ user: adminUser, setPage, setStudentIdForProfile, setP
                 actionMessage = `Are you sure you want to unverify this user?`;
                 confirmBtnText = "Unverify User";
                 confirmBtnColor = "red";
-                apiUrl = 'http://uniwiz-backend.test/api/update_user_status_admin.php';
+                apiUrl = `${API_BASE_URL}/update_user_status_admin.php`;
                 payload = { target_user_id: targetUserId, admin_id: adminUser.id, is_verified: isVerifiedToUpdate };
                 break;
             case 'delete':
                 actionMessage = `Are you sure you want to permanently delete this user? This action cannot be undone.`;
                 confirmBtnText = "Delete User";
                 confirmBtnColor = "red";
-                apiUrl = 'http://uniwiz-backend.test/api/delete_user_admin.php';
+                apiUrl = `${API_BASE_URL}/delete_user_admin.php`;
                 payload = { target_user_id: targetUserId, admin_id: adminUser.id };
                 break;
             default:
@@ -412,7 +413,7 @@ function UserManagement({ user: adminUser, setPage, setStudentIdForProfile, setP
                         <svg className="h-4 w-4 ml-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
                     </span>
                     <a
-                        href={`http://uniwiz-backend.test/api/${user.required_doc_url}`}
+                        href={`${API_BASE_URL}/${user.required_doc_url}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center px-2 py-1 bg-green-100 text-green-800 rounded hover:bg-green-200 font-semibold transition text-xs"
@@ -561,7 +562,7 @@ function UserManagement({ user: adminUser, setPage, setStudentIdForProfile, setP
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="flex items-center">
                                                     <img className="h-10 w-10 rounded-full object-cover" 
-                                                        src={user.profile_image_url ? `http://uniwiz-backend.test/api/${user.profile_image_url}` : `https://placehold.co/40x40/E8EAF6/211C84?text=${user.first_name?.charAt(0) || 'U'}`} 
+                                                        src={user.profile_image_url ? `${API_BASE_URL}/${user.profile_image_url}` : `https://placehold.co/40x40/E8EAF6/211C84?text=${user.first_name?.charAt(0) || 'U'}`} 
                                                         alt={`${user.first_name}'s profile`} 
                                                     />
                                                 </div>

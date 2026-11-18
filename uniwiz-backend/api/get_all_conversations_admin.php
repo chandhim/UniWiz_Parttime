@@ -3,7 +3,7 @@
 // DESCRIPTION: Fetches all conversations in the system for the admin panel.
 
 // --- Set CORS and Content-Type Headers ---
-header("Access-Control-Allow-Origin: http://localhost:3000"); // Allow requests from frontend
+header('Access-Control-Allow-Origin: ' . (getenv('FRONTEND_URL') ?: 'http://localhost:3000')); // Allow requests from frontend
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS"); // Allow these HTTP methods
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 header('Content-Type: application/json'); // Respond with JSON

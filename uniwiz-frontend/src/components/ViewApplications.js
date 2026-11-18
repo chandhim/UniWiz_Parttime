@@ -3,6 +3,7 @@
 // This component displays all applications for a specific job, allowing the publisher to view student profiles.
 
 import React, { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../config';
 
 // --- StatusBadge: Shows application status as a colored badge ---
 const StatusBadge = ({ status }) => {
@@ -37,7 +38,7 @@ function ViewApplications({ jobId, onBackClick, onViewStudentProfile }) { // Add
             try {
                 // Use the more detailed get_all_publisher_applications endpoint
                 // to get student IDs and other potential details.
-                const response = await fetch(`http://uniwiz-backend.test/api/get_all_publisher_applications.php?job_id=${jobId}`);
+                const response = await fetch(`${API_BASE_URL}/get_all_publisher_applications.php?job_id=${jobId}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch applications.');
                 }

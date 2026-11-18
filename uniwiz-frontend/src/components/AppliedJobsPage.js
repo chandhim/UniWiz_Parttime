@@ -1,6 +1,7 @@
 // FILE: src/components/AppliedJobsPage.js (BESPOKE UNIWIZ EMERALD & AMBER EDITION)
 // =================================================================================
 import React, { useState, useEffect, useCallback } from 'react';
+import { API_BASE_URL } from '../config';
 
 // --- LoadingSpinner ---
 const LoadingSpinner = () => (
@@ -49,7 +50,7 @@ function AppliedJobsPage({ user, initialFilter, setInitialFilter, handleViewJobD
         setIsLoading(true);
         setError(null);
         try {
-            const response = await fetch(`http://uniwiz-backend.test/api/get_student_application_details.php?student_id=${user.id}`);
+            const response = await fetch(`${API_BASE_URL}/get_student_application_details.php?student_id=${user.id}`);
             const data = await response.json();
 
             if (response.ok) {

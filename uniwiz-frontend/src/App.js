@@ -37,9 +37,9 @@ import VerifyEmailPage from './components/VerifyEmailPage';
 import WishlistPage from './components/WishlistPage';
 
 import './output.css';
+import { API_BASE_URL } from './config';
 
 // --- Constants ---
-const API_BASE_URL = 'http://uniwiz-backend.test/api';
 
 // --- INLINED ConversationViewerAdmin COMPONENT TO FIX BUILD ERROR ---
 
@@ -550,7 +550,7 @@ function App() {
     // Fetch the latest user profile from the backend
     let latestUser = userData;
     try {
-        const response = await fetch(`http://uniwiz-backend.test/api/get_user_profile_by_id.php?user_id=${userData.id}`);
+        const response = await fetch(`${API_BASE_URL}/get_user_profile_by_id.php?user_id=${userData.id}`);
         if (response.ok) {
             const result = await response.json();
             if (result && result.user) {
@@ -775,7 +775,7 @@ function App() {
                 onBackClick={() => setPage('job-management')}
                 onDeleteClick={async (jobId) => {
                     if (window.confirm('Are you sure you want to delete this job?')) {
-                        await fetch('http://uniwiz-backend.test/api/manage_job_action_admin.php', {
+                        await fetch(`${API_BASE_URL}/manage_job_action_admin.php`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ job_id: jobId, admin_id: currentUser.id, action: 'delete' })

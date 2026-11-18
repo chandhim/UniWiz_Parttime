@@ -4,7 +4,7 @@
 // This endpoint handles account-level actions like changing a password or deleting an account.
 
 // --- Headers & DB Connection ---
-header("Access-Control-Allow-Origin: http://localhost:3000"); // Allow requests from frontend
+header('Access-Control-Allow-Origin: ' . (getenv('FRONTEND_URL') ?: 'http://localhost:3000')); // Allow requests from frontend
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS"); // Allow these HTTP methods
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 header('Content-Type: application/json'); // Respond with JSON

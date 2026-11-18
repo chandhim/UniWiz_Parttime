@@ -1,6 +1,7 @@
 // FILE: src/components/TopNavbar.js (BESPOKE UNIWIZ EMERALD & AMBER EDITION)
 // =================================================================================
 import React, { useState, useEffect, useRef } from 'react';
+import { API_BASE_URL } from '../config';
 
 // --- NotificationIcon: Shows notification icon with color based on type and user role ---
 const NotificationIcon = ({ type, role }) => {
@@ -241,7 +242,7 @@ function TopNavbar({ user, setPage, notifications = [], onNotificationClick }) {
                     <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-emerald-700 via-emerald-600 to-teal-500 text-white font-extrabold text-xs flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform overflow-hidden ring-1 ring-emerald-500/20">
                         {user?.profile_image_url ? (
                             <img
-                                src={`http://uniwiz-backend.test/api/${user.profile_image_url}`}
+                                src={`${API_BASE_URL}/${user.profile_image_url}`}
                                 alt="Avatar"
                                 className="w-full h-full object-cover"
                                 onError={(e) => { e.target.style.display = 'none'; }}

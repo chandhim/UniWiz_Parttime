@@ -19,8 +19,8 @@
 // User links now navigate directly to the respective profile pages.
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { API_BASE_URL } from '../../config';
 
-const API_BASE_URL = 'http://uniwiz-backend.test/api';
 
 // Reusable components
 // LoadingSpinner: Shows a spinner while data is loading

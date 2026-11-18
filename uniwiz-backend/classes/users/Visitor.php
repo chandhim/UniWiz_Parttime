@@ -76,7 +76,7 @@ class Visitor extends User {
             $params = [];
             
             if (isset($filters['search'])) {
-                $sql .= " AND (j.title LIKE :search OR j.description LIKE :search)";
+                $sql .= " AND (LOWER(j.title) LIKE LOWER(:search) OR LOWER(j.description) LIKE LOWER(:search))";
                 $params['search'] = '%' . $filters['search'] . '%';
             }
             
@@ -166,7 +166,7 @@ class Visitor extends User {
             $sql = "SELECT jc.*, 
                            (SELECT COUNT(*) FROM jobs j WHERE j.category_id = jc.id AND j.status = 'active') as active_jobs_count
                     FROM job_categories jc
-                    WHERE jc.is_active = 1
+                    WHERE jc.is_active = TRUE
                     ORDER BY jc.name ASC";
             
             return $this->db->select($sql);
@@ -223,8 +223,8 @@ class Visitor extends User {
             $params = [];
             
             if (!empty($searchTerm)) {
-                $sql .= " AND (j.title LIKE :search OR j.description LIKE :search 
-                          OR u.company_name LIKE :search OR jc.name LIKE :search)";
+                $sql .= " AND (LOWER(j.title) LIKE LOWER(:search) OR LOWER(j.description) LIKE LOWER(:search) 
+                          OR LOWER(u.company_name) LIKE LOWER(:search) OR LOWER(jc.name) LIKE LOWER(:search))";
                 $params['search'] = '%' . $searchTerm . '%';
             }
             
@@ -239,7 +239,7 @@ class Visitor extends User {
             }
             
             if (isset($filters['location']) && $filters['location'] !== '') {
-                $sql .= " AND j.location LIKE :location";
+                $sql .= " AND LOWER(j.location) LIKE LOWER(:location)";
                 $params['location'] = '%' . $filters['location'] . '%';
             }
             

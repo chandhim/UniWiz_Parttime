@@ -3,8 +3,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { initSocket, getSocket } from '../utils/socket';
+import { API_BASE_URL } from '../config';
 
-const API_BASE_URL = 'http://uniwiz-backend.test/api';
 
 // Report User Modal
 const ReportModal = ({ isOpen, onClose, onSubmit, targetUser }) => {

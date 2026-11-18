@@ -7,6 +7,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import StudentReviewsSection from './StudentReviewsSection';
+import { API_BASE_URL } from '../config';
 
 // --- StatCard: Displays a dashboard stat with icon and action ---
 // UPDATED: StatCard now accepts dynamic color props
@@ -111,7 +112,7 @@ const ApplicantRow = ({ applicant, onViewProfile }) => (
     >
         <div className="flex items-center space-x-3">
             <img
-                src={applicant.profile_image_url ? `http://uniwiz-backend.test/api/${applicant.profile_image_url}` : `https://ui-avatars.com/api/?name=${applicant.first_name}+${applicant.last_name}&background=E8EAF6&color=211C84`}
+                src={applicant.profile_image_url ? `${API_BASE_URL}/${applicant.profile_image_url}` : `https://ui-avatars.com/api/?name=${applicant.first_name}+${applicant.last_name}&background=E8EAF6&color=211C84`}
                 alt="profile"
                 className="h-10 w-10 rounded-full object-cover"
             />
@@ -180,7 +181,7 @@ const ReviewCard = ({ review }) => {
         >
             <div className="flex items-start space-x-3">
                 <img
-                    src={review.student_image_url ? `http://uniwiz-backend.test/api/${review.student_image_url}` : `https://ui-avatars.com/api/?name=${review.first_name}+${review.last_name}&background=E8EAF6&color=211C84`}
+                    src={review.student_image_url ? `${API_BASE_URL}/${review.student_image_url}` : `https://ui-avatars.com/api/?name=${review.first_name}+${review.last_name}&background=E8EAF6&color=211C84`}
                     alt="student profile"
                     className="h-10 w-10 rounded-full object-cover"
                 />
@@ -239,7 +240,7 @@ function PublisherDashboard({ user, onPostJobClick, onViewAllJobsClick, onViewAp
             setIsLoading(true);
             setError(null);
             try {
-                const response = await fetch(`http://uniwiz-backend.test/api/get_publisher_stats.php?publisher_id=${user.id}`);
+                const response = await fetch(`${API_BASE_URL}/get_publisher_stats.php?publisher_id=${user.id}`);
                 const data = await response.json();
                 if (response.ok) {
                     setStats(data);

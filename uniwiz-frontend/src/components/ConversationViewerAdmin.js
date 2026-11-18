@@ -4,8 +4,8 @@
 // to view all user conversations on the platform for moderation purposes.
 
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { API_BASE_URL } from '../config';
 
-const API_BASE_URL = 'http://uniwiz-backend.test/api';
 
 // --- Reusable Read-Only Chat Window ---
 const ReadOnlyChatWindow = ({ conversation, currentUser }) => {

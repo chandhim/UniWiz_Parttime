@@ -6,6 +6,7 @@ import { validatePasswordStrength } from '../utils/passwordValidator';
 import PasswordStrengthMeter from './PasswordStrengthMeter';
 import { validateUniversityEmail } from '../utils/emailValidator';
 import EmailValidationIndicator from './EmailValidationIndicator';
+import { API_BASE_URL } from '../config';
 
 const validateName = (name) => {
     const nameRegex = /^[a-zA-Z\s]*$/;
@@ -105,7 +106,7 @@ function LoginPage({ onLoginSuccess, setPage, initialState }) {
                     password
                 };
 
-            const response = await fetch('http://uniwiz-backend.test/api/auth.php', {
+            const response = await fetch(`${API_BASE_URL}/auth.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)

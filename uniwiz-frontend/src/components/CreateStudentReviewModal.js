@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { API_BASE_URL } from '../config';
 
 // --- Star Icon Component ---
 const StarIcon = ({ filled = false, size = 'w-5 h-5', onClick = null }) => (
@@ -59,7 +60,7 @@ function CreateStudentReviewModal({
         setError(null);
 
         try {
-            const response = await fetch('http://uniwiz-backend.test/api/create_student_review.php', {
+            const response = await fetch(`${API_BASE_URL}/create_student_review.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -128,7 +129,7 @@ function CreateStudentReviewModal({
                 <div className="flex items-center mb-6 p-4 bg-gray-50 rounded-lg">
                     <img 
                         src={student.profile_image_url ? 
-                            `http://uniwiz-backend.test/api/${student.profile_image_url}` : 
+                            `${API_BASE_URL}/${student.profile_image_url}` : 
                             `https://ui-avatars.com/api/?name=${student.first_name}+${student.last_name}&background=E8EAF6&color=211C84`
                         }
                         alt="Student profile"
