@@ -95,9 +95,17 @@ const ApplicantDetailModal = ({ applicant, onClose, onStatusChange, handleInitia
                 <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-4 border-b pb-6 mb-6">
                     <div className="flex items-center gap-6">
                         <img
-                            src={applicant.profile_image_url ? `${API_BASE_URL}/${applicant.profile_image_url}` : `https://placehold.co/100x100/E8EAF6/211C84?text=${applicant.first_name.charAt(0)}`}
+                            src={applicant.profile_image_url ? (applicant.profile_image_url.startsWith('http') ? applicant.profile_image_url : `${API_BASE_URL}/${applicant.profile_image_url}`) : '/uploads/profiles/default_student.svg'}
                             alt="Profile"
-                            className="h-24 w-24 rounded-full object-cover border-4 border-primary-lighter shadow-md"
+                            className="h-24 w-24 rounded-full object-cover border-4 border-primary-lighter shadow-md bg-white"
+                            onError={(e) => {
+                                if (!e.target.dataset.triedPublic && applicant.profile_image_url) {
+                                    e.target.dataset.triedPublic = 'true';
+                                    e.target.src = applicant.profile_image_url.startsWith('/') ? applicant.profile_image_url : `/${applicant.profile_image_url}`;
+                                } else {
+                                    e.target.src = '/uploads/profiles/default_student.svg';
+                                }
+                            }}
                         />
                         <div>
                             <h2 className="text-3xl font-bold text-primary-dark">{applicant.first_name} {applicant.last_name}</h2>
@@ -282,7 +290,19 @@ function ViewApplicants({ job, onBack, handleInitiateConversation }) {
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center">
                                                 <div className="flex-shrink-0 h-10 w-10">
-                                                    <img className="h-10 w-10 rounded-full object-cover" src={applicant.profile_image_url ? `${API_BASE_URL}/${applicant.profile_image_url}` : `https://placehold.co/40x40/E8EAF6/211C84?text=${applicant.first_name.charAt(0)}`} alt="" />
+                                                    <img 
+                                                        className="h-10 w-10 rounded-full object-cover border border-slate-200 bg-white" 
+                                                        src={applicant.profile_image_url ? (applicant.profile_image_url.startsWith('http') ? applicant.profile_image_url : `${API_BASE_URL}/${applicant.profile_image_url}`) : '/uploads/profiles/default_student.svg'} 
+                                                        alt="" 
+                                                        onError={(e) => {
+                                                            if (!e.target.dataset.triedPublic && applicant.profile_image_url) {
+                                                                e.target.dataset.triedPublic = 'true';
+                                                                e.target.src = applicant.profile_image_url.startsWith('/') ? applicant.profile_image_url : `/${applicant.profile_image_url}`;
+                                                            } else {
+                                                                e.target.src = '/uploads/profiles/default_student.svg';
+                                                            }
+                                                        }}
+                                                    />
                                                 </div>
                                                 <div className="ml-4">
                                                     <div className="text-sm font-medium text-gray-900">{applicant.first_name} {applicant.last_name}</div>

@@ -113,7 +113,7 @@ function ProfilePage({ user, onProfileUpdate }) {
                 languages_spoken: user.languages_spoken || '', preferred_categories: user.preferred_categories || '',
                 skills: user.skills || '',
             });
-            setProfilePicturePreview(user.profile_image_url ? `${API_BASE_URL}/${user.profile_image_url}` : null);
+            setProfilePicturePreview(user.profile_image_url ? (user.profile_image_url.startsWith('http') ? user.profile_image_url : `${API_BASE_URL}/${user.profile_image_url}`) : null);
             setCoverImagePreview(user.cover_image_url ? `${API_BASE_URL}/${user.cover_image_url}` : null);
             fetchPublisherImages();
         }
@@ -278,7 +278,19 @@ function ProfilePage({ user, onProfileUpdate }) {
                     )}
                     <form onSubmit={handleSubmit} className="bg-white p-8 rounded-2xl shadow-md">
                         <div className="flex items-center space-x-6 mb-8">
-                            <img src={profilePicturePreview || `https://placehold.co/100x100/E8EAF6/211C84?text=${user.first_name.charAt(0)}`} alt="Profile" className="h-24 w-24 rounded-full object-cover border-4 border-white shadow-sm"/>
+                            <img 
+                                src={profilePicturePreview || (user?.role === 'publisher' ? '/uploads/logos/default_company.svg' : '/uploads/profiles/default_student.svg')} 
+                                alt="Profile" 
+                                className="h-24 w-24 rounded-full object-cover border-4 border-white shadow-sm bg-white"
+                                onError={(e) => {
+                                    if (!e.target.dataset.triedPublic && user?.profile_image_url) {
+                                        e.target.dataset.triedPublic = 'true';
+                                        e.target.src = user.profile_image_url.startsWith('/') ? user.profile_image_url : `/${user.profile_image_url}`;
+                                    } else {
+                                        e.target.src = user?.role === 'publisher' ? '/uploads/logos/default_company.svg' : '/uploads/profiles/default_student.svg';
+                                    }
+                                }}
+                            />
                             <div>
                                 <input type="file" ref={profilePictureInputRef} onChange={handleProfilePictureChange} className="hidden" accept="image/*"/>
                                 <button type="button" onClick={() => profilePictureInputRef.current.click()} className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">

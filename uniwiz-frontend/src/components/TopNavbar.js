@@ -242,10 +242,17 @@ function TopNavbar({ user, setPage, notifications = [], onNotificationClick }) {
                     <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-emerald-700 via-emerald-600 to-teal-500 text-white font-extrabold text-xs flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform overflow-hidden ring-1 ring-emerald-500/20">
                         {user?.profile_image_url ? (
                             <img
-                                src={`${API_BASE_URL}/${user.profile_image_url}`}
+                                src={user.profile_image_url.startsWith('http') ? user.profile_image_url : `${API_BASE_URL}/${user.profile_image_url}`}
                                 alt="Avatar"
                                 className="w-full h-full object-cover"
-                                onError={(e) => { e.target.style.display = 'none'; }}
+                                onError={(e) => {
+                                    if (!e.target.dataset.triedPublic && user.profile_image_url) {
+                                        e.target.dataset.triedPublic = 'true';
+                                        e.target.src = user.profile_image_url.startsWith('/') ? user.profile_image_url : `/${user.profile_image_url}`;
+                                    } else {
+                                        e.target.style.display = 'none';
+                                    }
+                                }}
                             />
                         ) : (
                             avatarInitial

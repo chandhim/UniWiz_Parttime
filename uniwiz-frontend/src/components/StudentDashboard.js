@@ -120,7 +120,14 @@ const ModernJobCard = ({
                   src={logoUrl.startsWith('http') ? logoUrl : `${API_BASE_URL}/${logoUrl}`}
                   alt={displayName}
                   className="w-full h-full object-cover"
-                  onError={(e) => { e.target.style.display = 'none'; }}
+                  onError={(e) => {
+                    if (!e.target.dataset.triedPublic && logoUrl) {
+                      e.target.dataset.triedPublic = 'true';
+                      e.target.src = logoUrl.startsWith('/') ? logoUrl : `/${logoUrl}`;
+                    } else {
+                      e.target.style.display = 'none';
+                    }
+                  }}
                 />
               ) : (
                 displayName.charAt(0)

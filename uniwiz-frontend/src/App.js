@@ -97,16 +97,32 @@ const ReadOnlyChatWindow = ({ conversation, currentUser }) => {
                 <div className="flex items-center space-x-3">
                     <div className="flex -space-x-4">
                         <img 
-                            src={userOne.image ? `${API_BASE_URL}/${userOne.image}` : `https://placehold.co/40x40/E8EAF6/211C84?text=${(userOne.name || 'U').charAt(0)}`}
+                            src={userOne.image ? (userOne.image.startsWith('http') ? userOne.image : `${API_BASE_URL}/${userOne.image}`) : '/uploads/profiles/default_student.svg'}
                             alt={userOne.name}
-                            className="h-10 w-10 rounded-full object-cover border-2 border-white"
+                            className="h-10 w-10 rounded-full object-cover border-2 border-white bg-white"
                             title={userOne.name}
+                            onError={(e) => {
+                                if (!e.target.dataset.triedPublic && userOne.image) {
+                                    e.target.dataset.triedPublic = 'true';
+                                    e.target.src = userOne.image.startsWith('/') ? userOne.image : `/${userOne.image}`;
+                                } else {
+                                    e.target.src = '/uploads/profiles/default_student.svg';
+                                }
+                            }}
                         />
                         <img 
-                            src={userTwo.image ? `${API_BASE_URL}/${userTwo.image}` : `https://placehold.co/40x40/9FA8DA/1A237E?text=${(userTwo.name || 'U').charAt(0)}`}
+                            src={userTwo.image ? (userTwo.image.startsWith('http') ? userTwo.image : `${API_BASE_URL}/${userTwo.image}`) : '/uploads/profiles/default_student.svg'}
                             alt={userTwo.name}
-                            className="h-10 w-10 rounded-full object-cover border-2 border-white"
+                            className="h-10 w-10 rounded-full object-cover border-2 border-white bg-white"
                             title={userTwo.name}
+                            onError={(e) => {
+                                if (!e.target.dataset.triedPublic && userTwo.image) {
+                                    e.target.dataset.triedPublic = 'true';
+                                    e.target.src = userTwo.image.startsWith('/') ? userTwo.image : `/${userTwo.image}`;
+                                } else {
+                                    e.target.src = '/uploads/profiles/default_student.svg';
+                                }
+                            }}
                         />
                     </div>
                     <div>
@@ -155,14 +171,30 @@ const ConversationItem = ({ conversation, onSelect, isActive }) => {
         >
             <div className="relative flex-shrink-0 flex -space-x-4">
                  <img 
-                    src={conversation.user_one_profile_image ? `${API_BASE_URL}/${conversation.user_one_profile_image}` : `https://placehold.co/48x48/E8EAF6/211C84?text=${(userOneName || 'U').charAt(0)}`}
+                    src={conversation.user_one_profile_image ? (conversation.user_one_profile_image.startsWith('http') ? conversation.user_one_profile_image : `${API_BASE_URL}/${conversation.user_one_profile_image}`) : '/uploads/profiles/default_student.svg'}
                     alt={userOneName}
-                    className="h-12 w-12 rounded-full object-cover border-2 border-white"
+                    className="h-12 w-12 rounded-full object-cover border-2 border-white bg-white"
+                    onError={(e) => {
+                        if (!e.target.dataset.triedPublic && conversation.user_one_profile_image) {
+                            e.target.dataset.triedPublic = 'true';
+                            e.target.src = conversation.user_one_profile_image.startsWith('/') ? conversation.user_one_profile_image : `/${conversation.user_one_profile_image}`;
+                        } else {
+                            e.target.src = '/uploads/profiles/default_student.svg';
+                        }
+                    }}
                 />
                  <img 
-                    src={conversation.user_two_profile_image ? `${API_BASE_URL}/${conversation.user_two_profile_image}` : `https://placehold.co/48x48/9FA8DA/1A237E?text=${(userTwoName || 'U').charAt(0)}`}
+                    src={conversation.user_two_profile_image ? (conversation.user_two_profile_image.startsWith('http') ? conversation.user_two_profile_image : `${API_BASE_URL}/${conversation.user_two_profile_image}`) : '/uploads/profiles/default_student.svg'}
                     alt={userTwoName}
-                    className="h-12 w-12 rounded-full object-cover border-2 border-white"
+                    className="h-12 w-12 rounded-full object-cover border-2 border-white bg-white"
+                    onError={(e) => {
+                        if (!e.target.dataset.triedPublic && conversation.user_two_profile_image) {
+                            e.target.dataset.triedPublic = 'true';
+                            e.target.src = conversation.user_two_profile_image.startsWith('/') ? conversation.user_two_profile_image : `/${conversation.user_two_profile_image}`;
+                        } else {
+                            e.target.src = '/uploads/profiles/default_student.svg';
+                        }
+                    }}
                 />
             </div>
             <div className="flex-grow overflow-hidden">

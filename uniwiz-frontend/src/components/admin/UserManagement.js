@@ -176,7 +176,19 @@ const UserDetailsPopup = ({ user, onClose }) => {
             <div className="bg-white rounded-xl shadow-lg p-6 min-w-[300px] max-w-xs relative" onClick={e => e.stopPropagation()}>
                 <button onClick={onClose} className="absolute top-2 right-2 text-gray-400 hover:text-gray-700 text-xl">&times;</button>
                 <div className="flex flex-col items-center">
-                    <img className="h-16 w-16 rounded-full object-cover mb-2" src={user.profile_image_url ? `${API_BASE_URL}/${user.profile_image_url}` : `https://placehold.co/64x64/E8EAF6/211C84?text=${user.first_name?.charAt(0) || 'U'}`} alt="Profile" />
+                    <img 
+                        className="h-16 w-16 rounded-full object-cover mb-2 border border-slate-200 bg-white" 
+                        src={user.profile_image_url ? (user.profile_image_url.startsWith('http') ? user.profile_image_url : `${API_BASE_URL}/${user.profile_image_url}`) : (user.role === 'publisher' ? '/uploads/logos/default_company.svg' : '/uploads/profiles/default_student.svg')} 
+                        alt="Profile" 
+                        onError={(e) => {
+                            if (!e.target.dataset.triedPublic && user.profile_image_url) {
+                                e.target.dataset.triedPublic = 'true';
+                                e.target.src = user.profile_image_url.startsWith('/') ? user.profile_image_url : `/${user.profile_image_url}`;
+                            } else {
+                                e.target.src = user.role === 'publisher' ? '/uploads/logos/default_company.svg' : '/uploads/profiles/default_student.svg';
+                            }
+                        }}
+                    />
                     <div className="font-bold text-lg mb-1">{user.first_name} {user.last_name}</div>
                     <div className="text-sm text-gray-500 mb-2">{user.email}</div>
                     <div className="text-xs text-gray-600 mb-1">Role: <span className="font-semibold">{user.role}</span></div>
@@ -561,9 +573,17 @@ function UserManagement({ user: adminUser, setPage, setStudentIdForProfile, setP
                                         <tr key={user.id} className="hover:bg-gray-100">
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="flex items-center">
-                                                    <img className="h-10 w-10 rounded-full object-cover" 
-                                                        src={user.profile_image_url ? `${API_BASE_URL}/${user.profile_image_url}` : `https://placehold.co/40x40/E8EAF6/211C84?text=${user.first_name?.charAt(0) || 'U'}`} 
+                                                    <img className="h-10 w-10 rounded-full object-cover border border-slate-200 bg-white" 
+                                                        src={user.profile_image_url ? (user.profile_image_url.startsWith('http') ? user.profile_image_url : `${API_BASE_URL}/${user.profile_image_url}`) : (user.role === 'publisher' ? '/uploads/logos/default_company.svg' : '/uploads/profiles/default_student.svg')} 
                                                         alt={`${user.first_name}'s profile`} 
+                                                        onError={(e) => {
+                                                            if (!e.target.dataset.triedPublic && user.profile_image_url) {
+                                                                e.target.dataset.triedPublic = 'true';
+                                                                e.target.src = user.profile_image_url.startsWith('/') ? user.profile_image_url : `/${user.profile_image_url}`;
+                                                            } else {
+                                                                e.target.src = user.role === 'publisher' ? '/uploads/logos/default_company.svg' : '/uploads/profiles/default_student.svg';
+                                                            }
+                                                        }}
                                                     />
                                                 </div>
                                                 <div className="ml-4">
