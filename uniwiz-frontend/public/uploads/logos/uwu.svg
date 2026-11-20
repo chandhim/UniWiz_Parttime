@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="uwuBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#064E3B"/>
+      <stop offset="100%" stop-color="#022C22"/>
+    </linearGradient>
+    <linearGradient id="uwuGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FDE68A"/>
+      <stop offset="50%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" rx="44" fill="url(#uwuBg)"/>
+  <rect x="4" y="4" width="192" height="192" rx="40" fill="none" stroke="#059669" stroke-width="2"/>
+  
+  <!-- Academic Crest Shield -->
+  <path d="M100 32 L144 48 C144 94 124 126 100 138 C76 126 56 94 56 48 Z" fill="#047857" stroke="url(#uwuGold)" stroke-width="3"/>
+  
+  <!-- Graduation Cap -->
+  <polygon points="100,56 132,68 100,80 68,68" fill="url(#uwuGold)"/>
+  <polygon points="100,80 124,71 124,82 C124 90 100 96 100 96 C100 96 76 90 76 82 L76,71" fill="#D97706"/>
+  <!-- Tassel -->
+  <path d="M128 70 C128 78 132 86 132 94" fill="none" stroke="#FDE68A" stroke-width="2"/>
+  <circle cx="132" cy="95" r="2.5" fill="#FDE68A"/>
+  
+  <!-- Open Book -->
+  <path d="M82 108 C90 104 98 106 100 109 C102 106 110 104 118 108 L118 120 C110 116 102 118 100 121 C98 118 90 116 82 120 Z" fill="#FFFFFF"/>
+  <line x1="100" y1="109" x2="100" y2="121" stroke="#047857" stroke-width="1.5"/>
+  
+  <text x="100" y="164" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="900" fill="#FDE68A" letter-spacing="3">UWU SUPPORT</text>
+  <text x="100" y="180" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="8" font-weight="700" fill="#A7F3D0" letter-spacing="2">UVA WELLASSA CAMPUS</text>
+</svg>

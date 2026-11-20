@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="admBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E1B4B"/>
+      <stop offset="100%" stop-color="#312E81"/>
+    </linearGradient>
+    <linearGradient id="admGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FBBF24"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+    <linearGradient id="admEmerald" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34D399"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" rx="44" fill="url(#admBg)"/>
+  <rect x="4" y="4" width="192" height="192" rx="40" fill="none" stroke="#4338CA" stroke-width="2"/>
+  
+  <!-- Security Shield & Crown -->
+  <path d="M100 34 L146 54 C146 102 126 132 100 144 C74 132 54 102 54 54 Z" fill="url(#admEmerald)" stroke="url(#admGold)" stroke-width="3.5"/>
+  
+  <!-- Wizard Star & Lightning -->
+  <polygon points="100,56 106,72 122,74 110,84 114,100 100,90 86,100 90,84 78,74 94,72" fill="url(#admGold)"/>
+  
+  <text x="100" y="166" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="900" fill="#F8FAFC" letter-spacing="3">UNIWIZ ADMIN</text>
+  <text x="100" y="182" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="8" font-weight="800" fill="#34D399" letter-spacing="2">VERIFIED PORTAL</text>
+</svg>

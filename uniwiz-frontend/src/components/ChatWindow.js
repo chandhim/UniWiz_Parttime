@@ -405,10 +405,17 @@ function ChatWindow({ conversation, currentUser, onNewMessageSent }) {
                         <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 text-white font-bold flex items-center justify-center text-sm shadow-sm overflow-hidden">
                             {conversation.profile_image_url ? (
                                 <img
-                                    src={`${API_BASE_URL}/${conversation.profile_image_url}`}
+                                    src={conversation.profile_image_url.startsWith('http') ? conversation.profile_image_url : `${API_BASE_URL}/${conversation.profile_image_url}`}
                                     alt="profile"
                                     className="w-full h-full object-cover"
-                                    onError={(e) => { e.target.style.display = 'none'; }}
+                                    onError={(e) => {
+                                        if (!e.target.dataset.triedPublic && conversation.profile_image_url) {
+                                            e.target.dataset.triedPublic = 'true';
+                                            e.target.src = conversation.profile_image_url.startsWith('/') ? conversation.profile_image_url : `/${conversation.profile_image_url}`;
+                                        } else {
+                                            e.target.style.display = 'none';
+                                        }
+                                    }}
                                 />
                             ) : (
                                 targetDisplayName.charAt(0).toUpperCase()

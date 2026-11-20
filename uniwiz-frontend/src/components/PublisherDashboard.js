@@ -112,9 +112,17 @@ const ApplicantRow = ({ applicant, onViewProfile }) => (
     >
         <div className="flex items-center space-x-3">
             <img
-                src={applicant.profile_image_url ? `${API_BASE_URL}/${applicant.profile_image_url}` : `https://ui-avatars.com/api/?name=${applicant.first_name}+${applicant.last_name}&background=E8EAF6&color=211C84`}
+                src={applicant.profile_image_url ? (applicant.profile_image_url.startsWith('http') ? applicant.profile_image_url : `${API_BASE_URL}/${applicant.profile_image_url}`) : '/uploads/profiles/default_student.svg'}
                 alt="profile"
-                className="h-10 w-10 rounded-full object-cover"
+                className="h-10 w-10 rounded-full object-cover border border-slate-200 bg-white"
+                onError={(e) => {
+                    if (!e.target.dataset.triedPublic && applicant.profile_image_url) {
+                        e.target.dataset.triedPublic = 'true';
+                        e.target.src = applicant.profile_image_url.startsWith('/') ? applicant.profile_image_url : `/${applicant.profile_image_url}`;
+                    } else {
+                        e.target.src = '/uploads/profiles/default_student.svg';
+                    }
+                }}
             />
             <div>
                 <p className="font-semibold text-gray-800">{applicant.first_name} {applicant.last_name}</p>
@@ -181,9 +189,17 @@ const ReviewCard = ({ review }) => {
         >
             <div className="flex items-start space-x-3">
                 <img
-                    src={review.student_image_url ? `${API_BASE_URL}/${review.student_image_url}` : `https://ui-avatars.com/api/?name=${review.first_name}+${review.last_name}&background=E8EAF6&color=211C84`}
+                    src={review.student_image_url ? (review.student_image_url.startsWith('http') ? review.student_image_url : `${API_BASE_URL}/${review.student_image_url}`) : '/uploads/profiles/default_student.svg'}
                     alt="student profile"
-                    className="h-10 w-10 rounded-full object-cover"
+                    className="h-10 w-10 rounded-full object-cover border border-slate-200 bg-white"
+                    onError={(e) => {
+                        if (!e.target.dataset.triedPublic && review.student_image_url) {
+                            e.target.dataset.triedPublic = 'true';
+                            e.target.src = review.student_image_url.startsWith('/') ? review.student_image_url : `/${review.student_image_url}`;
+                        } else {
+                            e.target.src = '/uploads/profiles/default_student.svg';
+                        }
+                    }}
                 />
                 <div className="flex-grow">
                     <div className="flex justify-between items-center">

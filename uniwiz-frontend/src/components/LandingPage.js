@@ -700,9 +700,12 @@ const LandingPage = ({ setPage }) => {
                 </p>
               </div>
               <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
-                <div className="w-10 h-10 rounded-full bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center text-sm">
-                  KP
-                </div>
+                <img 
+                  src="/uploads/profiles/kasun_perera.jpg" 
+                  alt="Kasun Perera" 
+                  className="w-10 h-10 rounded-full object-cover border border-indigo-200 shadow-xs" 
+                  onError={(e) => { e.target.outerHTML = '<div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center text-sm">KP</div>'; }}
+                />
                 <div>
                   <h4 className="text-sm font-bold text-slate-900">Kasun Perera</h4>
                   <p className="text-xs text-slate-500">CS Undergrad, Uva Wellassa University</p>
@@ -725,9 +728,12 @@ const LandingPage = ({ setPage }) => {
                 </p>
               </div>
               <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
-                <div className="w-10 h-10 rounded-full bg-purple-100 text-purple-700 font-bold flex items-center justify-center text-sm">
-                  KS
-                </div>
+                <img 
+                  src="/uploads/logos/creativestudio.svg" 
+                  alt="Kavindi Silva" 
+                  className="w-10 h-10 rounded-full object-cover border border-purple-200 shadow-xs" 
+                  onError={(e) => { e.target.outerHTML = '<div class="w-10 h-10 rounded-full bg-purple-100 text-purple-700 font-bold flex items-center justify-center text-sm">KS</div>'; }}
+                />
                 <div>
                   <h4 className="text-sm font-bold text-slate-900">Kavindi Silva</h4>
                   <p className="text-xs text-slate-500">Design Lead, Creative Studio Colombo</p>
@@ -750,9 +756,12 @@ const LandingPage = ({ setPage }) => {
                 </p>
               </div>
               <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
-                <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center text-sm">
-                  NF
-                </div>
+                <img 
+                  src="/uploads/logos/uwu.svg" 
+                  alt="Dr. Nihal Fernando" 
+                  className="w-10 h-10 rounded-full object-cover border border-emerald-200 shadow-xs" 
+                  onError={(e) => { e.target.outerHTML = '<div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center text-sm">NF</div>'; }}
+                />
                 <div>
                   <h4 className="text-sm font-bold text-slate-900">Dr. Nihal Fernando</h4>
                   <p className="text-xs text-slate-500">Coordinator, Uva Wellassa Support</p>

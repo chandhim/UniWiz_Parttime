@@ -79,7 +79,9 @@ async function main() {
   // 4.1 Admin User
   const adminUser = await prisma.user.upsert({
     where: { email: 'admin@uniwiz.lk' },
-    update: {},
+    update: {
+      profileImageUrl: 'uploads/profiles/admin_uniwiz.jpg'
+    },
     create: {
       email: 'admin@uniwiz.lk',
       password: DEFAULT_PASSWORD_HASH,
@@ -87,6 +89,7 @@ async function main() {
       lastName: 'UniWiz',
       role: 'ADMIN',
       status: 'ACTIVE',
+      profileImageUrl: 'uploads/profiles/admin_uniwiz.jpg',
       isVerified: true,
       emailVerifiedAt: new Date()
     }
@@ -99,12 +102,14 @@ async function main() {
       firstName: 'Saman',
       lastName: 'Perera',
       companyName: 'Tech Solutions Lanka',
+      profileImageUrl: 'uploads/logos/techsolutions.svg',
       profile: {
         about: 'Tech Solutions Lanka is a premier software development consultancy specializing in web, mobile, and cloud systems. We actively mentor and hire talented university students for part-time and project roles.',
         industry: 'Information Technology',
         websiteUrl: 'https://techsolutions.lk',
         address: 'Level 4, Galle Road, Colombo 03',
-        phoneNumber: '+94 11 234 5678'
+        phoneNumber: '+94 11 234 5678',
+        coverImageUrl: 'uploads/covers/cover_techsolutions.jpg'
       }
     },
     {
@@ -112,12 +117,14 @@ async function main() {
       firstName: 'Kavindi',
       lastName: 'Silva',
       companyName: 'Creative Studio Colombo',
+      profileImageUrl: 'uploads/logos/creativestudio.svg',
       profile: {
         about: 'Boutique digital design and branding agency producing award-winning UI/UX, graphic identities, and motion graphics for regional and global clients.',
         industry: 'Design & Media',
         websiteUrl: 'https://creativestudio.lk',
         address: '15 Horton Place, Colombo 07',
-        phoneNumber: '+94 11 789 1234'
+        phoneNumber: '+94 11 789 1234',
+        coverImageUrl: 'uploads/covers/cover_creativestudio.jpg'
       }
     },
     {
@@ -125,12 +132,14 @@ async function main() {
       firstName: 'Dr. Nihal',
       lastName: 'Fernando',
       companyName: 'Uva Wellassa Campus Support',
+      profileImageUrl: 'uploads/logos/uwu.svg',
       profile: {
         about: 'University academic assistance and student employment initiative, matching talented senior undergraduates with part-time teaching, lab, and tutoring positions.',
         industry: 'Education & Academia',
         websiteUrl: 'https://uwu.ac.lk',
         address: 'Passara Road, Badulla',
-        phoneNumber: '+94 55 222 6622'
+        phoneNumber: '+94 55 222 6622',
+        coverImageUrl: 'uploads/covers/cover_uwu.jpg'
       }
     },
     {
@@ -138,12 +147,14 @@ async function main() {
       firstName: 'Roshan',
       lastName: 'Gunawardena',
       companyName: 'Apex Digital Marketing',
+      profileImageUrl: 'uploads/logos/apexdigital.svg',
       profile: {
         about: 'Fast-growing digital marketing agency helping high-growth brands scale with SEO, social media strategies, and content production.',
         industry: 'Marketing & Advertising',
         websiteUrl: 'https://apexdigital.lk',
         address: '72 Peradeniya Road, Kandy',
-        phoneNumber: '+94 81 220 4455'
+        phoneNumber: '+94 81 220 4455',
+        coverImageUrl: 'uploads/covers/cover_apexdigital.jpg'
       }
     }
   ];
@@ -154,6 +165,7 @@ async function main() {
       where: { email: pub.email },
       update: {
         companyName: pub.companyName,
+        profileImageUrl: pub.profileImageUrl,
         isVerified: true
       },
       create: {
@@ -162,6 +174,7 @@ async function main() {
         firstName: pub.firstName,
         lastName: pub.lastName,
         companyName: pub.companyName,
+        profileImageUrl: pub.profileImageUrl,
         role: 'PUBLISHER',
         status: 'ACTIVE',
         isVerified: true,
@@ -187,6 +200,7 @@ async function main() {
       email: 'kasun.perera@std.uwu.ac.lk',
       firstName: 'Kasun',
       lastName: 'Perera',
+      profileImageUrl: 'uploads/profiles/kasun_perera.jpg',
       profile: {
         universityName: 'Uva Wellassa University',
         fieldOfStudy: 'Computer Science & Technology',
@@ -200,6 +214,7 @@ async function main() {
       email: 'amali.senanayake@std.uwu.ac.lk',
       firstName: 'Amali',
       lastName: 'Senanayake',
+      profileImageUrl: 'uploads/profiles/amali_senanayake.jpg',
       profile: {
         universityName: 'Uva Wellassa University',
         fieldOfStudy: 'Management Sciences',
@@ -213,6 +228,7 @@ async function main() {
       email: 'dineth.wijesinghe@std.uwu.ac.lk',
       firstName: 'Dineth',
       lastName: 'Wijesinghe',
+      profileImageUrl: 'uploads/profiles/dineth_wijesinghe.jpg',
       profile: {
         universityName: 'University of Moratuwa',
         fieldOfStudy: 'Information Technology',
@@ -226,6 +242,7 @@ async function main() {
       email: 'thilini.jayawardena@std.uwu.ac.lk',
       firstName: 'Thilini',
       lastName: 'Jayawardena',
+      profileImageUrl: 'uploads/profiles/thilini_jayawardena.jpg',
       profile: {
         universityName: 'University of Colombo',
         fieldOfStudy: 'Applied Mathematics',
@@ -239,6 +256,7 @@ async function main() {
       email: 'chathura.ranasinghe@std.uwu.ac.lk',
       firstName: 'Chathura',
       lastName: 'Ranasinghe',
+      profileImageUrl: 'uploads/profiles/chathura_ranasinghe.jpg',
       profile: {
         universityName: 'University of Kelaniya',
         fieldOfStudy: 'Business Management',
@@ -254,12 +272,16 @@ async function main() {
   for (const stu of studentsData) {
     const user = await prisma.user.upsert({
       where: { email: stu.email },
-      update: { isVerified: true },
+      update: {
+        profileImageUrl: stu.profileImageUrl,
+        isVerified: true
+      },
       create: {
         email: stu.email,
         password: DEFAULT_PASSWORD_HASH,
         firstName: stu.firstName,
         lastName: stu.lastName,
+        profileImageUrl: stu.profileImageUrl,
         role: 'STUDENT',
         status: 'ACTIVE',
         isVerified: true,
@@ -277,6 +299,40 @@ async function main() {
     });
 
     studentMap[stu.email] = user;
+  }
+
+  // 4.4 Publisher Gallery Images
+  const galleryItems = [
+    { email: 'hr@techsolutions.lk', file: 'gallery_tech_1.jpg' },
+    { email: 'hr@techsolutions.lk', file: 'gallery_tech_2.jpg' },
+    { email: 'hr@techsolutions.lk', file: 'gallery_tech_3.jpg' },
+    { email: 'jobs@creativestudio.lk', file: 'gallery_creative_1.jpg' },
+    { email: 'jobs@creativestudio.lk', file: 'gallery_creative_2.jpg' },
+    { email: 'jobs@creativestudio.lk', file: 'gallery_creative_3.jpg' },
+    { email: 'academics@uwu.ac.lk', file: 'gallery_uwu_1.jpg' },
+    { email: 'academics@uwu.ac.lk', file: 'gallery_uwu_2.jpg' },
+    { email: 'academics@uwu.ac.lk', file: 'gallery_uwu_3.jpg' },
+    { email: 'careers@apexdigital.lk', file: 'gallery_apex_1.jpg' },
+    { email: 'careers@apexdigital.lk', file: 'gallery_apex_2.jpg' },
+    { email: 'careers@apexdigital.lk', file: 'gallery_apex_3.jpg' }
+  ];
+
+  for (const item of galleryItems) {
+    const pubUser = publisherMap[item.email];
+    if (pubUser) {
+      const imgUrl = `uploads/gallery/${item.file}`;
+      const existing = await prisma.publisherImage.findFirst({
+        where: { publisherId: pubUser.id, imageUrl: imgUrl }
+      });
+      if (!existing) {
+        await prisma.publisherImage.create({
+          data: {
+            publisherId: pubUser.id,
+            imageUrl: imgUrl
+          }
+        });
+      }
+    }
   }
 
   // =========================================================================

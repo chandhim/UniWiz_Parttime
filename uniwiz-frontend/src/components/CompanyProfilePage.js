@@ -46,9 +46,17 @@ const ReviewCard = ({ review }) => (
     <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
         <div className="flex items-center mb-2">
             <img 
-                src={review.student_image_url ? `${API_BASE_URL}/${review.student_image_url}` : `https://placehold.co/40x40/E8EAF6/211C84?text=${(review.first_name || 'S').charAt(0)}`} 
+                src={review.student_image_url ? (review.student_image_url.startsWith('http') ? review.student_image_url : `${API_BASE_URL}/${review.student_image_url}`) : '/uploads/profiles/default_student.svg'} 
                 alt="student profile"
-                className="h-10 w-10 rounded-full object-cover mr-3"
+                className="h-10 w-10 rounded-full object-cover mr-3 border border-slate-200"
+                onError={(e) => {
+                    if (!e.target.dataset.triedPublic && review.student_image_url) {
+                        e.target.dataset.triedPublic = 'true';
+                        e.target.src = review.student_image_url.startsWith('/') ? review.student_image_url : `/${review.student_image_url}`;
+                    } else {
+                        e.target.src = '/uploads/profiles/default_student.svg';
+                    }
+                }}
             />
             <div>
                 <p className="font-bold">{review.first_name} {review.last_name}</p>
@@ -286,18 +294,36 @@ function CompanyProfilePage({ publisherId, currentUser, handleApply, handleViewJ
                     {/* Cover Image */}
                     {company.cover_image_url ? (
                         <div className="h-64 rounded-xl overflow-hidden mb-8 shadow-lg">
-                            <img src={`${API_BASE_URL}/${company.cover_image_url}`} alt={`${company.company_name} cover`} className="w-full h-full object-cover"/>
+                            <img 
+                                src={company.cover_image_url.startsWith('http') ? company.cover_image_url : `${API_BASE_URL}/${company.cover_image_url}`} 
+                                alt={`${company.company_name} cover`} 
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                    if (!e.target.dataset.triedPublic && company.cover_image_url) {
+                                        e.target.dataset.triedPublic = 'true';
+                                        e.target.src = company.cover_image_url.startsWith('/') ? company.cover_image_url : `/${company.cover_image_url}`;
+                                    }
+                                }}
+                            />
                         </div>
                     ) : (
-                        <div className="h-48 bg-gray-200 rounded-xl mb-8"></div>
+                        <div className="h-48 bg-gradient-to-r from-emerald-600 to-teal-800 rounded-xl mb-8"></div>
                     )}
 
                     {/* Company Profile Header */}
                     <div className="bg-white p-8 rounded-xl shadow-lg mb-8 flex flex-col md:flex-row items-center text-center md:text-left gap-6 border -mt-24 md:-mt-16 relative">
                         <img 
-                            src={company.profile_image_url ? `${API_BASE_URL}/${company.profile_image_url}` : `https://placehold.co/128x128/E8EAF6/211C84?text=${(company.company_name || 'C').charAt(0)}`} 
+                            src={company.profile_image_url ? (company.profile_image_url.startsWith('http') ? company.profile_image_url : `${API_BASE_URL}/${company.profile_image_url}`) : '/uploads/logos/default_company.svg'} 
                             alt={`${company.company_name || company.first_name}'s Profile`} 
-                            className="h-32 w-32 rounded-full object-cover shadow-md border-4 border-white" 
+                            className="h-32 w-32 rounded-full object-cover shadow-md border-4 border-white bg-white" 
+                            onError={(e) => {
+                                if (!e.target.dataset.triedPublic && company.profile_image_url) {
+                                    e.target.dataset.triedPublic = 'true';
+                                    e.target.src = company.profile_image_url.startsWith('/') ? company.profile_image_url : `/${company.profile_image_url}`;
+                                } else {
+                                    e.target.src = '/uploads/logos/default_company.svg';
+                                }
+                            }}
                         />
                         <div>
                             <h1 className="text-4xl font-bold text-primary-dark mb-1">{company.company_name || `${company.first_name} ${company.last_name}`}</h1>
@@ -334,7 +360,17 @@ function CompanyProfilePage({ publisherId, currentUser, handleApply, handleViewJ
                                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                                         {galleryImages.map(image => (
                                             <div key={image.id} className="rounded-lg overflow-hidden shadow-sm">
-                                                <img src={`${API_BASE_URL}/${image.image_url}`} alt="Company gallery" className="h-32 w-full object-cover hover:scale-105 transition-transform duration-300"/>
+                                                <img 
+                                                    src={image.image_url.startsWith('http') ? image.image_url : `${API_BASE_URL}/${image.image_url}`} 
+                                                    alt="Company gallery" 
+                                                    className="h-32 w-full object-cover hover:scale-105 transition-transform duration-300"
+                                                    onError={(e) => {
+                                                        if (!e.target.dataset.triedPublic && image.image_url) {
+                                                            e.target.dataset.triedPublic = 'true';
+                                                            e.target.src = image.image_url.startsWith('/') ? image.image_url : `/${image.image_url}`;
+                                                        }
+                                                    }}
+                                                />
                                             </div>
                                         ))}
                                     </div>

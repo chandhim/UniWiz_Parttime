@@ -104,9 +104,17 @@ function StudentProfilePage({ studentId, onBackClick, currentUser }) {
                 {/* --- Profile Header --- */}
                 <div className="bg-white p-6 md:p-8 rounded-xl shadow-sm border border-gray-200 mb-8 flex flex-col md:flex-row items-center gap-6">
                     <img
-                        src={student.profile_image_url ? `${API_BASE_URL}/${student.profile_image_url}` : `https://placehold.co/128x128/E8EAF6/211C84?text=${student.first_name.charAt(0)}`}
+                        src={student.profile_image_url ? (student.profile_image_url.startsWith('http') ? student.profile_image_url : `${API_BASE_URL}/${student.profile_image_url}`) : '/uploads/profiles/default_student.svg'}
                         alt="Profile"
-                        className="h-28 w-28 md:h-32 md:w-32 rounded-full object-cover border-4 border-blue-100 shadow-sm"
+                        className="h-28 w-28 md:h-32 md:w-32 rounded-full object-cover border-4 border-blue-100 shadow-sm bg-white"
+                        onError={(e) => {
+                            if (!e.target.dataset.triedPublic && student.profile_image_url) {
+                                e.target.dataset.triedPublic = 'true';
+                                e.target.src = student.profile_image_url.startsWith('/') ? student.profile_image_url : `/${student.profile_image_url}`;
+                            } else {
+                                e.target.src = '/uploads/profiles/default_student.svg';
+                            }
+                        }}
                     />
                     <div className="text-center md:text-left">
                         <h1 className="text-2xl md:text-3xl font-bold text-gray-800">{student.first_name} {student.last_name}</h1>

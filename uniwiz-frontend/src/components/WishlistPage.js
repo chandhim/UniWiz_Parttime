@@ -30,10 +30,10 @@ const JobCard = ({ job, onRemove, onViewDetails, onApply }) => {
             <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center space-x-3">
                     <img 
-                        src={job.company_logo || job.profile_image_url || '/logo.png'} 
+                        src={job.company_logo || (job.profile_image_url ? (job.profile_image_url.startsWith('http') || job.profile_image_url.startsWith('/') ? job.profile_image_url : `/${job.profile_image_url}`) : '/uploads/logos/default_company.svg')} 
                         alt={`${displayName} logo`}
-                        className="w-12 h-12 rounded-lg border border-gray-200 bg-gray-100"
-                        onError={e => { e.target.style.display = 'none'; }}
+                        className="w-12 h-12 rounded-lg border border-gray-200 bg-white object-cover"
+                        onError={e => { e.target.src = '/uploads/logos/default_company.svg'; }}
                     />
                     <div>
                         <h3 className="text-lg font-semibold text-gray-800 hover:text-blue-600 cursor-pointer"

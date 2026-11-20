@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="csBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2E1065"/>
+      <stop offset="100%" stop-color="#4C1D95"/>
+    </linearGradient>
+    <linearGradient id="csPink" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F43F5E"/>
+      <stop offset="100%" stop-color="#EC4899"/>
+    </linearGradient>
+    <linearGradient id="csViolet" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8B5CF6"/>
+      <stop offset="100%" stop-color="#6366F1"/>
+    </linearGradient>
+    <linearGradient id="csAmber" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FBBF24"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" rx="44" fill="url(#csBg)"/>
+  <rect x="4" y="4" width="192" height="192" rx="40" fill="none" stroke="#6D28D9" stroke-width="2"/>
+  
+  <!-- Overlapping Designer Flower/Petals -->
+  <circle cx="85" cy="80" r="32" fill="url(#csPink)" opacity="0.85"/>
+  <circle cx="115" cy="80" r="32" fill="url(#csViolet)" opacity="0.85"/>
+  <circle cx="100" cy="105" r="32" fill="url(#csAmber)" opacity="0.85"/>
+  
+  <!-- Stylized CS Monogram in center -->
+  <path d="M92 82 C86 76 78 80 78 88 C78 96 86 100 92 94" fill="none" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round"/>
+  <path d="M120 84 C116 80 108 81 108 86 C108 93 118 91 118 97 C118 102 110 102 106 98" fill="none" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round"/>
+  
+  <!-- Sparkles -->
+  <polygon points="145,42 147,48 153,50 147,52 145,58 143,52 137,50 143,48" fill="#FDE047"/>
+  <polygon points="52,118 53,123 58,124 53,126 52,131 51,126 46,124 51,123" fill="#F43F5E"/>
+  
+  <text x="100" y="166" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="900" fill="#FFFFFF" letter-spacing="2">CREATIVE STUDIO</text>
+  <text x="100" y="182" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="8.5" font-weight="700" fill="#F472B6" letter-spacing="3">COLOMBO</text>
+</svg>
